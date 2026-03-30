@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { response } from 'express';
 
 
 
@@ -11,6 +12,49 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent  {
-  //Enter the required code here!!
+export class LoginComponent implements OnInit {
+
+  itemForm: FormGroup;
+  formModel: any = { username: "", password: "" }
+  showError: boolean = false;
+  errorMessage: any;
+
+  constructor(
+    public router: Router,
+    public httpService: HttpService,
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {
+    this.itemForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  onLogin() {
+    if (this.itemForm.valid) {
+      this.httpService.Login(this.itemForm.value).subscribe({
+        next: (data) => {
+          this.authService.saveToken(data["token"]);
+          this.authService.saveUserId(data["userId"]);
+          this.authService.SetRole(data["role"]);
+          this.router.navigateByUrl("/dashboard");
+        },
+        error: (error) => {
+          this.showError = true;
+          this.errorMessage = "Error logging in";
+          return;
+        }
+      });
+    }
+  }
+
+  registration() {
+    this.router.navigateByUrl('/registration');
+  }
 }
+
