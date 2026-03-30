@@ -1,1 +1,42 @@
-<!--Enter your code here-->
+<div class="auth-wrapper">
+  <div class="auth-card fadeUp">
+
+    <h2>Create Account</h2>
+
+    <form>
+      <div class="input-group">
+        <input type="text" required placeholder=" " />
+        <label>Username</label>
+      </div>
+
+      <div class="input-group">
+        <input type="email" required placeholder=" " />
+        <label>Email</label>
+      </div>
+
+      <div class="input-group">
+        <input type="password" required placeholder=" " />
+        <label>Password</label>
+      </div>
+
+      <div class="input-group">
+        <select required>
+          <option value="" disabled selected></option>
+          <option>Policyholder</option>
+          <option>Adjuster</option>
+          <option>Underwriter</option>
+          <option>Investigator</option>
+        </select>
+        <label class="select-label">Role</label>
+      </div>
+
+      <button type="submit">Create Account</button>
+    </form>
+
+    <p class="switch">
+      Already have an account?
+      <a routerLink="/login">Login →</a>
+    </p>
+
+  </div>
+</div>
