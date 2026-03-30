@@ -37,6 +37,7 @@ export class RegistrationComponent implements OnInit {
     if (this.itemForm.valid) {
       this.bookService.registerUser(this.itemForm.value).subscribe(
         () => {
+          console.log(this.itemForm.value)
           this.showMessage = true;
           this.responseMessage = "Registered successfully";
           this.itemForm.reset();

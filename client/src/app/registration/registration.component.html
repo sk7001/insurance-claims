@@ -3,34 +3,34 @@
 
     <h2>Create Account</h2>
 
-    <form>
+    <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
       <div class="input-group">
-        <input type="text" required placeholder=" " />
+        <input type="text" required placeholder=" " formControlName="username" />
         <label>Username</label>
       </div>
 
       <div class="input-group">
-        <input type="email" required placeholder=" " />
+        <input type="email" required placeholder=" " formControlName="email" />
         <label>Email</label>
       </div>
 
       <div class="input-group">
-        <input type="password" required placeholder=" " />
+        <input type="password" required placeholder=" " formControlName="password" />
         <label>Password</label>
       </div>
 
-      <div class="input-group">
-        <select required>
+      <div class=" input-group">
+        <select required formControlName="role">
           <option value="" disabled selected></option>
-          <option>Policyholder</option>
-          <option>Adjuster</option>
-          <option>Underwriter</option>
-          <option>Investigator</option>
+          <option value="POLICYHOLDER">Policyholder</option>
+          <option value="ADJUSTER">Adjuster</option>
+          <option value="UNDERWRITER">Underwriter</option>
+          <option value="INVESTIGATOR">Investigator</option>
         </select>
         <label class="select-label">Role</label>
       </div>
 
-      <button type="submit">Create Account</button>
+      <button type="submit" [disabled]="itemForm.invalid">Create Account</button>
     </form>
 
     <p class="switch">

@@ -39,6 +39,7 @@ export class LoginComponent implements OnInit {
     if (this.itemForm.valid) {
       this.httpService.Login(this.itemForm.value).subscribe({
         next: (data) => {
+          console.log(this.itemForm.value);
           this.authService.saveToken(data["token"]);
           this.authService.saveUserId(data["userId"]);
           this.authService.SetRole(data["role"]);
