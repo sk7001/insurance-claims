@@ -1,15 +1,6 @@
-$bg1: #e8f0ff;
-$bg2: #ffffff;
 $accent: #0071e3;
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif;
-}
-
-/*BACKGROUND ANIMATION */
+/* BACKGROUND */
 .bg-animation {
   position: fixed;
   width: 100%;
@@ -24,29 +15,6 @@ $accent: #0071e3;
   0% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
-}
-
-/*TEXT */
-.hero-text {
-  text-align: center;
-  margin-top: 60px;
-
-  h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #1d1d1f;
-    animation: fadeUp 1s ease;
-
-    span {
-      color: $accent;
-      animation: glowText 2s infinite alternate;
-    }
-  }
-}
-
-@keyframes glowText {
-  from { text-shadow: 0 0 5px rgba(0,113,227,0.2); }
-  to { text-shadow: 0 0 20px rgba(0,113,227,0.6); }
 }
 
 /* CARD */
@@ -66,7 +34,7 @@ $accent: #0071e3;
   text-align: center;
 }
 
-/*INPUT */
+/* INPUT */
 .input-group {
   position: relative;
   margin-bottom: 20px;
@@ -76,7 +44,7 @@ $accent: #0071e3;
     padding: 14px;
     border-radius: 12px;
     border: 1px solid #d2d2d7;
-    background: #ffffff; 
+    background: #fff;
     outline: none;
     transition: 0.3s;
 
@@ -104,7 +72,7 @@ $accent: #0071e3;
   }
 }
 
-/*BUTTON */
+/* BUTTON */
 button {
   width: 100%;
   padding: 14px;
@@ -119,19 +87,43 @@ button {
     transform: scale(1.03);
     box-shadow: 0 10px 30px rgba(0,113,227,0.4);
   }
-}
 
-/* LINK */
-.switch {
-  margin-top: 15px;
-
-  a {
-    color: $accent;
-    text-decoration: none;
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-} 
+/* ERROR TEXT */
+.error {
+  color: #e63946;
+  font-size: 12px;
+  margin-top: 6px;
+  display: block;
+}
+
+.center {
+  text-align: center;
+}
+
+/* 🔴 INVALID BORDER (NO ANIMATION DAMAGE) */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border-color: #e63946;
+  animation: shake 0.25s ease-in-out;
+}
+
+input.ng-invalid.ng-touched:focus,
+input.ng-invalid.ng-dirty:focus {
+  box-shadow:
+    0 0 0 4px rgba(230,57,70,0.18);
+}
+
+/* SHAKE */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  50% { transform: translateX(3px); }
+  75% { transform: translateX(-3px); }
+  100% { transform: translateX(0); }
+}

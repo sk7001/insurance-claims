@@ -3,24 +3,49 @@
 
     <h2>Create Account</h2>
 
+    <p class="server-message" [class.error]="isError" [class.success]="!isError" *ngIf="showMessage">
+      {{ responseMessage }}
+    </p>
+
     <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
+
       <div class="input-group">
-        <input type="text" required placeholder=" " formControlName="username" />
+        <input type="text" placeholder=" " formControlName="username">
         <label>Username</label>
+
+        <small class="error" *ngIf="itemForm.get('username')?.invalid &&
+                 (itemForm.get('username')?.touched || itemForm.get('username')?.dirty)">
+          Username is required
+        </small>
       </div>
 
       <div class="input-group">
-        <input type="email" required placeholder=" " formControlName="email" />
+        <input type="email" placeholder=" " formControlName="email">
         <label>Email</label>
+
+        <small class="error" *ngIf="itemForm.get('email')?.invalid &&
+                 (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)">
+          <span *ngIf="itemForm.get('email')?.errors?.['required']">
+            Email is required
+          </span>
+          <span *ngIf="itemForm.get('email')?.errors?.['email']">
+            Enter a valid email
+          </span>
+        </small>
       </div>
 
       <div class="input-group">
-        <input type="password" required placeholder=" " formControlName="password" />
+        <input type="password" placeholder=" " formControlName="password">
         <label>Password</label>
+
+        <small class="error" *ngIf="itemForm.get('password')?.invalid &&
+                 (itemForm.get('password')?.touched || itemForm.get('password')?.dirty)">
+          Password must be 8+ chars, uppercase, lowercase, number & symbol
+        </small>
       </div>
 
-      <div class=" input-group">
-        <select required formControlName="role">
+      <div class="input-group">
+        <select formControlName="role">
           <option value="" disabled selected></option>
           <option value="POLICYHOLDER">Policyholder</option>
           <option value="ADJUSTER">Adjuster</option>
@@ -28,9 +53,17 @@
           <option value="INVESTIGATOR">Investigator</option>
         </select>
         <label class="select-label">Role</label>
+
+        <small class="error" *ngIf="itemForm.get('role')?.invalid &&
+                 (itemForm.get('role')?.touched || itemForm.get('role')?.dirty)">
+          Role is required
+        </small>
       </div>
 
-      <button type="submit" [disabled]="itemForm.invalid">Create Account</button>
+      <button type="submit" [disabled]="itemForm.invalid">
+        Create Account
+      </button>
+
     </form>
 
     <p class="switch">

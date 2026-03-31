@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,28 +18,61 @@
 
       <h3>Welcome Back</h3>
 
+
       <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
-        <div class="input-group">
-          <input type="text" required formControlName="username">
-          <label>Username</label>
-        </div>
 
-        <div class="input-group">
-          <input type="password" required formControlName="password">
-          <label>Password</label>
-        </div>
+  <!-- USERNAME -->
+  <div class="input-group">
+    <input type="text" formControlName="username">
+    <label>Username</label>
 
-        <button>Sign In</button>
-      </form>
+    <small class="error"
+      *ngIf="
+        itemForm.get('username')?.invalid &&
+        (itemForm.get('username')?.touched || itemForm.get('username')?.dirty)
+      ">
+      Username is required
+    </small>
+  </div>
+
+  <!-- PASSWORD -->
+  <div class="input-group">
+    <input type="password" formControlName="password">
+    <label>Password</label>
+
+    <small class="error"
+      *ngIf="
+        itemForm.get('password')?.invalid &&
+        (itemForm.get('password')?.touched || itemForm.get('password')?.dirty)
+      ">
+      Password is required
+    </small>
+  </div>
+
+  <button type="submit" [disabled]="itemForm.invalid">
+    Sign In
+  </button>
+
+</form>
+
+<p class="error center" *ngIf="showError">
+  {{ errorMessage }}
+</p>
+
+
 
       <p class="switch">
         Don’t have an account?
         <a routerLink="/registration">Register →</a>
       </p>
-
+      <p>{{errorMessage}}</p>
     </div>
   </div>
 
 </body>
 
 </html>
+
+
+
+

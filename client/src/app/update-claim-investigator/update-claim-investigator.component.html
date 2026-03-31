@@ -1,1 +1,51 @@
-<!--Enter your code here-->
+
+<div class="page">
+  <h1 class="page-title">Review Claims</h1>
+
+  <div class="card table-card">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Description</th>
+          <th>Current Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of claimList">
+          <td>{{ claim.id }}</td>
+          <td>{{ claim.description }}</td>
+          <td>{{ claim.status }}</td>
+
+          <td>
+            <!-- Approve -->
+            <button
+              class="small success"
+              (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
+              Approve
+            </button>
+
+            <!-- Reject -->
+            <button
+              class="small danger"
+              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
+              Reject
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Error Message -->
+    <div *ngIf="showError" class="error">
+      {{ errorMessage || 'Something went wrong' }}
+    </div>
+
+  </div>
+</div>
+
+
+

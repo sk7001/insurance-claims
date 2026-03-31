@@ -1,0 +1,38 @@
+.page {
+  padding: 30px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 26px;
+  margin-bottom: 24px;
+}
+
+.form-card {
+  width: 420px;
+  padding: 30px;
+  border-radius: 18px;
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+input, select {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+}
+
+button {
+  padding: 12px;
+  background: #0071e3;
+  color: white;
+  border: none;
+  border-radius: 10px;
+}

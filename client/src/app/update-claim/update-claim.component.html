@@ -1,1 +1,68 @@
-<!--Enter your code here-->
+
+
+<div class="page">
+  <h1 class="page-title">Update Claims</h1>
+
+  <div class="card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Underwriter</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of claimList">
+          <td>{{ claim.id }}</td>
+          <td>{{ claim.description }}</td>
+          <td>{{ claim.status }}</td>
+          <td>{{ claim.date.toString() }}</td>
+          <td>{{ claim.underwriter.id }} - {{ claim.underwriter.username }} - {{ claim.underwriter.email }}</td>
+          <td>
+            <button class="small" (click)="edit(claim)">
+              Update
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===================== UPDATE FORM ===================== -->
+  <div class="card form-card" *ngIf="updatedId">
+    <h2>Update Claim</h2>
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+      <label>Description</label>
+      <input type="text" formControlName="description" />
+
+      <label>Date</label>
+      <input type="date" formControlName="date" />
+
+      <label>Status</label>
+      <select formControlName="status">
+        <option value="">Select Status</option>
+        <option value="Pending">Pending</option>
+        <option value="Approved">Approved</option>
+        <option value="Rejected">Rejected</option>
+      </select>
+
+      <button type="submit" class="success">Save Changes</button>
+
+    </form>
+
+    <!-- ERROR -->
+    <div *ngIf="showError" class="error">
+      {{ errorMessage || 'Failed to update claim' }}
+    </div>
+  </div>
+</div>
+
+
+

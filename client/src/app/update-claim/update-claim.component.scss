@@ -1,0 +1,155 @@
+
+.page {
+  padding: 30px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 26px;
+  margin-bottom: 24px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* =======================
+   Cards
+======================= */
+
+.table-card,
+.form-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.form-card h2 {
+  font-size: 20px;
+  margin-bottom: 16px;
+  color: #1f2937;
+}
+
+/* =======================
+   Table Styles
+======================= */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 14px;
+  border-bottom: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+th {
+  text-align: left;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+tr:hover {
+  background-color: #f9fafb;
+}
+
+/* =======================
+   Buttons
+======================= */
+
+.small {
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: #0071e3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.small:hover {
+  background: #005bb5;
+}
+
+button.success {
+  margin-top: 16px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  border: none;
+  font-size: 14px;
+  background-color: #16a34a;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+button.success:hover {
+  background-color: #15803d;
+}
+
+/* =======================
+   Form Elements
+======================= */
+
+.form-card form {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+}
+
+input[type="text"],
+input[type="date"],
+select {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  font-size: 14px;
+  outline: none;
+}
+
+input:focus,
+select:focus {
+  border-color: #0071e3;
+  box-shadow: 0 0 0 2px rgba(0, 113, 227, 0.2);
+}
+
+/* =======================
+   Error Handling
+======================= */
+
+.error {
+  margin-top: 12px;
+  padding: 10px;
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* =======================
+   Responsive
+======================= */
+
+@media (max-width: 768px) {
+  .page {
+    padding: 20px;
+  }
+
+  table,
+  thead,
+  tbody,
+  th,
+  td,
+  tr {
+    font-size: 13px;
+  }
+}
