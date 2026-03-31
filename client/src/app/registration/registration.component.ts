@@ -23,7 +23,7 @@ export class RegistrationComponent implements OnInit {
   ) {
     this.itemForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', [Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
       email: ['', [Validators.required, Validators.email]],
       role: ['', Validators.required]
     });
@@ -35,14 +35,17 @@ export class RegistrationComponent implements OnInit {
 
   onRegister() {
     if (this.itemForm.valid) {
-      this.bookService.registerUser(this.itemForm.value).subscribe(
-        () => {
+      this.bookService.registerUser(this.itemForm.value).subscribe({
+        next: (data) => {
           console.log(this.itemForm.value)
           this.showMessage = true;
           this.responseMessage = "Registered successfully";
           this.itemForm.reset();
+        },
+        error: (error) => {
+          this.responseMessage = error.getMessage();
         }
-      )
+      })
     }
   }
 }
