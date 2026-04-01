@@ -1,21 +1,22 @@
-
-
 .page {
   padding: 30px;
   background: #ffffff;
   min-height: 100vh;
+  margin-left: 250px;
+  padding: 20px;
 }
 
 .page-title {
   font-size: 26px;
   margin-bottom: 24px;
+  text-align: center;
 }
 
 .table-card {
   background: #ffffff;
   padding: 20px;
   border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .success {
@@ -34,5 +35,3 @@ button {
   border: none;
   margin-right: 5px;
 }
-
-

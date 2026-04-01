@@ -1,21 +1,24 @@
-
 .page {
   padding: 30px;
   background: #ffffff;
+  margin-left: 250px;
+  padding: 20px;
   min-height: 100vh;
 }
 
 .page-title {
   font-size: 26px;
   margin-bottom: 25px;
+  text-align: center;
 }
 
 .form-card {
-  max-width: 450px;
-  background: #ffffff;
+  width: 420px;
   padding: 30px;
   border-radius: 18px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
 }
 
 form {
@@ -29,7 +32,8 @@ label {
   color: #374151;
 }
 
-input, textarea {
+input,
+textarea {
   padding: 12px;
   border-radius: 10px;
   border: 1px solid #d1d5db;

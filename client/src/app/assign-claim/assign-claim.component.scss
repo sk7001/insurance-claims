@@ -2,11 +2,14 @@
   padding: 30px;
   background: #ffffff;
   min-height: 100vh;
+  margin-left: 250px;
+  padding: 20px;
 }
 
 .page-title {
   font-size: 26px;
   margin-bottom: 24px;
+  text-align: center;
 }
 
 .form-card {
@@ -14,7 +17,8 @@
   padding: 30px;
   border-radius: 18px;
   background: #ffffff;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  margin: 0 auto;
 }
 
 form {
@@ -23,7 +27,8 @@ form {
   gap: 15px;
 }
 
-input, select {
+input,
+select {
   padding: 12px;
   border-radius: 10px;
   border: 1px solid #d1d5db;

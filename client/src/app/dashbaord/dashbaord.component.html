@@ -4,4 +4,6 @@
 
   <p>{{role}}</p>
   <p>{{userId}}</p>
+
+  <app-view-claim *ngIf="role === 'POLICYHOLDER'"></app-view-claim>
 </div>
