@@ -29,7 +29,7 @@ export class CreateClaimComponent {
     this.itemForm = this.formBuilder.group({
       description: ['', Validators.required],
       date: ['', Validators.required],
-      status: ['Created', Validators.required]
+      status: ['', Validators.required]
     });
   }
 
