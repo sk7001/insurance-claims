@@ -10,10 +10,13 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 public class Policyholder extends User {
 
     @OneToMany(mappedBy = "policyholder")
+    @JsonIgnore
     private List<Claim> claims;
 
     public Policyholder() {}

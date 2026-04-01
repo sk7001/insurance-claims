@@ -26,11 +26,11 @@ export class CreateClaimComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService
   ) {
-      this.itemForm = this.formBuilder.group({
-  description: ['', Validators.required],
-  date: ['', Validators.required],
-  status: ['', Validators.required]
-});
+    this.itemForm = this.formBuilder.group({
+      description: ['', Validators.required],
+      date: ['', Validators.required],
+      status: ['Created', Validators.required]
+    });
   }
 
 
