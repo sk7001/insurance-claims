@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<properties>
+
+    <!-- ===================================================== -->
+    <!-- BACKEND : InsuranceClaimsProcessingSystemApplicationTests -->
+    <!-- ===================================================== -->
+
+    <property name="testRegisterUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should register a new user successfully"/>
+
+    <property name="testLoginUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should login user with valid credentials"/>
+
+    <property name="testLoginWithWrongUsernameOrPassword"
+              value="InsuranceClaimsProcessingSystemApplicationTests should reject login with invalid username or password"/>
+
+    <property name="testPolicyHolderShouldSubmitClaim"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow policyholder to submit a claim"/>
+
+    <property name="testPolicyHolderShouldGetClaims"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow policyholder to retrieve all claims"/>
+
+    <property name="testAdjusterShouldUpdateClaim"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow adjuster to update a claim"/>
+
+    <property name="testAdjusterShouldGetAllClaims"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow adjuster to retrieve all claims"/>
+
+    <property name="testAdjusterShouldAssignClaimToUnderwriter"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow adjuster to assign a claim to an underwriter"/>
+
+    <property name="testInvestigatorShouldCreateInvestigation"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow investigator to create an investigation"/>
+
+    <property name="testInvestigatorShouldUpdateInvestigation"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow investigator to update an investigation"/>
+
+    <property name="testInvestigatorShouldGetAllInvestigations"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow investigator to retrieve all investigations"/>
+
+    <property name="testUnderwriterShouldReviewClaim"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow underwriter to review a claim"/>
+
+    <property name="testUnderwriterShouldGetClaimsForReview"
+              value="InsuranceClaimsProcessingSystemApplicationTests should allow underwriter to retrieve claims for review"/>
+
+    <property name="testPolicyHolderApiShouldBeForbiddenForOtherUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should restrict policyholder APIs for other roles"/>
+
+    <property name="testAdjusterApiShouldBeForbiddenForOtherUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should restrict adjuster APIs for other roles"/>
+
+    <property name="testUnderwriterApiShouldBeForbiddenForOtherUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should restrict underwriter APIs for other roles"/>
+
+    <property name="testInvestigatorApiShouldBeForbiddenForOtherUser"
+              value="InsuranceClaimsProcessingSystemApplicationTests should restrict investigator APIs for other roles"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : AssignClaimComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="AssignClaimComponent_create"
+              value="AssignClaimComponent should create the component"/>
+
+    <property name="AssignClaimComponent_form_invalid_empty"
+              value="AssignClaimComponent should mark form invalid when claimId and underwriterId are empty"/>
+
+    <property name="AssignClaimComponent_form_valid"
+              value="AssignClaimComponent should validate form when claimId and underwriterId are provided"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : CreateClaimComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="CreateClaimComponent_create"
+              value="CreateClaimComponent should create the component"/>
+
+    <property name="CreateClaimComponent_form_invalid_empty"
+              value="CreateClaimComponent should mark form invalid when description date and status are empty"/>
+
+    <property name="CreateClaimComponent_form_valid"
+              value="CreateClaimComponent should validate form when description date and status are provided"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : CreateInvestigatorComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="CreateInvestigatorComponent_create"
+              value="CreateInvestigatorComponent should create the component"/>
+
+    <property name="CreateInvestigatorComponent_form_invalid_empty"
+              value="CreateInvestigatorComponent should mark form invalid when report and status are empty"/>
+
+    <property name="CreateInvestigatorComponent_form_valid"
+              value="CreateInvestigatorComponent should validate form when report and status are provided"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : HttpService.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="HttpService_create"
+              value="HttpService should be created"/>
+
+    <property name="HttpService_getInvestigations"
+              value="HttpService should retrieve all investigations"/>
+
+    <property name="HttpService_getClaimsByUnderwriter"
+              value="HttpService should retrieve claims by underwriter"/>
+
+    <property name="HttpService_getClaimsByPolicyholder"
+              value="HttpService should retrieve claims by policyholder"/>
+
+    <property name="HttpService_getAllClaims"
+              value="HttpService should retrieve all claims"/>
+
+    <property name="HttpService_getAllUnderwriters"
+              value="HttpService should retrieve all underwriters"/>
+
+    <property name="HttpService_updateInvestigation"
+              value="HttpService should update an investigation"/>
+
+    <property name="HttpService_createInvestigation"
+              value="HttpService should create an investigation"/>
+
+    <property name="HttpService_createClaims"
+              value="HttpService should create a claim"/>
+
+    <property name="HttpService_updateClaims"
+              value="HttpService should update a claim"/>
+
+    <property name="HttpService_updateClaimsStatus"
+              value="HttpService should update claim status"/>
+
+    <property name="HttpService_login"
+              value="HttpService should login user"/>
+
+    <property name="HttpService_registerUser"
+              value="HttpService should register a new user"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : LoginComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="LoginComponent_invalid_empty"
+              value="LoginComponent should mark form invalid when username and password are empty"/>
+
+    <property name="LoginComponent_invalid_partial"
+              value="LoginComponent should mark form invalid when either username or password is empty"/>
+
+    <property name="LoginComponent_valid"
+              value="LoginComponent should validate form when username and password are provided"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : RegistrationComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="RegistrationComponent_invalid_empty"
+              value="RegistrationComponent should mark form invalid when any field is empty"/>
+
+    <property name="RegistrationComponent_invalid_email"
+              value="RegistrationComponent should mark form invalid when email format is incorrect"/>
+
+    <property name="RegistrationComponent_valid"
+              value="RegistrationComponent should validate form when all fields are provided correctly"/>
+
+    <!-- ===================================================== -->
+    <!-- FRONTEND : UpdateClaimComponent.spec.ts -->
+    <!-- ===================================================== -->
+
+    <property name="UpdateClaimComponent_create"
+              value="UpdateClaimComponent should create the component"/>
+
+    <property name="UpdateClaimComponent_form_invalid_empty"
+              value="UpdateClaimComponent should mark form invalid when description date and status are empty"/>
+
+</properties>
