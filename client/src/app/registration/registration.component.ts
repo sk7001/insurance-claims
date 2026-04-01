@@ -6,10 +6,44 @@ import { HttpService } from '../../services/http.service';
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html'
- 
+  templateUrl: './registration.component.html',
+  styleUrls: ['./registration.component.scss']
 })
-export class RegistrationComponent {
 
-  //Enter the required code here!!
+export class RegistrationComponent implements OnInit {
+
+  itemForm: FormGroup;
+  showMessage = false;
+  responseMessage: any;
+
+  constructor(
+    public router: Router,
+    private bookService: HttpService,
+    private formBuilder: FormBuilder
+  ) {
+    this.itemForm = this.formBuilder.group({
+      username: ['', Validators.required],
+      password: ['', [Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]],
+      email: ['', [Validators.required, Validators.email]],
+      role: ['', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+
+  }
+
+  onRegister() {
+    if (this.itemForm.valid) {
+      this.bookService.registerUser(this.itemForm.value).subscribe(
+        () => {
+          console.log(this.itemForm.value)
+          this.showMessage = true;
+          this.responseMessage = "Registered successfully";
+          this.itemForm.reset();
+        }
+      )
+    }
+  }
 }
+

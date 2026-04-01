@@ -10,9 +10,9 @@ import com.edutech.insurance_claims_processing_system.entity.Underwriter;
 import java.util.List;
 
 @Repository
-public interface ClaimRepository  {
+public interface ClaimRepository extends JpaRepository<Claim, Long> {
+
     List<Claim> findByPolicyholder(Policyholder policyholder);
 
     List<Claim> findByUnderwriter(Underwriter underwriter);
 }
-
