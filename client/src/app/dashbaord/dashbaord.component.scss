@@ -1,9 +1,9 @@
-
-
 .page {
   padding: 30px;
   background: #ffffff;
   min-height: 100vh;
+  margin-left: 250px;
+  padding: 20px;
 }
 
 .page-title {
@@ -22,7 +22,7 @@
   background: #ffffff;
   border-radius: 18px;
   padding: 25px;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
 }
 
 .card h3 {
@@ -36,8 +36,14 @@
   margin-top: 10px;
 }
 
-.success { color: #16a34a; }
-.warning { color: #ca8a04; }
-.danger  { color: #dc2626; }
+.success {
+  color: #16a34a;
+}
 
+.warning {
+  color: #ca8a04;
+}
 
+.danger {
+  color: #dc2626;
+}
