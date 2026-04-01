@@ -1,4 +1,3 @@
-
 .page {
   padding: 30px;
   background: #ffffff;
@@ -152,4 +151,9 @@ select:focus {
   tr {
     font-size: 13px;
   }
+}
+
+.no-underwriter {
+  color: red;
+  font-weight: 600;
 }

@@ -1,5 +1,4 @@
-
-
+<app-navbar></app-navbar>
 <div class="page">
   <h1 class="page-title">Update Claims</h1>
 
@@ -22,8 +21,18 @@
           <td>{{ claim.description }}</td>
           <td>{{ claim.status }}</td>
           <td>{{ claim.date.toString() }}</td>
-          <td>{{ claim.underwriter.id }} - {{ claim.underwriter.username }} - {{ claim.underwriter.email }}</td>
           <td>
+            <div *ngIf="claim.underwriter; else noUnderwriter">
+              {{ claim.underwriter.id }} -
+              {{ claim.underwriter.username }} -
+              {{ claim.underwriter.email }}
+            </div>
+
+            <ng-template #noUnderwriter>
+              <div class="no-underwriter">No underwriter</div>
+            </ng-template>
+          <td>
+
             <button class="small" (click)="edit(claim)">
               Update
             </button>
@@ -33,7 +42,6 @@
     </table>
   </div>
 
-  <!-- ===================== UPDATE FORM ===================== -->
   <div class="card form-card" *ngIf="updatedId">
     <h2>Update Claim</h2>
 
@@ -46,23 +54,14 @@
       <input type="date" formControlName="date" />
 
       <label>Status</label>
-      <select formControlName="status">
-        <option value="">Select Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Approved">Approved</option>
-        <option value="Rejected">Rejected</option>
-      </select>
+      <input type="text" formControlName="status">
 
       <button type="submit" class="success">Save Changes</button>
 
     </form>
 
-    <!-- ERROR -->
     <div *ngIf="showError" class="error">
       {{ errorMessage || 'Failed to update claim' }}
     </div>
   </div>
 </div>
-
-
-

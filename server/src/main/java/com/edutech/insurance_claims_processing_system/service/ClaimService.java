@@ -1,61 +1,13 @@
-
-// package com.edutech.insurance_claims_processing_system.service;
-
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Service;
-
-// import com.edutech.insurance_claims_processing_system.entity.Adjuster;
-// import com.edutech.insurance_claims_processing_system.entity.Claim;
-// import com.edutech.insurance_claims_processing_system.entity.Policyholder;
-// import com.edutech.insurance_claims_processing_system.entity.Underwriter;
-// import com.edutech.insurance_claims_processing_system.repository.AdjusterRepository;
-// import com.edutech.insurance_claims_processing_system.repository.ClaimRepository;
-// import com.edutech.insurance_claims_processing_system.repository.PolicyholderRepository;
-// import com.edutech.insurance_claims_processing_system.repository.UnderwriterRepository;
-
-// import javax.persistence.EntityNotFoundException;
-// import java.util.List;
-// import java.util.Optional;
-
-// @Service
-// public class ClaimService {
-
-//     private final ClaimRepository claimRepository;
-
-//     public ClaimService(ClaimRepository claimRepository) {
-//         this.claimRepository = claimRepository;
-//     }
-
-//     public Claim save(Claim claim) {
-//         return claimRepository.save(claim);
-//     }
-
-//     public Optional<Claim> findById(Long id) {
-//         return claimRepository.findById(id);
-//     }
-
-//     public List<Claim> findAll() {
-//         return claimRepository.findAll();
-//     }
-
-//     public List<Claim> findByPolicyholder(Policyholder policyholder) {
-//         return claimRepository.findByPolicyholder(policyholder);
-//     }
-
-//     public List<Claim> findByUnderwriter(Underwriter underwriter) {
-//         return claimRepository.findByUnderwriter(underwriter);
-//     }
-// }
-
-
 package com.edutech.insurance_claims_processing_system.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.edutech.insurance_claims_processing_system.entity.Adjuster;
 import com.edutech.insurance_claims_processing_system.entity.Claim;
 import com.edutech.insurance_claims_processing_system.entity.Policyholder;
 import com.edutech.insurance_claims_processing_system.entity.Underwriter;
+import com.edutech.insurance_claims_processing_system.repository.AdjusterRepository;
 import com.edutech.insurance_claims_processing_system.repository.ClaimRepository;
 import com.edutech.insurance_claims_processing_system.repository.PolicyholderRepository;
 import com.edutech.insurance_claims_processing_system.repository.UnderwriterRepository;
@@ -69,16 +21,17 @@ public class ClaimService {
     private final ClaimRepository claimRepository;
     private final PolicyholderRepository policyholderRepository;
     private final UnderwriterRepository underwriterRepository;
+    private final AdjusterRepository adjusterRepository;
 
     @Autowired
     public ClaimService(
             ClaimRepository claimRepository,
             PolicyholderRepository policyholderRepository,
-            UnderwriterRepository underwriterRepository
-    ) {
+            UnderwriterRepository underwriterRepository, AdjusterRepository adjusterRepository) {
         this.claimRepository = claimRepository;
         this.policyholderRepository = policyholderRepository;
         this.underwriterRepository = underwriterRepository;
+        this.adjusterRepository = adjusterRepository;
     }
 
     public Claim createClaim(Claim claim) {
@@ -128,14 +81,18 @@ public class ClaimService {
         return claimRepository.findByUnderwriter(underwriter);
     }
 
-    public Claim assignClaimToUnderwriter(Long claimId, Long underwriterId) {
+    public Claim assignClaimToUnderwriter(Long claimId, Long underwriterId, Long adjusterId) {
         Claim claim = claimRepository.findById(claimId)
                 .orElseThrow(() -> new EntityNotFoundException("Claim not found"));
 
         Underwriter underwriter = underwriterRepository.findById(underwriterId)
                 .orElseThrow(() -> new EntityNotFoundException("Underwriter not found"));
 
+        Adjuster adjuster = adjusterRepository.findById(adjusterId)
+                .orElseThrow(() -> new EntityNotFoundException("Adjuster not found"));
+        claim.setStatus("In progress");
         claim.setUnderwriter(underwriter);
+        claim.setAdjuster(adjuster);
         return claimRepository.save(claim);
     }
 }

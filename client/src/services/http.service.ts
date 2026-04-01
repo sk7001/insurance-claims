@@ -99,7 +99,7 @@ export class HttpService {
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
     headers = headers.set('Authorization', `Bearer ${authToken}`);
-    return this.http.put(this.serverName + '/api/adjuster/claim/' + details.claimId + ' /assign?underwriterId=' + details.underwriterId, details, { headers: headers });
+    return this.http.put(this.serverName + '/api/adjuster/claim/' + details.claimId + '/assign?underwriterId=' + details.underwriterId + '&adjusterId=' + localStorage.getItem('userId'), details, { headers: headers });
   }
 
   Login(details: any): Observable<any> {
