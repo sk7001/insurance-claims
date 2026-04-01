@@ -1,0 +1,47 @@
+
+.page {
+  padding: 30px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 26px;
+  margin-bottom: 25px;
+}
+
+.form-card {
+  max-width: 450px;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+label {
+  font-size: 14px;
+  color: #374151;
+}
+
+input, textarea {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+}
+
+button {
+  margin-top: 10px;
+  padding: 12px;
+  background: #0071e3;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+}
