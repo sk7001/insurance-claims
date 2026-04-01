@@ -1,1 +1,27 @@
-<!--Enter your code here-->
+create claim component.html
+
+
+<div class="page">
+  <h1 class="page-title">Create Claim</h1>
+
+  <div class="card form-card">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+      <label>Description</label>
+      <textarea rows="4" placeholder="Describe the incident" formControlName="description"></textarea>
+
+      <label>Incident Date</label>
+      <input type="date" formControlName="date">
+
+      <!-- <select formControlName="status">
+        <option value="Created">Created</option>
+        <option value="Created">In progress</option>
+        <option value="Created">Resolved</option>
+      </select> -->
+      <button>Create Claim</button>
+    </form>
+
+    <p *ngIf="showMessage">{{responseMessage}}</p>
+    <p *ngIf="showError">{{errorMessage}}</p>
+  </div>
+</div>
+
