@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class CreateClaimComponent {
 
   itemForm: FormGroup;
-  formModel: any = { description: '', date: '', status: '' };
+  formModel: any = { description: '', date: '', status: 'Created' };
   showError = false;
   errorMessage: any;
   claimList: any[] = [];
@@ -29,7 +29,7 @@ export class CreateClaimComponent {
     this.itemForm = this.formBuilder.group({
       description: ['', Validators.required],
       date: ['', Validators.required],
-      status: ['', Validators.required]
+      status: ['Status', Validators.required]
     });
   }
 
@@ -67,6 +67,8 @@ export class CreateClaimComponent {
           this.getClaims();
           this.showMessage = true;
           this.responseMessage = "Claim created successfully";
+          alert("Claim created successfully");
+          this.router.navigateByUrl('/view-claim-status');
         },
         error: (err) => {
           this.showError = true;

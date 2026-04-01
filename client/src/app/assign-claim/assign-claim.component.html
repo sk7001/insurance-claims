@@ -1,3 +1,5 @@
+<app-navbar></app-navbar>
+
 <div class="page">
   <h1 class="page-title">Assign Claim</h1>
 
@@ -9,16 +11,13 @@
       <label for="claimId">Claim</label>
       <select id="claimId" formControlName="claimId">
         <option value="">Select Claim</option>
-        <option
-          *ngFor="let claim of claimList"
-          [value]="claim.id">
+        <option *ngFor="let claim of claimList" [value]="claim.id">
           {{ claim.id }} - {{ claim.description }} - {{ claim.date | date }}
         </option>
       </select>
 
       <!-- Validation Message -->
-      <div class="error"
-           *ngIf="itemForm.get('claimId')?.invalid && showError">
+      <div class="error" *ngIf="itemForm.get('claimId')?.invalid && showError">
         Claim is required
       </div>
 
@@ -26,16 +25,13 @@
       <label for="underwriterId">Underwriter</label>
       <select id="underwriterId" formControlName="underwriterId">
         <option value="">Select Underwriter</option>
-        <option
-          *ngFor="let underwriter of underwriterList"
-          [value]="underwriter.id">
+        <option *ngFor="let underwriter of underwriterList" [value]="underwriter.id">
           {{ underwriter.id }} - {{ underwriter.username }} - {{ underwriter.email }}
         </option>
       </select>
 
       <!-- Validation Message -->
-      <div class="error"
-           *ngIf="itemForm.get('underwriterId')?.invalid && showError">
+      <div class="error" *ngIf="itemForm.get('underwriterId')?.invalid && showError">
         Underwriter is required
       </div>
 

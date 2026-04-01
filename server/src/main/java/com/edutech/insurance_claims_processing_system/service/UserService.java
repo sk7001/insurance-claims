@@ -45,10 +45,10 @@ public class UserService implements UserDetailsService {
         }
 
         if (userRepository.existsByUsername(user.getUsername())) {
-            throw new IllegalArgumentException("User with username " + user.getUsername() + " already exists");
+            throw new IllegalArgumentException("User with same username exists");
         }
         if (userRepository.existsByEmail(user.getEmail())) {
-            throw new IllegalArgumentException("User with email " + user.getEmail() + " already exists");
+            throw new IllegalArgumentException("User with same email exists");
         }
 
         switch (user.getRole().toUpperCase()) {

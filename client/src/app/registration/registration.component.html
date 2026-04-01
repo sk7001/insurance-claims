@@ -3,10 +3,6 @@
 
     <h2>Create Account</h2>
 
-    <p class="server-message" [class.error]="isError" [class.success]="!isError" *ngIf="showMessage">
-      {{ responseMessage }}
-    </p>
-
     <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
 
       <div class="input-group">
@@ -63,6 +59,10 @@
       <button type="submit" [disabled]="itemForm.invalid">
         Create Account
       </button>
+
+      <p class="server-message" [class.error]="isError" [class.success]="!isError" *ngIf="showMessage">
+        {{ responseMessage }}
+      </p>
 
     </form>
 

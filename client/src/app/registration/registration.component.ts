@@ -46,8 +46,10 @@ export class RegistrationComponent implements OnInit {
       next: () => {
         this.showMessage = true;
         this.isError = false;
-        this.responseMessage = 'Registered successfully';
+        this.responseMessage = 'User registered successfully';
+        alert('User registered successfully');
         this.itemForm.reset();
+        this.router.navigateByUrl('/login');
       },
       error: (error) => {
         this.showMessage = true;

@@ -1,0 +1,27 @@
+<app-navbar></app-navbar>
+<div class="page">
+  <h1 class="page-title">View Claim Status</h1>
+
+  <p *ngIf="showError">{{errorMessage}}</p>
+
+  <div class="card table-card">
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of claimList">
+          <td>{{ claim.id }}</td>
+          <td>{{ claim.description }}</td>
+          <td>{{ claim.status }}</td>
+          <td>{{ claim.date.toString() }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
