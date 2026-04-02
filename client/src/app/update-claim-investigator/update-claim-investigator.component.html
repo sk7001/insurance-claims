@@ -28,8 +28,17 @@
             {{ claim.description }}
           </td>
 
+          <!-- ✅ STATUS PILL (COLOR MATCHED) -->
           <td>
-            <span class="status-tag">
+            <span
+              class="status-tag"
+              [ngClass]="{
+                'status-approved': claim.status === 'Approved',
+                'status-rejected': claim.status === 'Rejected',
+                'status-inprogress': claim.status === 'In progress',
+                'status-initiated': claim.status === 'Initiated'
+              }"
+            >
               {{ claim.status }}
             </span>
           </td>
@@ -44,13 +53,15 @@
           <td class="actions">
             <button
               class="action-btn approve"
-              (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
+              (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()"
+            >
               Approve
             </button>
 
             <button
               class="action-btn reject"
-              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
+              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()"
+            >
               Reject
             </button>
           </td>

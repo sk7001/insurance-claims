@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
         },
         error: (error) => {
           this.showError = true;
-          this.errorMessage = "Error logging in";
+          this.errorMessage = "Invalid username and password";
           return;
         }
       });

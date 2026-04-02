@@ -10,7 +10,6 @@ $error: #e63946;
   margin-left: 250px;
   padding: 30px;
   background: linear-gradient(120deg, #f7f9fe, #ffffff);
-
   scrollbar-width: none;
   -ms-overflow-style: none;
   animation: fadeSlide 0.45s ease both;
@@ -18,7 +17,6 @@ $error: #e63946;
 
 .page::-webkit-scrollbar {
   width: 0;
-  background: transparent;
 }
 
 /* ======================
@@ -63,13 +61,12 @@ th {
   text-align: left;
 }
 
-/* Center Action header */
 th.action-header {
   text-align: center;
 }
 
 /* ======================
-   ROW DIVIDER (FIXED ✅)
+   ROW DIVIDER
 ====================== */
 tbody tr {
   position: relative;
@@ -91,7 +88,7 @@ tbody tr:hover {
 }
 
 /* ======================
-   STATUS TAG
+   ✅ STATUS PILL (FINAL)
 ====================== */
 .status-tag {
   display: inline-block;
@@ -99,13 +96,35 @@ tbody tr:hover {
   border-radius: 999px;
   font-size: 12px;
   font-weight: 600;
-  background: rgba(0, 113, 227, 0.1);
-  color: #0071e3;
   animation: fadeUp 0.4s ease both;
 }
 
+/* Approved */
+.status-approved {
+  background: rgba(34, 197, 94, 0.15);
+  color: #15803d;
+}
+
+/* Rejected */
+.status-rejected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #b91c1c;
+}
+
+/* In Progress */
+.status-inprogress {
+  background: rgba(202, 138, 4, 0.15);
+  color: #92400e;
+}
+
+/* Initiated */
+.status-initiated {
+  background: rgba(0, 113, 227, 0.15);
+  color: #0071e3;
+}
+
 /* ======================
-   POLICYHOLDER INFO
+   POLICYHOLDER
 ====================== */
 .muted {
   font-size: 12px;
@@ -133,11 +152,9 @@ td.actions {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
   transition: 0.25s;
 }
 
@@ -163,7 +180,6 @@ td.actions {
   color: white;
 }
 
-/* Button press */
 button:active {
   transform: scale(0.96);
 }

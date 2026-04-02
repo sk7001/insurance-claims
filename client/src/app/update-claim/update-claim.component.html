@@ -25,8 +25,17 @@
 
           <td>{{ claim.description }}</td>
 
+          <!-- ✅ STATUS PILL (MATCHES VIEW CLAIM STATUS) -->
           <td>
-            <span class="status">
+            <span
+              class="status-tag"
+              [ngClass]="{
+                'status-approved': claim.status === 'Approved',
+                'status-rejected': claim.status === 'Rejected',
+                'status-inprogress': claim.status === 'In progress',
+                'status-initiated': claim.status === 'Initiated'
+              }"
+            >
               {{ claim.status }}
             </span>
           </td>
@@ -56,7 +65,11 @@
   </div>
 
   <!-- UPDATE FORM -->
-  <div class="form-card update-form" [class.hide]="closing" *ngIf="updatedId || closing">
+  <div
+    class="form-card update-form"
+    [class.hide]="closing"
+    *ngIf="updatedId || closing"
+  >
     <h2>Update Claim</h2>
 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
@@ -76,13 +89,16 @@
         <input type="text" formControlName="status" />
       </div>
 
-      <!-- ACTION BUTTONS -->
       <div class="action-buttons">
         <button type="submit" class="success-btn">
           Save Changes
         </button>
 
-        <button type="button" class="cancel-btn" (click)="cancelUpdate()">
+        <button
+          type="button"
+          class="cancel-btn"
+          (click)="cancelUpdate()"
+        >
           Cancel
         </button>
       </div>
@@ -92,6 +108,6 @@
     <div *ngIf="showError" class="error-box">
       {{ errorMessage || 'Failed to update claim' }}
     </div>
-
   </div>
+
 </div>
