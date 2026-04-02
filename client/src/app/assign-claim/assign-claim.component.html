@@ -1,1 +1,60 @@
-<!--Enter your code here-->
+<app-navbar></app-navbar>
+
+<div class="page">
+
+  <h1 class="page-title">Assign Claim</h1>
+
+  <div class="form-card">
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+      <!-- Claim -->
+      <div class="form-group">
+        <label for="claimId">Claim</label>
+        <select id="claimId" formControlName="claimId">
+          <option value="">Select Claim</option>
+          <option *ngFor="let claim of claimList" [value]="claim.id">
+            {{ claim.id }} - {{ claim.description }} - {{ claim.date | date }}
+          </option>
+        </select>
+
+        <span class="error"
+          *ngIf="itemForm.get('claimId')?.invalid && showError">
+          Claim is required
+        </span>
+      </div>
+
+      <!-- Underwriter -->
+      <div class="form-group">
+        <label for="underwriterId">Underwriter</label>
+        <select id="underwriterId" formControlName="underwriterId">
+          <option value="">Select Underwriter</option>
+          <option *ngFor="let underwriter of underwriterList" [value]="underwriter.id">
+            {{ underwriter.id }} - {{ underwriter.username }} - {{ underwriter.email }}
+          </option>
+        </select>
+
+        <span class="error"
+          *ngIf="itemForm.get('underwriterId')?.invalid && showError">
+          Underwriter is required
+        </span>
+      </div>
+
+      <!-- Submit -->
+      <button type="submit">
+        Assign Claim
+      </button>
+
+    </form>
+
+    <!-- Messages -->
+    <p class="success-message" *ngIf="showMessage">
+      {{ responseMessage }}
+    </p>
+
+    <p class="error-message" *ngIf="errorMessage && showError">
+      {{ responseMessage }}
+    </p>
+
+  </div>
+</div>

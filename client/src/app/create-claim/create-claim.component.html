@@ -1,1 +1,47 @@
-<!--Enter your code here-->
+<app-navbar></app-navbar>
+
+<div class="page">
+
+  <h1 class="page-title">Create Claim</h1>
+
+  <div class="form-card">
+
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
+
+      <!-- DESCRIPTION -->
+      <div class="form-group">
+        <label>Description</label>
+        <textarea
+          rows="4"
+          placeholder="Describe the incident"
+          formControlName="description">
+        </textarea>
+      </div>
+
+      <!-- INCIDENT DATE -->
+      <div class="form-group">
+        <label>Incident Date</label>
+        <input type="date" formControlName="date">
+      </div>
+
+      <!-- STATUS (hidden) -->
+      <input type="text" formControlName="status" value="Created" hidden>
+
+      <!-- ACTION -->
+      <button type="submit">
+        Create Claim
+      </button>
+
+    </form>
+
+    <!-- MESSAGES -->
+    <p class="success-message" *ngIf="showMessage">
+      {{ responseMessage }}
+    </p>
+
+    <p class="error-message" *ngIf="showError">
+      {{ errorMessage }}
+    </p>
+
+  </div>
+</div>
