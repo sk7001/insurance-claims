@@ -1,10 +1,15 @@
 <app-navbar></app-navbar>
+
 <div class="page">
+
   <h1 class="page-title">View Claim Status</h1>
 
-  <p *ngIf="showError">{{errorMessage}}</p>
+  <p class="error-message" *ngIf="showError">
+    {{ errorMessage }}
+  </p>
 
-  <div class="card table-card">
+  <div class="table-card">
+
     <table>
       <thead>
         <tr>
@@ -17,11 +22,22 @@
 
       <tbody>
         <tr *ngFor="let claim of claimList">
-          <td>{{ claim.id }}</td>
+
+          <td><strong>#{{ claim.id }}</strong></td>
+
           <td>{{ claim.description }}</td>
-          <td>{{ claim.status }}</td>
-          <td>{{ claim.date.toString() }}</td>
+
+          <td>
+            <span class="status-tag">
+              {{ claim.status }}
+            </span>
+          </td>
+
+          <td>{{ claim.date | date }}</td>
+
         </tr>
       </tbody>
     </table>
+
   </div>
+</div>

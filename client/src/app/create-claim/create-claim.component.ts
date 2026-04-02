@@ -13,7 +13,7 @@ import { AuthService } from '../../services/auth.service';
 export class CreateClaimComponent {
 
   itemForm: FormGroup;
-  formModel: any = { description: '', date: '', status: 'Created' };
+  formModel: any = { description: '', date: '', status: '' };
   showError = false;
   errorMessage: any;
   claimList: any[] = [];
@@ -29,7 +29,7 @@ export class CreateClaimComponent {
     this.itemForm = this.formBuilder.group({
       description: ['', Validators.required],
       date: ['', Validators.required],
-      status: ['Status', Validators.required]
+      status: ['Initiated', Validators.required]
     });
   }
 

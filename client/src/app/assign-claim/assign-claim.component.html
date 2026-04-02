@@ -4,52 +4,57 @@
 
   <h1 class="page-title">Assign Claim</h1>
 
-  <div class="card form-card">
+  <div class="form-card">
 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
 
-      <!-- Claim Dropdown -->
-      <label for="claimId">Claim</label>
-      <select id="claimId" formControlName="claimId">
-        <option value="">Select Claim</option>
-        <option *ngFor="let claim of claimList" [value]="claim.id">
-          {{ claim.id }} - {{ claim.description }} - {{ claim.date | date }}
-        </option>
-      </select>
+      <!-- Claim -->
+      <div class="form-group">
+        <label for="claimId">Claim</label>
+        <select id="claimId" formControlName="claimId">
+          <option value="">Select Claim</option>
+          <option *ngFor="let claim of claimList" [value]="claim.id">
+            {{ claim.id }} - {{ claim.description }} - {{ claim.date | date }}
+          </option>
+        </select>
 
-      <!-- Validation Message -->
-      <div class="error" *ngIf="itemForm.get('claimId')?.invalid && showError">
-        Claim is required
+        <span class="error"
+          *ngIf="itemForm.get('claimId')?.invalid && showError">
+          Claim is required
+        </span>
       </div>
 
-      <!-- Underwriter Dropdown -->
-      <label for="underwriterId">Underwriter</label>
-      <select id="underwriterId" formControlName="underwriterId">
-        <option value="">Select Underwriter</option>
-        <option *ngFor="let underwriter of underwriterList" [value]="underwriter.id">
-          {{ underwriter.id }} - {{ underwriter.username }} - {{ underwriter.email }}
-        </option>
-      </select>
+      <!-- Underwriter -->
+      <div class="form-group">
+        <label for="underwriterId">Underwriter</label>
+        <select id="underwriterId" formControlName="underwriterId">
+          <option value="">Select Underwriter</option>
+          <option *ngFor="let underwriter of underwriterList" [value]="underwriter.id">
+            {{ underwriter.id }} - {{ underwriter.username }} - {{ underwriter.email }}
+          </option>
+        </select>
 
-      <!-- Validation Message -->
-      <div class="error" *ngIf="itemForm.get('underwriterId')?.invalid && showError">
-        Underwriter is required
+        <span class="error"
+          *ngIf="itemForm.get('underwriterId')?.invalid && showError">
+          Underwriter is required
+        </span>
       </div>
 
-      <!-- Submit Button -->
-      <button type="submit">Assign</button>
+      <!-- Submit -->
+      <button type="submit">
+        Assign Claim
+      </button>
 
     </form>
 
-    <!-- Success Message -->
-    <div class="success-message" *ngIf="showMessage">
+    <!-- Messages -->
+    <p class="success-message" *ngIf="showMessage">
       {{ responseMessage }}
-    </div>
+    </p>
 
-    <!-- Error Message -->
-    <div class="error-message" *ngIf="errorMessage && showError">
+    <p class="error-message" *ngIf="errorMessage && showError">
       {{ responseMessage }}
-    </div>
+    </p>
 
   </div>
 </div>

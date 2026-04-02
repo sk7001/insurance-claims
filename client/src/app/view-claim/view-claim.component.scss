@@ -1,37 +1,163 @@
+$accent: #0071e3;
+$error: #e63946;
+
+/* ======================
+   PAGE
+====================== */
 .page {
-  padding: 30px;
-  background: #ffffff;
   min-height: 100vh;
   margin-left: 250px;
-  padding: 20px;
+  padding: 30px;
+  background: linear-gradient(120deg, #f7f9fe, #ffffff);
+
+  animation: pageFade 0.45s ease both;
 }
 
+/* ======================
+   TITLE
+====================== */
 .page-title {
-  font-size: 26px;
-  margin-bottom: 24px;
+  font-size: 28px;
+  margin-bottom: 28px;
   text-align: center;
+  color: #1d1d1f;
+
+  animation: titleSlide 0.4s ease both;
 }
 
+/* ======================
+   CARD
+====================== */
 .table-card {
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  padding: 24px;
+  border-radius: 22px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+
+  animation: cardFloat 0.55s ease both;
 }
 
-.success {
-  background: #16a34a;
-  color: white;
+/* ======================
+   TABLE
+====================== */
+table {
+  width: 100%;
+  border-collapse: collapse;
 }
 
-.danger {
-  background: #dc2626;
-  color: white;
+th,
+td {
+  padding: 14px;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
-button {
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: none;
-  margin-right: 5px;
+th {
+  text-align: left;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+/* Row enter animation */
+tbody tr {
+  animation: rowFade 0.35s ease both;
+}
+
+tbody tr:hover {
+  background: rgba(0, 113, 227, 0.05);
+}
+
+/* ======================
+   STATUS TAG (PILL)
+====================== */
+.status-tag {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background-color: rgba(0, 113, 227, 0.1);
+  color: #0071e3;
+
+  animation: fadeUp 0.4s ease both;
+}
+
+/* ======================
+   ERROR
+====================== */
+.error-message {
+  margin-bottom: 16px;
+  text-align: center;
+  color: $error;
+  font-weight: 500;
+
+  animation: shake 0.3s ease;
+}
+
+/* ======================
+   ANIMATIONS
+====================== */
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes titleSlide {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardFloat {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes rowFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
 }

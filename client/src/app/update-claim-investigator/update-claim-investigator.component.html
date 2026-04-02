@@ -1,44 +1,69 @@
 <app-navbar></app-navbar>
 
 <div class="page">
+
   <h1 class="page-title">Review Claims</h1>
 
-  <div class="card table-card">
+  <div class="table-card">
 
     <table>
       <thead>
         <tr>
           <th>Claim ID</th>
           <th>Description</th>
-          <th>Current Status</th>
+          <th>Status</th>
           <th>Policyholder</th>
-          <th>Action</th>
+          <th class="action-header">Action</th>
         </tr>
       </thead>
 
       <tbody>
         <tr *ngFor="let claim of claimList">
-          <td>{{ claim.id }}</td>
-          <td>{{ claim.description }}</td>
-          <td>{{ claim.status }}</td>
-          <td> {{claim.policyholder.id}} - {{claim.policyholder.username}} - {{claim.policyholder.email}} </td>
+
           <td>
-            <button class="small success"
+            <strong>#{{ claim.id }}</strong>
+          </td>
+
+          <td>
+            {{ claim.description }}
+          </td>
+
+          <td>
+            <span class="status-tag">
+              {{ claim.status }}
+            </span>
+          </td>
+
+          <td>
+            {{ claim.policyholder.username }}
+            <div class="muted">
+              {{ claim.policyholder.email }}
+            </div>
+          </td>
+
+          <td class="actions">
+            <button
+              class="action-btn approve"
               (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
               Approve
             </button>
 
-            <button class="small danger" (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
+            <button
+              class="action-btn reject"
+              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
               Reject
             </button>
           </td>
+
         </tr>
       </tbody>
     </table>
 
-    <div *ngIf="showError" class="error">
+    <!-- ERROR MESSAGE -->
+    <div *ngIf="showError" class="error-box">
       {{ errorMessage || 'Something went wrong' }}
     </div>
 
   </div>
+
 </div>
