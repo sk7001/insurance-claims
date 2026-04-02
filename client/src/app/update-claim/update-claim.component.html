@@ -1,8 +1,11 @@
 <app-navbar></app-navbar>
+
 <div class="page">
+
   <h1 class="page-title">Update Claims</h1>
 
-  <div class="card table-card">
+  <!-- TABLE CARD -->
+  <div class="table-card">
     <table>
       <thead>
         <tr>
@@ -17,51 +20,78 @@
 
       <tbody>
         <tr *ngFor="let claim of claimList">
-          <td>{{ claim.id }}</td>
+
+          <td><strong>#{{ claim.id }}</strong></td>
+
           <td>{{ claim.description }}</td>
-          <td>{{ claim.status }}</td>
-          <td>{{ claim.date.toString() }}</td>
+
           <td>
-            <div *ngIf="claim.underwriter; else noUnderwriter">
-              {{ claim.underwriter.id }} -
-              {{ claim.underwriter.username }} -
-              {{ claim.underwriter.email }}
-            </div>
+            <span class="status">
+              {{ claim.status }}
+            </span>
+          </td>
+
+          <td>{{ claim.date | date }}</td>
+
+          <td>
+            <ng-container *ngIf="claim.underwriter; else noUnderwriter">
+              {{ claim.underwriter.username }}
+              <div class="muted">{{ claim.underwriter.email }}</div>
+            </ng-container>
 
             <ng-template #noUnderwriter>
-              <div class="no-underwriter">No underwriter</div>
+              <span class="no-underwriter">Not Assigned</span>
             </ng-template>
-          <td>
+          </td>
 
-            <button class="small" (click)="edit(claim)">
+          <td>
+            <button class="small-btn" (click)="edit(claim)">
               Update
             </button>
           </td>
+
         </tr>
       </tbody>
     </table>
   </div>
 
-  <div class="card form-card" *ngIf="updatedId">
+  <!-- UPDATE FORM -->
+  <div class="form-card update-form" [class.hide]="closing" *ngIf="updatedId || closing">
     <h2>Update Claim</h2>
 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
 
-      <label>Description</label>
-      <input type="text" formControlName="description" />
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" formControlName="description" />
+      </div>
 
-      <label>Date</label>
-      <input type="date" formControlName="date" />
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" formControlName="date" />
+      </div>
 
-      <label>Status</label>
-      <input type="text" formControlName="status">
+      <div class="form-group">
+        <label>Status</label>
+        <input type="text" formControlName="status" />
+      </div>
 
-      <button type="submit" class="success">Save Changes</button>
+      <!-- ACTION BUTTONS -->
+      <div class="action-buttons">
+        <button type="submit" class="success-btn">
+          Save Changes
+        </button>
+
+        <button type="button" class="cancel-btn" (click)="cancelUpdate()">
+          Cancel
+        </button>
+      </div>
 
     </form>
 
-    <div *ngIf="showError" class="error">
+    <div *ngIf="showError" class="error-box">
       {{ errorMessage || 'Failed to update claim' }}
     </div>
+
   </div>
 </div>

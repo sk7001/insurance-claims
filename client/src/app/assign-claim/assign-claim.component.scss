@@ -1,43 +1,185 @@
+$accent: #0071e3;
+$error: #e63946;
+$success: #2ecc71;
+
+/* ======================
+   PAGE
+====================== */
 .page {
-  padding: 30px;
-  background: #ffffff;
   min-height: 100vh;
   margin-left: 250px;
-  padding: 20px;
+  padding: 30px;
+  background: #f9fafb;
+
+  animation: pageFade 0.45s ease both;
 }
 
+/* ======================
+   TITLE
+====================== */
 .page-title {
   font-size: 26px;
-  margin-bottom: 24px;
+  margin-bottom: 28px;
   text-align: center;
+  color: #1d1d1f;
 }
 
+/* ======================
+   CARD
+====================== */
 .form-card {
   width: 420px;
-  padding: 30px;
-  border-radius: 18px;
-  background: #ffffff;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
   margin: 0 auto;
+  padding: 32px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+
+  animation: cardIn 0.55s ease both;
 }
 
+/* ======================
+   FORM
+====================== */
 form {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 18px;
 }
 
-input,
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+}
+
+/* ======================
+   INPUTS
+====================== */
 select {
   padding: 12px;
-  border-radius: 10px;
+  border-radius: 12px;
   border: 1px solid #d1d5db;
+  font-size: 14px;
+  background: #fff;
+  transition: all 0.3s ease;
+
+  cursor: pointer;
 }
 
+select:focus {
+  outline: none;
+  border-color: $accent;
+  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+  animation: focusPulse 0.35s ease;
+}
+
+/* ======================
+   BUTTON
+====================== */
 button {
-  padding: 12px;
-  background: #0071e3;
-  color: white;
+  margin-top: 10px;
+  padding: 14px;
+  border-radius: 14px;
   border: none;
-  border-radius: 10px;
+  background: linear-gradient(135deg, #0071e3, #005ecb);
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 10px 30px rgba(0, 113, 227, 0.4);
+}
+
+button:active {
+  transform: scale(0.96);
+}
+
+/* ======================
+   ERRORS & MESSAGES
+====================== */
+.error {
+  color: $error;
+  font-size: 12px;
+  animation: shake 0.3s ease;
+}
+
+.success-message {
+  margin-top: 16px;
+  color: $success;
+  text-align: center;
+  font-size: 14px;
+  animation: successFade 0.4s ease both;
+}
+
+.error-message {
+  margin-top: 16px;
+  color: $error;
+  text-align: center;
+  font-size: 14px;
+  animation: shake 0.3s ease;
+}
+
+/* ======================
+   ANIMATIONS
+====================== */
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cardIn {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes focusPulse {
+  from {
+    box-shadow: 0 0 0 0 rgba(0,113,227,0.35);
+  }
+  to {
+    box-shadow: 0 0 0 6px rgba(0,113,227,0);
+  }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes successFade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

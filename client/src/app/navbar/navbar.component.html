@@ -1,63 +1,64 @@
-<nav class="sidebar bg-dark">
-  <div class="sidebar-header text-white px-3 py-3">
-    <h5>Insurance Claims</h5>
+<nav class="app-sidebar">
+
+  <!-- TOP SECTION -->
+  <div class="sidebar-top">
+
+    <div class="sidebar-header">
+      <h5>Insurance Claims</h5>
+    </div>
+
+    <ul class="sidebar-menu">
+
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active">
+          Dashboard
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'POLICYHOLDER'">
+        <a routerLink="/create-claim" routerLinkActive="active">
+          Create Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'ADJUSTER'">
+        <a routerLink="/assign-claim" routerLinkActive="active">
+          Assign Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'ADJUSTER'">
+        <a routerLink="/update-claim" routerLinkActive="active">
+          Get & Update Claims
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'INVESTIGATOR'">
+        <a routerLink="/create-investigator" routerLinkActive="active">
+          Investigator
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'UNDERWRITER'">
+        <a routerLink="/update-claim-investigator" routerLinkActive="active">
+          Update Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'POLICYHOLDER'">
+        <a routerLink="/view-claim-status" routerLinkActive="active">
+          View Claim Status
+        </a>
+      </li>
+
+    </ul>
   </div>
 
-  <ul class="nav flex-column px-2">
+  <!-- ✅ BOTTOM SECTION -->
+  <div class="sidebar-bottom" *ngIf="IsLoggin">
+    <a (click)="logout()" routerLink="/login" class="logout-btn">
+      Logout
+    </a>
+  </div>
 
-    <li class="nav-item">
-      <a class="nav-link" [routerLink]="['/dashboard']">
-        Dashboard
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'POLICYHOLDER'" [routerLink]="['/create-claim']">
-        Create Claim
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'ADJUSTER'" [routerLink]="['/assign-claim']">
-        Assign Claim
-      </a>
-    </li>
-    
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'ADJUSTER'" [routerLink]="['/update-claim']">
-        Get & Update Claims
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'INVESTIGATOR'" [routerLink]="['/create-investigator']">
-        Investigator
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'UNDERWRITER'" [routerLink]="['/update-claim-investigator']">
-        Update Claim
-      </a>
-    </li>
-
-    <li class="nav-item">
-      <a class="nav-link" *ngIf="roleName === 'POLICYHOLDER'" [routerLink]="['/view-claim-status']">
-        View Claim Status
-      </a>
-    </li>
-
-    <hr class="text-secondary">
-
-    <li class="nav-item" *ngIf="!IsLoggin">
-      <a class="nav-link" [routerLink]="['/login']">Login</a>
-    </li>
-
-    <li class="nav-item" *ngIf="IsLoggin">
-      <a class="nav-link" (click)="logout()" [routerLink]="['/login']">
-        Logout
-      </a>
-    </li>
-
-  </ul>
 </nav>

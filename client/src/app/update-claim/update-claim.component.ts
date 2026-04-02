@@ -20,6 +20,7 @@ export class UpdateClaimComponent implements OnInit {
   assignModel: any = {};
   showMessage: any;
   responseMessage: any;
+  closing = false;
   updatedId: number | null = null;
   constructor(
     public router: Router,
@@ -94,6 +95,17 @@ export class UpdateClaimComponent implements OnInit {
         this.errorMessage = err;
       }
     });
+  }
+
+  cancelUpdate() {
+    this.closing = true;
+
+    setTimeout(() => {
+      this.updatedId = null;
+      this.itemForm.reset();
+      this.showError = false;
+      this.closing = false;
+    }, 300); // match CSS animation duration
   }
 }
 
