@@ -23,21 +23,36 @@
       <tbody>
         <tr *ngFor="let claim of claimList">
 
-          <td><strong>#{{ claim.id }}</strong></td>
-
-          <td>{{ claim.description }}</td>
+          <td>
+            <strong>#{{ claim.id }}</strong>
+          </td>
 
           <td>
-            <span class="status-tag">
+            {{ claim.description }}
+          </td>
+
+          <td>
+            <span
+              class="status-tag"
+              [ngClass]="{
+                'status-approved': claim.status === 'Approved',
+                'status-rejected': claim.status === 'Rejected',
+                'status-inprogress': claim.status === 'In progress',
+                'status-initiated': claim.status === 'Initiated'
+              }"
+            >
               {{ claim.status }}
             </span>
           </td>
 
-          <td>{{ claim.date | date }}</td>
+          <td>
+            {{ claim.date | date }}
+          </td>
 
         </tr>
       </tbody>
     </table>
 
   </div>
+
 </div>

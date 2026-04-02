@@ -25,11 +25,8 @@ const routes: Routes = [
   { path: 'assign-claim', component: AssignClaimComponent },
   { path: 'create-investigator', component: CreateInvestigatorComponent },
   { path: 'update-claim-investigator', component: UpdateClaimInvestigatorComponent },
-
   { path: 'view-claim-status', component: ViewClaimComponent },
-
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
-
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 ];
 
