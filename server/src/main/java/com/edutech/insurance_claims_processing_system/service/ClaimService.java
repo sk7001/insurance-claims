@@ -170,6 +170,7 @@ public class ClaimService {
                 "Dear " + claim.getPolicyholder().getUsername() + ",\n\n" +
                         "Your claim (ID: #" + claim.getId() + ") is now being reviewed.\n\n" +
                         "Assigned Underwriter: " + underwriter.getUsername() + "\n\n" +
+                        "Status:" + claim.getStatus() + "\n\n" +
                         "Regards,\nInsurance Claims Team"
         );
 
