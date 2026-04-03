@@ -20,6 +20,7 @@ export class UpdateClaimComponent implements OnInit {
   assignModel: any = {};
   showMessage: any;
   responseMessage: any;
+  closing = false;
   updatedId: number | null = null;
   constructor(
     public router: Router,
@@ -31,7 +32,7 @@ export class UpdateClaimComponent implements OnInit {
     this.itemForm = this.formBuilder.group({
       description: ['', Validators.required],
       date: ['', Validators.required],
-      status: [this.formModel.status, Validators.required],
+      status: [{ value: '', disabled: true }, Validators.required],
     });
   }
 
@@ -53,6 +54,7 @@ export class UpdateClaimComponent implements OnInit {
 
   edit(val: any) {
     this.updatedId = val.id;
+    console.log(val)
     this.assignModel = val;
     this.itemForm.patchValue({
       description: val.description,
@@ -86,12 +88,24 @@ export class UpdateClaimComponent implements OnInit {
         });
         this.updatedId = null;
         this.getClaims();
+        alert("Claim updated successfully");
       },
       error: (err) => {
         this.showError = true;
         this.errorMessage = err;
       }
     });
+  }
+
+  cancelUpdate() {
+    this.closing = true;
+
+    setTimeout(() => {
+      this.updatedId = null;
+      this.itemForm.reset();
+      this.showError = false;
+      this.closing = false;
+    }, 300); // match CSS animation duration
   }
 }
 

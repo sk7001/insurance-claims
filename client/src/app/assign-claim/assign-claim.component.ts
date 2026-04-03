@@ -50,6 +50,7 @@ export class AssignClaimComponent implements OnInit {
       next: () => {
         this.showMessage = true;
         this.responseMessage = 'Claim assigned successfully';
+        alert("Claim assigned successfully")
         this.itemForm.reset({
           claimId: null,
           underwriterId: null
@@ -98,6 +99,6 @@ export class AssignClaimComponent implements OnInit {
 
 
 
- 
-  
+
+
 

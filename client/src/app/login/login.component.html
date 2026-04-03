@@ -1,43 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
+<div class="bg-animation"></div>
 
-<head>
-  <meta charset="UTF-8">
-  <title>Login</title>
-  <link rel="stylesheet" href="/home/coder/app/client/src/app/login/login.component.scss">
-</head>
+<div class="auth-wrapper">
+  <div class="auth-card fade-in">
 
-<body>
+    <h3>Welcome Back</h3>
 
-  <div class="bg-animation"></div>
+    <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
 
-  <div class="auth-wrapper">
-    <div class="auth-card fade-in">
+      <!-- USERNAME -->
+      <div class="input-group">
+        <input
+          type="text"
+          formControlName="username"
+          required
+        />
+        <label>Username</label>
 
-      <h3>Welcome Back</h3>
+        <small class="error"
+          *ngIf="
+            itemForm.get('username')?.invalid &&
+            (itemForm.get('username')?.touched || itemForm.get('username')?.dirty)
+          ">
+          Username is required
+        </small>
+      </div>
 
-      <form [formGroup]="itemForm" (ngSubmit)="onLogin()">
-        <div class="input-group">
-          <input type="text" required formControlName="username">
-          <label>Username</label>
-        </div>
+      <!-- PASSWORD -->
+      <div class="input-group">
+        <input
+          type="password"
+          formControlName="password"
+          required
+        />
+        <label>Password</label>
 
-        <div class="input-group">
-          <input type="password" required formControlName="password">
-          <label>Password</label>
-        </div>
+        <small class="error"
+          *ngIf="
+            itemForm.get('password')?.invalid &&
+            (itemForm.get('password')?.touched || itemForm.get('password')?.dirty)
+          ">
+          Password is required
+        </small>
+      </div>
 
-        <button>Sign In</button>
-      </form>
+      <button type="submit" [disabled]="itemForm.invalid">
+        Sign In
+      </button>
+    </form>
 
-      <p class="switch">
-        Don’t have an account?
-        <a routerLink="/registration">Register →</a>
-      </p>
+    <p class="error center" *ngIf="showError">
+      {{ errorMessage }}
+    </p>
 
-    </div>
+    <p class="switch">
+      Don’t have an account?
+      <a routerLink="/registration">Register →</a>
+    </p>
+
   </div>
-
-</body>
-
-</html>
+</div>

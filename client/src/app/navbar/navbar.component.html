@@ -1,0 +1,64 @@
+<nav class="app-sidebar">
+
+  <!-- TOP SECTION -->
+  <div class="sidebar-top">
+
+    <div class="sidebar-header">
+      <h5>Insurance Claims</h5>
+    </div>
+
+    <ul class="sidebar-menu">
+
+      <li>
+        <a routerLink="/dashboard" routerLinkActive="active">
+          Dashboard
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'POLICYHOLDER'">
+        <a routerLink="/create-claim" routerLinkActive="active">
+          Create Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'ADJUSTER'">
+        <a routerLink="/assign-claim" routerLinkActive="active">
+          Assign Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'ADJUSTER'">
+        <a routerLink="/update-claim" routerLinkActive="active">
+          Get & Update Claims
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'INVESTIGATOR'">
+        <a routerLink="/create-investigator" routerLinkActive="active">
+          Investigator
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'UNDERWRITER'">
+        <a routerLink="/update-claim-investigator" routerLinkActive="active">
+          Update Claim
+        </a>
+      </li>
+
+      <li *ngIf="roleName === 'POLICYHOLDER'">
+        <a routerLink="/view-claim-status" routerLinkActive="active">
+          View Claim Status
+        </a>
+      </li>
+
+    </ul>
+  </div>
+
+  <!-- ✅ BOTTOM SECTION -->
+  <div class="sidebar-bottom" *ngIf="IsLoggin">
+    <a (click)="logout()" routerLink="/login" class="logout-btn">
+      Logout
+    </a>
+  </div>
+
+</nav>

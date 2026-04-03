@@ -12,7 +12,7 @@ import { HttpService } from '../../services/http.service';
 
 export class UpdateClaimInvestigatorComponent implements OnInit {
 
- 
+
   itemForm: FormGroup;
   formModel: any = { status: null };
   showError: boolean = false;
@@ -23,7 +23,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
   responseMessage: any;
   updateId: any;
 
-  
+
   constructor(
     public router: Router,
     public httpService: HttpService,
@@ -35,7 +35,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     });
   }
 
- 
+
   ngOnInit(): void {
     this.getClaims();
   }
@@ -56,7 +56,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
         this.errorMessage = err;
       }
     });
-  }  
+  }
 
   edit(val: any): void {
     this.updateId = val.id;
@@ -74,6 +74,9 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
           this.itemForm.reset();
           this.updateId = null;
           this.getClaims();
+          setTimeout(() => {
+            alert("Claim updated successfully");
+          }, 300);
         },
         error: (err) => {
           this.showError = true;

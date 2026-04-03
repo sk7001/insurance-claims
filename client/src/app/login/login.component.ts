@@ -25,7 +25,7 @@ export class LoginComponent implements OnInit {
   ) {
     this.itemForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', [Validators.required,Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]]
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]]
     });
   }
   ngOnInit(): void {

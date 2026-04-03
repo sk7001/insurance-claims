@@ -44,6 +44,13 @@ public class UserService implements UserDetailsService {
             throw new IllegalArgumentException("Role cannot be null");
         }
 
+        if (userRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("User with same username exists");
+        }
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("User with same email exists");
+        }
+
         switch (user.getRole().toUpperCase()) {
 
             case "POLICYHOLDER":

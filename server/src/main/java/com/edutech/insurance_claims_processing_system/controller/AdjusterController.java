@@ -41,8 +41,9 @@ public class AdjusterController {
     @PutMapping("/claim/{claimId}/assign")
     public ResponseEntity<Claim> assignClaimToUnderwriter(
             @PathVariable Long claimId,
-            @RequestParam Long underwriterId) {
-        Claim updated = claimService.assignClaimToUnderwriter(claimId, underwriterId);
+            @RequestParam Long underwriterId,
+            @RequestParam Long adjusterId) {
+        Claim updated = claimService.assignClaimToUnderwriter(claimId, underwriterId, adjusterId);
         return ResponseEntity.ok(updated);
     }
 }

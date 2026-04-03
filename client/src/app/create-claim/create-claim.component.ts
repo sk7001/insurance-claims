@@ -26,11 +26,11 @@ export class CreateClaimComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService
   ) {
-      this.itemForm = this.formBuilder.group({
-  description: ['', Validators.required],
-  date: ['', Validators.required],
-  status: ['', Validators.required]
-});
+    this.itemForm = this.formBuilder.group({
+      description: ['', Validators.required],
+      date: ['', Validators.required],
+      status: ['Initiated', Validators.required]
+    });
   }
 
 
@@ -67,6 +67,8 @@ export class CreateClaimComponent {
           this.getClaims();
           this.showMessage = true;
           this.responseMessage = "Claim created successfully";
+          alert("Claim created successfully");
+          this.router.navigateByUrl('/view-claim-status');
         },
         error: (err) => {
           this.showError = true;
