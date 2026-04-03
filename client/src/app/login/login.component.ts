@@ -5,8 +5,6 @@ import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
 import { response } from 'express';
 
-
-
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -27,14 +25,11 @@ export class LoginComponent implements OnInit {
   ) {
     this.itemForm = this.formBuilder.group({
       username: ['', Validators.required],
-      password: ['', Validators.required]
+      password: ['', [Validators.required, Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)]]
     });
   }
-
   ngOnInit(): void {
-
   }
-
   onLogin() {
     if (this.itemForm.valid) {
       this.httpService.Login(this.itemForm.value).subscribe({

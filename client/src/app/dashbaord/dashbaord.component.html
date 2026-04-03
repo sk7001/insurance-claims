@@ -1,6 +1,48 @@
+<app-navbar></app-navbar>
+
 <div class="page">
+
+  <!-- PAGE TITLE -->
   <h1 class="page-title">Dashboard</h1>
 
-  <p>{{role}}</p>
-  <p>{{userId}}</p>
+  <!-- STATS CARDS -->
+  <div class="stats-row">
+
+    <div class="stat-card">
+      <h3>Total Claims</h3>
+      <div class="number">{{ stats.total }}</div>
+    </div>
+
+    <div class="stat-card info">
+      <h3>Initiated</h3>
+      <div class="number">{{ stats.initiated }}</div>
+    </div>
+
+    <div class="stat-card warning">
+      <h3>In Progress</h3>
+      <div class="number">{{ stats.inProgress }}</div>
+    </div>
+
+    <div class="stat-card success">
+      <h3>Approved</h3>
+      <div class="number">{{ stats.approved }}</div>
+    </div>
+
+    <div class="stat-card danger">
+      <h3>Rejected</h3>
+      <div class="number">{{ stats.rejected }}</div>
+    </div>
+
+  </div>
+
+  <!-- SECTION TITLE -->
+  <h2 class="section-title" *ngIf="role === 'POLICYHOLDER'">
+    Your Claims
+  </h2>
+
+  <!-- CLAIMS VIEW WRAPPED CLEANLY -->
+  <div class="content-card" *ngIf="role === 'POLICYHOLDER'">
+    <app-view-claim></app-view-claim>
+  </div>
+
 </div>

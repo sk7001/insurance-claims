@@ -1,1 +1,69 @@
-<!--Enter your code here-->
+<app-navbar></app-navbar>
+
+<div class="page">
+
+  <h1 class="page-title">Review Claims</h1>
+
+  <div class="table-card">
+
+    <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Policyholder</th>
+          <th class="action-header">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of claimList">
+
+          <td>
+            <strong>#{{ claim.id }}</strong>
+          </td>
+
+          <td>
+            {{ claim.description }}
+          </td>
+
+          <td>
+            <span class="status-tag">
+              {{ claim.status }}
+            </span>
+          </td>
+
+          <td>
+            {{ claim.policyholder.username }}
+            <div class="muted">
+              {{ claim.policyholder.email }}
+            </div>
+          </td>
+
+          <td class="actions">
+            <button
+              class="action-btn approve"
+              (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
+              Approve
+            </button>
+
+            <button
+              class="action-btn reject"
+              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
+              Reject
+            </button>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- ERROR MESSAGE -->
+    <div *ngIf="showError" class="error-box">
+      {{ errorMessage || 'Something went wrong' }}
+    </div>
+
+  </div>
+
+</div>

@@ -1,72 +1,50 @@
-$bg1: #e8f0ff;
-$bg2: #ffffff;
 $accent: #0071e3;
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", sans-serif;
-}
-
-/*BACKGROUND ANIMATION */
-.bg-animation {
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(120deg, #e8f0ff, #ffffff, #f0f7ff);
-  background-size: 300% 300%;
-  animation: gradientMove 10s ease infinite;
-  z-index: -1;
-}
+$error: #e63946;
 
 @keyframes gradientMove {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
+  0% {
+    background-position: 0% 50%;
+  }
 
-/*TEXT */
-.hero-text {
-  text-align: center;
-  margin-top: 60px;
+  50% {
+    background-position: 100% 50%;
+  }
 
-  h1 {
-    font-size: 36px;
-    font-weight: 600;
-    color: #1d1d1f;
-    animation: fadeUp 1s ease;
-
-    span {
-      color: $accent;
-      animation: glowText 2s infinite alternate;
-    }
+  100% {
+    background-position: 0% 50%;
   }
 }
 
-@keyframes glowText {
-  from { text-shadow: 0 0 5px rgba(0,113,227,0.2); }
-  to { text-shadow: 0 0 20px rgba(0,113,227,0.6); }
+/* FULL PAGE BACKGROUND */
+.auth-wrapper {
+  min-height: 100vh;
+  background: linear-gradient(120deg, #e8f0ff, #ffffff, #f0f7ff);
+  background-size: 300% 300%;
+  animation: gradientMove 10s ease infinite;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* CARD */
-.auth-wrapper {
-  display: flex;
-  justify-content: center;
-  margin-top: 60px;
-}
-
 .auth-card {
-  width: 360px;
+  width: 380px;
   padding: 35px;
   border-radius: 22px;
-  background: rgba(255,255,255,0.7);
+  background: rgba(255, 255, 255, 0.75);
   backdrop-filter: blur(20px);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
   text-align: center;
+  animation: fadeUp 0.8s ease;
+
+  h2 {
+    margin-bottom: 22px;
+    color: #1d1d1f;
+  }
 }
 
-/*INPUT */
+/* INPUT GROUP */
 .input-group {
   position: relative;
   margin-bottom: 20px;
@@ -76,23 +54,24 @@ $accent: #0071e3;
     padding: 14px;
     border-radius: 12px;
     border: 1px solid #d2d2d7;
-    background: #ffffff; 
+    background: #fff;
+    font-size: 14px;
     outline: none;
     transition: 0.3s;
+  }
 
-    &:focus {
-      border-color: $accent;
-      box-shadow: 0 0 0 4px rgba(0,113,227,0.15);
-    }
+  input:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+  }
 
-    &:focus + label,
-    &:valid + label {
-      top: -8px;
-      font-size: 12px;
-      color: $accent;
-      background: #fff;
-      padding: 0 5px;
-    }
+  input:focus+label,
+  input:not(:placeholder-shown)+label {
+    top: -8px;
+    font-size: 12px;
+    color: $accent;
+    background: #fff;
+    padding: 0 5px;
   }
 
   label {
@@ -101,10 +80,11 @@ $accent: #0071e3;
     left: 14px;
     color: #86868b;
     transition: 0.3s;
+    pointer-events: none;
   }
 }
 
-/*BUTTON */
+/* BUTTON */
 button {
   width: 100%;
   padding: 14px;
@@ -112,26 +92,63 @@ button {
   border: none;
   background: linear-gradient(135deg, #0071e3, #005ecb);
   color: white;
+  font-weight: 500;
   cursor: pointer;
   transition: 0.3s;
 
-  &:hover {
+  &:hover:not(:disabled) {
     transform: scale(1.03);
-    box-shadow: 0 10px 30px rgba(0,113,227,0.4);
+    box-shadow: 0 10px 30px rgba(0, 113, 227, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
   }
 }
 
-/* LINK */
+/* SWITCH TEXT */
 .switch {
-  margin-top: 15px;
+  margin-top: 18px;
+  font-size: 14px;
 
   a {
     color: $accent;
     text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
   }
 }
 
+/* ANIMATIONS */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-} 
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ERROR */
+.error {
+  color: $error;
+  font-size: 12px;
+  margin-top: 6px;
+  display: block;
+}
+
+/* INVALID STATE */
+input.ng-invalid.ng-touched,
+input.ng-invalid.ng-dirty {
+  border-color: $error;
+}
+
+input.ng-invalid.ng-touched:focus,
+input.ng-invalid.ng-dirty:focus {
+  box-shadow: 0 0 0 4px rgba(230, 57, 70, 0.18);
+}
