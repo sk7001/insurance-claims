@@ -6,6 +6,5 @@ import org.springframework.stereotype.Repository;
 import com.edutech.insurance_claims_processing_system.entity.Adjuster;
 
 @Repository
-public interface AdjusterRepository {
-    // Additional query methods can be defined here if needed
+public interface AdjusterRepository extends JpaRepository<Adjuster, Long> {
 }

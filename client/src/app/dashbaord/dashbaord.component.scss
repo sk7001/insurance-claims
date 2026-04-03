@@ -1,0 +1,39 @@
+.page {
+  padding: 30px;
+  background: #ffffff;
+  min-height: 100vh;
+}
+
+.page-title {
+  font-size: 28px;
+  margin-bottom: 24px;
+  color: #1d1d1f;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 25px;
+  box-shadow: 0 18px 40px rgba(0,0,0,0.08);
+}
+
+.card h3 {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+.number {
+  font-size: 36px;
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.success { color: #16a34a; }
+.warning { color: #ca8a04; }
+.danger  { color: #dc2626; }
