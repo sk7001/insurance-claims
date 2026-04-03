@@ -9,6 +9,7 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/ClaimRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/UnderwriterController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/InsuranceClaimsProcessingSystemApplication.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/EmailService.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/PolicyholderController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Adjuster.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/ClaimService.java

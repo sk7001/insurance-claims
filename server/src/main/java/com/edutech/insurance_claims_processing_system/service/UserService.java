@@ -135,5 +135,6 @@ public class UserService implements UserDetailsService {
         target.setEmail(source.getEmail());
         target.setRole(source.getRole());
         target.setPassword(passwordEncoder.encode(source.getPassword()));
+        target.setPhoneNumber(source.getPhoneNumber());
     }
 }

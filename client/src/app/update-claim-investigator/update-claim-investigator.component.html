@@ -1,34 +1,57 @@
 <app-navbar></app-navbar>
 
 <div class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Review Claims</h1>
+      <p class="page-subtitle">Search and update claim statuses quickly.</p>
+    </div>
 
-  <h1 class="page-title">Review Claims</h1>
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search by claim/type/policyholder/status..."
+        (input)="searchByDescId($event)"
+      />
+    </div>
+  </div>
 
   <div class="table-card">
-
     <table>
       <thead>
         <tr>
           <th>Claim ID</th>
+
+          <!-- ✅ NEW -->
+          <th>Type</th>
+
           <th>Description</th>
           <th>Status</th>
+
+          <!-- ✅ NEW -->
           <th>Policyholder</th>
+
           <th class="action-header">Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let claim of claimList">
-
+        <tr *ngFor="let claim of searchFilter">
           <td>
-            <strong>#{{ claim.id }}</strong>
+            <strong class="claim-id">#{{ claim.id }}</strong>
           </td>
 
-          <td>
+          <!-- ✅ NEW: TYPE -->
+          <td class="type-col">
+            {{ claim.insuranceType || '-' }}
+          </td>
+
+          <td class="desc">
             {{ claim.description }}
           </td>
 
-          <!-- ✅ STATUS PILL (COLOR MATCHED) -->
           <td>
             <span
               class="status-tag"
@@ -43,38 +66,45 @@
             </span>
           </td>
 
+          <!-- ✅ NEW: POLICYHOLDER -->
           <td>
-            {{ claim.policyholder.username }}
-            <div class="muted">
-              {{ claim.policyholder.email }}
-            </div>
+            <ng-container *ngIf="claim.policyholder; else noPolicyholder">
+              <div class="policyholder">
+                <div class="ph-name">{{ claim.policyholder.username }}</div>
+                <div class="muted">{{ claim.policyholder.email }}</div>
+                <div class="muted" *ngIf="claim.policyholder.phoneNumber">
+                  {{ claim.policyholder.phoneNumber }}
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #noPolicyholder>
+              <span class="no-underwriter">Not Available</span>
+            </ng-template>
           </td>
 
+          <!-- ACTION -->
           <td class="actions">
-            <button
-              class="action-btn approve"
-              (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()"
-            >
+            <button class="action-btn approve" (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
               Approve
             </button>
 
-            <button
-              class="action-btn reject"
-              (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()"
-            >
+            <button class="action-btn reject" (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
               Reject
             </button>
           </td>
+        </tr>
 
+        <tr *ngIf="searchFilter?.length === 0">
+          <td class="empty" colspan="6">
+            No claims found. Try searching with a different keyword.
+          </td>
         </tr>
       </tbody>
     </table>
 
-    <!-- ERROR MESSAGE -->
     <div *ngIf="showError" class="error-box">
       {{ errorMessage || 'Something went wrong' }}
     </div>
-
   </div>
-
 </div>

@@ -22,11 +22,19 @@ export class RegistrationComponent implements OnInit {
   ) {
     this.itemForm = this.formBuilder.group({
       username: ['', Validators.required],
+
+      phoneNumber: ['', [
+        Validators.required,
+        Validators.pattern(/^[0-9]{10}$/)
+      ]],
+
+      email: ['', [Validators.required, Validators.email]],
+
       password: ['', [
         Validators.required,
         Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
       ]],
-      email: ['', [Validators.required, Validators.email]],
+
       role: ['', Validators.required]
     });
   }
@@ -34,7 +42,6 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void { }
 
   onRegister() {
-
     this.showMessage = false;
     this.isError = false;
 
@@ -42,7 +49,13 @@ export class RegistrationComponent implements OnInit {
       return;
     }
 
-    this.bookService.registerUser(this.itemForm.value).subscribe({
+    // ✅ Convert phoneNumber to number before sending
+    const payload = {
+      ...this.itemForm.value,
+      phoneNumber: Number(this.itemForm.value.phoneNumber)
+    };
+
+    this.bookService.registerUser(payload).subscribe({
       next: () => {
         this.showMessage = true;
         this.isError = false;

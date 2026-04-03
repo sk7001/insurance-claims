@@ -1,60 +1,156 @@
 <app-navbar></app-navbar>
 
 <div class="page">
-
   <h1 class="page-title">Assign Claim</h1>
 
   <div class="form-card">
-
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
 
-      <!-- Claim -->
+      <!-- CLAIM DROPDOWN -->
       <div class="form-group">
-        <label for="claimId">Claim</label>
-        <select id="claimId" formControlName="claimId">
-          <option value="">Select Claim</option>
-          <option *ngFor="let claim of claimList" [value]="claim.id">
-            {{ claim.id }} - {{ claim.description }} - {{ claim.date | date }}
-          </option>
-        </select>
+        <label>Claim</label>
 
-        <span class="error"
-          *ngIf="itemForm.get('claimId')?.invalid && showError">
+        <div class="dropdown" [class.open]="claimDropdownOpen">
+          <button type="button" class="dropdown-trigger" (click)="toggleClaimDropdown()">
+            <span class="trigger-text" *ngIf="!selectedClaimText">Select Claim</span>
+            <span class="trigger-text" *ngIf="selectedClaimText">{{ selectedClaimText }}</span>
+            <span class="chev">▾</span>
+          </button>
+
+          <div class="dropdown-panel" *ngIf="claimDropdownOpen">
+            <div class="dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                class="dropdown-search-input"
+                placeholder="Search by claim / policyholder..."
+                [(ngModel)]="claimSearch"
+                (input)="filterClaims()"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+
+            <div class="dropdown-list">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let claim of filteredClaimList"
+                (click)="selectClaim(claim)"
+              >
+                <!-- Left: claim info -->
+                <div class="claim-left">
+                  <div class="item-main">
+                    <strong>#{{ claim.id }}</strong>
+                    <span class="item-dot">•</span>
+
+                    <!-- ✅ claim type shown before description -->
+                    <span class="item-desc">
+                      <span class="claim-type" *ngIf="claim.insuranceType">
+                        {{ claim.insuranceType }} -
+                      </span>
+                      {{ claim.description }}
+                    </span>
+                  </div>
+
+                  <!-- date stays same place -->
+                  <div class="item-sub">
+                    {{ claim.date | date }}
+                  </div>
+                </div>
+
+                <!-- Right: policyholder details -->
+                <div class="claim-right" *ngIf="claim.policyholder">
+                  <div class="ph-name">
+                    {{ claim.policyholder.username || 'Unknown' }}
+                  </div>
+
+                  <div class="ph-muted" *ngIf="claim.policyholder.email">
+                    {{ claim.policyholder.email }}
+                  </div>
+
+                  <div class="ph-muted" *ngIf="claim.policyholder.phoneNumber">
+                    {{ claim.policyholder.phoneNumber }}
+                  </div>
+
+                  <!-- ✅ policyholder id (optional display) -->
+                  <div class="ph-muted" *ngIf="claim.policyholder.id">
+                    ID: {{ claim.policyholder.id }}
+                  </div>
+                </div>
+
+                <div class="claim-right" *ngIf="!claim.policyholder">
+                  <div class="ph-name">No policyholder</div>
+                </div>
+              </button>
+
+              <div class="dropdown-empty" *ngIf="filteredClaimList.length === 0">
+                No claims found
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <span class="error" *ngIf="itemForm.get('claimId')?.invalid && showError">
           Claim is required
         </span>
       </div>
 
-      <!-- Underwriter -->
+      <!-- UNDERWRITER DROPDOWN (unchanged UI, search already updated in TS) -->
       <div class="form-group">
-        <label for="underwriterId">Underwriter</label>
-        <select id="underwriterId" formControlName="underwriterId">
-          <option value="">Select Underwriter</option>
-          <option *ngFor="let underwriter of underwriterList" [value]="underwriter.id">
-            {{ underwriter.id }} - {{ underwriter.username }} - {{ underwriter.email }}
-          </option>
-        </select>
+        <label>Underwriter</label>
 
-        <span class="error"
-          *ngIf="itemForm.get('underwriterId')?.invalid && showError">
+        <div class="dropdown" [class.open]="underDropdownOpen">
+          <button type="button" class="dropdown-trigger" (click)="toggleUnderDropdown()">
+            <span class="trigger-text" *ngIf="!selectedUnderwriterText">Select Underwriter</span>
+            <span class="trigger-text" *ngIf="selectedUnderwriterText">{{ selectedUnderwriterText }}</span>
+            <span class="chev">▾</span>
+          </button>
+
+          <div class="dropdown-panel" *ngIf="underDropdownOpen">
+            <div class="dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                class="dropdown-search-input"
+                placeholder="Search by id / username / email / phone..."
+                [(ngModel)]="underwriterSearch"
+                (input)="filterUnderwriters()"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+
+            <div class="dropdown-list">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let u of filteredUnderwriterList"
+                (click)="selectUnderwriter(u)"
+              >
+                <div class="item-main">
+                  <strong>#{{ u.id }}</strong>
+                  <span class="item-dot">•</span>
+                  <span class="item-desc">{{ u.username }}</span>
+                </div>
+
+                <div class="item-sub">{{ u.email }}</div>
+              </button>
+
+              <div class="dropdown-empty" *ngIf="filteredUnderwriterList.length === 0">
+                No underwriters found
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <span class="error" *ngIf="itemForm.get('underwriterId')?.invalid && showError">
           Underwriter is required
         </span>
       </div>
 
-      <!-- Submit -->
-      <button type="submit">
-        Assign Claim
-      </button>
-
+      <button type="submit">Assign Claim</button>
     </form>
 
-    <!-- Messages -->
-    <p class="success-message" *ngIf="showMessage">
-      {{ responseMessage }}
-    </p>
-
-    <p class="error-message" *ngIf="errorMessage && showError">
-      {{ responseMessage }}
-    </p>
-
+    <p class="success-message" *ngIf="showMessage">{{ responseMessage }}</p>
+    <p class="error-message" *ngIf="errorMessage && showError">{{ responseMessage }}</p>
   </div>
 </div>

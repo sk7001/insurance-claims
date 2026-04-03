@@ -1,8 +1,21 @@
 <app-navbar></app-navbar>
 
 <div class="page">
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <h1 class="page-title">Update Claims</h1>
 
-  <h1 class="page-title">Update Claims</h1>
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search by Claim / Type / Policyholder / Underwriter..."
+        (input)="searchByDescId($event)"
+      />
+    </div>
+  </div>
 
   <!-- TABLE CARD -->
   <div class="table-card">
@@ -10,22 +23,38 @@
       <thead>
         <tr>
           <th>Claim ID</th>
+
+          <!-- ✅ NEW -->
+          <th>Type</th>
+
           <th>Description</th>
           <th>Status</th>
           <th>Date</th>
+
+          <!-- ✅ NEW -->
+          <th>Policyholder</th>
+
           <th>Underwriter</th>
-          <th>Action</th>
+          <th class="action-header">Action</th>
         </tr>
       </thead>
 
       <tbody>
-        <tr *ngFor="let claim of claimList">
+        <tr *ngFor="let claim of searchFilter">
+          <td>
+            <strong>#{{ claim.id }}</strong>
+          </td>
 
-          <td><strong>#{{ claim.id }}</strong></td>
+          <!-- ✅ NEW: CLAIM TYPE -->
+          <td class="type-col">
+            {{ claim.insuranceType || '-' }}
+          </td>
 
-          <td>{{ claim.description }}</td>
+          <td class="desc">
+            {{ claim.description }}
+          </td>
 
-          <!-- ✅ STATUS PILL (MATCHES VIEW CLAIM STATUS) -->
+          <!-- STATUS -->
           <td>
             <span
               class="status-tag"
@@ -40,12 +69,39 @@
             </span>
           </td>
 
-          <td>{{ claim.date | date }}</td>
+          <td>
+            {{ claim.date | date }}
+          </td>
 
+          <!-- ✅ NEW: POLICYHOLDER DETAILS -->
+          <td>
+            <ng-container *ngIf="claim.policyholder; else noPolicyholder">
+              <div class="person">
+                <div class="person-name">{{ claim.policyholder.username }}</div>
+                <div class="muted">{{ claim.policyholder.email }}</div>
+                <div class="muted" *ngIf="claim.policyholder.phoneNumber">
+                  {{ claim.policyholder.phoneNumber }}
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-template #noPolicyholder>
+              <span class="no-underwriter">Not Available</span>
+            </ng-template>
+          </td>
+
+          <!-- UNDERWRITER (same as before) -->
           <td>
             <ng-container *ngIf="claim.underwriter; else noUnderwriter">
-              {{ claim.underwriter.username }}
-              <div class="muted">{{ claim.underwriter.email }}</div>
+              <div class="underwriter">
+                <div>{{ claim.underwriter.username }}</div>
+                <div class="muted">{{ claim.underwriter.email }}</div>
+
+                <!-- optional show phone if exists -->
+                <div class="muted" *ngIf="claim.underwriter.phoneNumber">
+                  {{ claim.underwriter.phoneNumber }}
+                </div>
+              </div>
             </ng-container>
 
             <ng-template #noUnderwriter>
@@ -53,27 +109,25 @@
             </ng-template>
           </td>
 
-          <td>
+          <td class="actions">
             <button class="small-btn" (click)="edit(claim)">
               Update
             </button>
           </td>
-
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- UPDATE FORM -->
+  <!-- UPDATE FORM (same as before) -->
   <div
     class="form-card update-form"
-    [class.hide]="closing"
     *ngIf="updatedId || closing"
+    [class.hide]="closing"
   >
     <h2>Update Claim</h2>
 
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-
       <div class="form-group">
         <label>Description</label>
         <input type="text" formControlName="description" />
@@ -94,20 +148,14 @@
           Save Changes
         </button>
 
-        <button
-          type="button"
-          class="cancel-btn"
-          (click)="cancelUpdate()"
-        >
+        <button type="button" class="cancel-btn" (click)="cancelUpdate()">
           Cancel
         </button>
       </div>
-
     </form>
 
     <div *ngIf="showError" class="error-box">
       {{ errorMessage || 'Failed to update claim' }}
     </div>
   </div>
-
 </div>
