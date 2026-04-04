@@ -9,15 +9,14 @@ import { AuthService } from './auth.service';
 })
 export class HttpService {
   public serverName = environment.apiUrl;
-  constructor(private http: HttpClient, private authService: AuthService) {
 
-  }
+  constructor(private http: HttpClient, private authService: AuthService) {}
 
   getInvestigations(): Observable<any> {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/investigator/investigations`, { headers: headers });
   }
 
@@ -25,7 +24,7 @@ export class HttpService {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/underwriter/claims?underwriterId=` + id, { headers: headers });
   }
 
@@ -33,7 +32,7 @@ export class HttpService {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/policyholder/claims?policyholderId=` + policyholder, { headers: headers });
   }
 
@@ -41,7 +40,7 @@ export class HttpService {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/adjuster/claims`, { headers: headers });
   }
 
@@ -49,7 +48,7 @@ export class HttpService {
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
-    headers = headers.set('Authorization', `Bearer ${authToken}`)
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
     return this.http.get(this.serverName + `/api/adjuster/underwriters`, { headers: headers });
   }
 
@@ -94,12 +93,20 @@ export class HttpService {
   }
 
   AssignClaim(details: any): Observable<any> {
-
     const authToken = this.authService.getToken();
     let headers = new HttpHeaders();
     headers = headers.set('Content-Type', 'application/json');
     headers = headers.set('Authorization', `Bearer ${authToken}`);
-    return this.http.put(this.serverName + '/api/adjuster/claim/' + details.claimId + '/assign?underwriterId=' + details.underwriterId + '&adjusterId=' + localStorage.getItem('userId'), details, { headers: headers });
+
+    // ✅ FIXED: &amp; -> &
+    return this.http.put(
+      this.serverName
+        + '/api/adjuster/claim/' + details.claimId
+        + '/assign?underwriterId=' + details.underwriterId
+        + '&adjusterId=' + localStorage.getItem('userId'),
+      details,
+      { headers: headers }
+    );
   }
 
   Login(details: any): Observable<any> {
@@ -114,4 +121,13 @@ export class HttpService {
     return this.http.post(this.serverName + '/api/user/register', details, { headers: headers });
   }
 
+  // ✅ Chatbot endpoint
+  chatbotMessage(payload: any): Observable<any> {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    if (authToken) headers = headers.set('Authorization', `Bearer ${authToken}`);
+
+    return this.http.post(this.serverName + '/api/chatbot/message', payload, { headers });
+  }
 }
