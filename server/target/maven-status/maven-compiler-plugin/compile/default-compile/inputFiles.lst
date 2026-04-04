@@ -6,7 +6,9 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/LoginResponse.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/InvestigationRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/jwt/JwtUtil.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/ChatbotController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/ClaimRepository.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/ChatbotRequest.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/UnderwriterController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/InsuranceClaimsProcessingSystemApplication.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/EmailService.java
@@ -17,14 +19,17 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/jwt/JwtRequestFilter.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/InvestigationService.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/LoginRequest.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/ChatbotResponse.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/RegisterAndLoginController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigation.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigator.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/AdjusterRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/AdjusterController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/config/Configurations.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/GeminiService.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Claim.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Policyholder.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/UserRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/PolicyholderRepository.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/ChatbotService.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/User.java
