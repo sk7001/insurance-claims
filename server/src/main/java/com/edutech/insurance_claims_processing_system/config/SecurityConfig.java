@@ -13,7 +13,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.edutech.insurance_claims_processing_system.jwt.JwtRequestFilter;
@@ -45,14 +44,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable()
                 .authorizeHttpRequests()
+
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
                 .antMatchers("/api/user/register", "/api/user/login").permitAll()
+
+                .antMatchers("/api/chatbot/**").hasAuthority("POLICYHOLDER")
+
                 .antMatchers("/api/policyholder/**").hasAuthority("POLICYHOLDER")
                 .antMatchers("/api/adjuster/**").hasAuthority("ADJUSTER")
                 .antMatchers("/api/investigator/**").hasAuthority("INVESTIGATOR")
                 .antMatchers("/api/underwriter/**").hasAuthority("UNDERWRITER")
+
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
