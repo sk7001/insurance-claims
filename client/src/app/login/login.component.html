@@ -271,27 +271,121 @@
 
       <!-- SIGN IN -->
       <div class="form-box sign-in" [class.shake]="loginShake">
-        <h2>Welcome back</h2>
-        <p class="sub">Sign in to your insurance portal</p>
-        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <div class="field" [class.inv]="isInv(loginForm,'username')" [class.ok]="isOk(loginForm,'username')">
-            <span class="fico">👤</span>
-            <input type="text" formControlName="username" placeholder=" " autocomplete="off"/>
-            <label>Username</label>
-            <span class="ferr">Username is required</span>
+        
+        <!-- LOGIN VIEW -->
+        <ng-container *ngIf="!isForgotMode">
+          <h2>Welcome back</h2>
+          <p class="sub">Sign in to your insurance portal</p>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <div class="field" [class.inv]="isInv(loginForm,'username')" [class.ok]="isOk(loginForm,'username')">
+              <span class="fico">👤</span>
+              <input type="text" formControlName="username" placeholder=" " autocomplete="off"/>
+              <label>Username</label>
+              <span class="ferr">Username is required</span>
+            </div>
+            <div class="field" [class.inv]="isInv(loginForm,'password')" [class.ok]="isOk(loginForm,'password')">
+              <span class="fico">🔒</span>
+              <input [type]="showLiPw ? 'text' : 'password'" formControlName="password" placeholder=" " autocomplete="off"/>
+              <label>Password</label>
+              <span class="peye" (click)="showLiPw=!showLiPw">{{ showLiPw ? '🙈' : '👁' }}</span>
+              <span class="ferr">Password is required</span>
+            </div>
+            
+            <div class="form-links">
+              <a class="forgot-link" (click)="toggleForgot(true)">Forgot Password?</a>
+            </div>
+
+            <div class="ebanner" *ngIf="loginErr">{{ loginErr }}</div>
+            <button type="submit" class="bmain" [disabled]="loginLoading" (click)="addRipple($event)">
+              <span>{{ loginLoading ? 'Signing in...' : 'Sign In' }}</span>
+            </button>
+          </form>
+        </ng-container>
+
+        <!-- FORGOT PASSWORD VIEW (3 STEPS) -->
+        <ng-container *ngIf="isForgotMode">
+          <h2>Reset password</h2>
+          
+          <!-- STEP 1: EMAIL (ALWAYS VISIBLE BUT DISABLED AFTER SUBMISSION) -->
+          <div class="forgot-form" [class.shake]="forgotShake">
+            <p class="sub" *ngIf="forgotStep === 1">Enter your email to receive a verification code</p>
+            <div class="field" [class.ok]="forgotStep > 1">
+              <span class="fico">✉️</span>
+              <input type="email" [(ngModel)]="forgotEmail" [disabled]="forgotStep > 1 || forgotLoading" 
+                     placeholder=" " autocomplete="off" (keyup.enter)="forgotStep === 1 && onForgotSubmit()"/>
+              <label>Email address</label>
+            </div>
+
+            <!-- STEP 2: OTP GRID -->
+            <div *ngIf="forgotStep === 2" class="otp-container">
+              <p class="sub">Enter the 6-digit code sent to your email</p>
+              <div class="otp-grid">
+                <input *ngFor="let digit of otpDigits; let i = index"
+                       type="text"
+                       id="otp-{{i}}"
+                       [value]="otpDigits[i]"
+                       maxlength="1"
+                       [disabled]="forgotLoading"
+                       (input)="onOtpInput($event, i)"
+                       (keydown)="onOtpKeydown($event, i)"
+                       (paste)="onOtpPaste($event)"
+                       class="otp-box"
+                       autocomplete="one-time-code">
+              </div>
+            </div>
+
+            <!-- STEP 3: NEW PASSWORD -->
+            <div *ngIf="forgotStep === 3">
+              <p class="sub">Set your new secure password</p>
+              
+              <div class="field" 
+                   [class.inv]="newPassword && !pwPattern.test(newPassword)"
+                   [class.ok]="newPassword && pwPattern.test(newPassword)">
+                <span class="fico">🔒</span>
+                <input type="password" [(ngModel)]="newPassword" 
+                       (input)="onPwInput($event)"
+                       [disabled]="forgotLoading" placeholder=" " autocomplete="off"/>
+                <label>New Password</label>
+              </div>
+
+              <!-- Password Strength Meter (From Register) -->
+              <div class="pw-strength" *ngIf="newPassword">
+                <div class="pwbar">
+                  <div class="pwfill" [style.width.%]="pwStr * 20" [style.backgroundColor]="pwColor"></div>
+                </div>
+                <div class="pwhint" [style.color]="pwColor">{{ pwLabel }}</div>
+              </div>
+
+              <div class="field" 
+                   [class.inv]="confirmPassword && confirmPassword !== newPassword"
+                   [class.ok]="confirmPassword && confirmPassword === newPassword">
+                <span class="fico">🛡️</span>
+                <input type="password" [(ngModel)]="confirmPassword" [disabled]="forgotLoading" placeholder=" " autocomplete="off"/>
+                <label>Confirm Password</label>
+              </div>
+            </div>
+
+            <!-- MESSAGES -->
+            <div class="ebanner" *ngIf="forgotErr">{{ forgotErr }}</div>
+            <div class="sbanner" *ngIf="forgotSucc">{{ forgotSucc }}</div>
+
+            <!-- BUTTONS -->
+            <button class="bmain" *ngIf="forgotStep === 1" [disabled]="forgotLoading" (click)="onForgotSubmit()">
+              <span>{{ forgotLoading ? 'Sending...' : 'Send OTP Code' }}</span>
+            </button>
+            
+            <button class="bmain" *ngIf="forgotStep === 2" [disabled]="forgotLoading" (click)="onVerifyOtp()">
+              <span>{{ forgotLoading ? 'Verifying...' : 'Verify Code' }}</span>
+            </button>
+
+            <button class="bmain" *ngIf="forgotStep === 3" [disabled]="forgotLoading" (click)="onResetSubmit()">
+              <span>{{ forgotLoading ? 'Resetting...' : 'Reset Password' }}</span>
+            </button>
+
+            <button class="gbtn-alt" *ngIf="!forgotLoading" (click)="toggleForgot(false)">Back to Login</button>
           </div>
-          <div class="field" [class.inv]="isInv(loginForm,'password')" [class.ok]="isOk(loginForm,'password')">
-            <span class="fico">🔒</span>
-            <input [type]="showLiPw ? 'text' : 'password'" formControlName="password" placeholder=" " autocomplete="off"/>
-            <label>Password</label>
-            <span class="peye" (click)="showLiPw=!showLiPw">{{ showLiPw ? '🙈' : '👁' }}</span>
-            <span class="ferr">Password is required</span>
-          </div>
-          <div class="ebanner" *ngIf="loginErr">{{ loginErr }}</div>
-          <button type="submit" class="bmain" [disabled]="loginLoading" (click)="addRipple($event)">
-            <span>{{ loginLoading ? 'Signing in...' : 'Sign In' }}</span>
-          </button>
-        </form>
+        </ng-container>
+
       </div>
 
       <!-- SIGN UP -->
@@ -299,8 +393,14 @@
         <h2>Create account</h2>
         <p class="sub">Join the claims portal today</p>
         <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
-          <div class="field" [class.inv]="isInv(registerForm,'username')" [class.ok]="isOk(registerForm,'username')">
+          <div class="field" [class.inv]="isInv(registerForm,'fullName')" [class.ok]="isOk(registerForm,'fullName')">
             <span class="fico">👤</span>
+            <input type="text" formControlName="fullName" placeholder=" " autocomplete="off"/>
+            <label>Full Name</label>
+            <span class="ferr">Full name is required</span>
+          </div>
+          <div class="field" [class.inv]="isInv(registerForm,'username')" [class.ok]="isOk(registerForm,'username')">
+            <span class="fico">🆔</span>
             <input type="text" formControlName="username" placeholder=" " autocomplete="off"/>
             <label>Username</label>
             <span class="ferr">Username is required</span>
@@ -332,6 +432,14 @@
             <span class="ferr">8+ chars, upper, lower, number &amp; symbol</span>
             <div class="pwbar"><div class="pwfill" [style.width.%]="pwStr*20" [style.background]="pwColor"></div></div>
             <div class="pwhint" [style.color]="pwColor">{{ pwLabel }}</div>
+          </div>
+
+          <div class="field" [class.inv]="isInv(registerForm,'confirmPassword') || (registerForm.touched && registerForm.hasError('mismatch'))" [class.ok]="isOk(registerForm,'confirmPassword') && !registerForm.hasError('mismatch')">
+            <span class="fico">🛡️</span>
+            <input type="password" formControlName="confirmPassword" placeholder=" " autocomplete="off"/>
+            <label>Confirm Password</label>
+            <span class="ferr" *ngIf="registerForm.hasError('mismatch')">Passwords do not match</span>
+            <span class="ferr" *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && !registerForm.hasError('mismatch')">Confirmation is required</span>
           </div>
 
           <div class="rlabel">Your role in the system</div>

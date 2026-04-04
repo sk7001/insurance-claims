@@ -22,6 +22,7 @@ public class User {
     private String email;
     private String role; // POLICYHOLDER, ADJUSTER, UNDERWRITER, INVESTIGATOR
     private Long phoneNumber;
+    private String fullName;
     public User() {}
 
     public Long getId() { return id; }
@@ -42,5 +43,6 @@ public class User {
     public Long getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(Long phoneNumber) { this.phoneNumber = phoneNumber; }
 
-
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 }

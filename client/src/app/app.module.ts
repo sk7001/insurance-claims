@@ -18,6 +18,7 @@ import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/up
 import { NavbarComponent } from './navbar/navbar.component';
 import { ViewClaimComponent } from './view-claim/view-claim.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { ProfileComponent } from './profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     UpdateClaimInvestigatorComponent,
     NavbarComponent,
     ViewClaimComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

@@ -10,16 +10,27 @@ public class LoginResponse {
    private String username;
    private String email;
    private String role;
+   private String fullName;
 
    @JsonCreator
    public LoginResponse(@JsonProperty("userId") Long userId, @JsonProperty("token") String token,
          @JsonProperty("username") String username,
-         @JsonProperty("email") String email, @JsonProperty("role") String role) {
+         @JsonProperty("email") String email, @JsonProperty("role") String role,
+         @JsonProperty("fullName") String fullName) {
       this.token = token;
-      this.role = role;
       this.userId = userId;
       this.username = username;
+      this.email = email;
       this.role = role;
+      this.fullName = fullName;
+   }
+
+   public String getFullName() {
+      return fullName;
+   }
+
+   public void setFullName(String fullName) {
+      this.fullName = fullName;
    }
 
    public Long getUserId() {

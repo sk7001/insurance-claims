@@ -49,7 +49,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
   }
 
   getClaims() {
-    const userId = localStorage.getItem('userId');
+    const userId = this.authService.getUserId();
     if (!userId) return;
 
     this.httpService.getClaimsByUnderwriter(userId).subscribe({

@@ -9,8 +9,20 @@
 
   <div class="uc-container">
     <div class="uc-header">
-      <h2>Manage Claims</h2>
-      <p>Review and update existing claims within your workflow.</p>
+      <div class="header-text">
+        <h2>Manage Claims</h2>
+        <p>Review and update existing claims within your workflow.</p>
+      </div>
+
+      <!-- RESTORED SEARCH -->
+      <div class="dh-search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
+        <input
+          type="text"
+          placeholder="Search by Claim ID, User, or Description..."
+          (input)="searchByDescId($event)"
+        />
+      </div>
     </div>
 
     <!-- TABLE CARD -->
@@ -28,7 +40,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let claim of claimList" class="uc-row">
+            <tr *ngFor="let claim of searchFilter" class="uc-row">
               <td class="td-bold">#{{ claim.id }}</td>
               <td><span class="td-desc">{{ claim.description }}</span></td>
               <td><span class="status-badge" [ngClass]="claim.status | lowercase">{{ claim.status }}</span></td>

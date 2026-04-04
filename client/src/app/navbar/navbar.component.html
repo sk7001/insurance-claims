@@ -1,8 +1,12 @@
 <nav class="d-sidebar">
   <div class="ds-brand">
-    <div class="logo-mark">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-    </div>
+    <button class="ds-profile-btn" *ngIf="userName">
+       <img [src]="'https://ui-avatars.com/api/?name=' + userName + '&background=474a51&color=fff'" class="ds-avatar">
+       <div class="ds-pinfo">
+         <h4>{{ userName }}</h4>
+         <p *ngIf="roleName">{{ roleName }}</p>
+       </div>
+    </button>
   </div>
 
   <div class="ds-section">
@@ -26,7 +30,6 @@
         <li>
           <a routerLink="/create-claim" routerLinkActive="active">
             <span>Create Claim</span>
-            <span class="ds-count orange">New</span>
           </a>
         </li>
         <li>
@@ -49,7 +52,6 @@
       <li *ngIf="roleName === 'INVESTIGATOR' || roleName === 'ADMIN' || !roleName">
         <a routerLink="/create-investigator" routerLinkActive="active">
           <span>Investigators</span>
-          <span class="ds-count green">8</span>
         </a>
       </li>
     </ul>
@@ -57,24 +59,13 @@
   </div>
 
   <div class="ds-bottom">
-    <div class="ds-profile">
-       <img [src]="'https://ui-avatars.com/api/?name=' + (userName || 'U') + '&background=474a51&color=fff'" class="ds-avatar">
-       <div class="ds-pinfo">
-         <h4>{{ userName || 'Alex' }}</h4>
-         <p>{{ roleName || 'Admin' }}</p>
-       </div>
-    </div>
+
 
     <!-- Toggles & Logout row -->
     <div class="ds-toggles-row">
-      <div class="ds-toggles">
-        <button class="dt-btn" (click)="openChat()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></button>
-        <button class="dt-btn" [class.active]="theme === 'dark'" (click)="setTheme('dark')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-        <button class="dt-btn" [class.active]="theme === 'light'" (click)="setTheme('light')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
-      </div>
-
       <button class="ds-logout" (click)="logout()" title="Logout">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span class="logout-text">Logout</span>
       </button>
     </div>
   </div>

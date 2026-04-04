@@ -3,7 +3,7 @@
 <div class="db-shell">
   <!-- SEARCH & TOPBAR -->
   <header class="dh-header">
-    <div class="dh-greeting">
+    <div class="dh-greeting" routerLink="/profile" style="cursor: pointer;">
       <h2>{{ getGreeting() }}, <span>{{ userName }}</span> 👋</h2>
       <p>Summary of your insurance claims.</p>
     </div>
@@ -14,7 +14,7 @@
     </div>
     <div class="dh-actions">
       <button class="dh-icon-btn"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg></button>
-      <img [src]="'https://ui-avatars.com/api/?name=' + userName + '&background=35373e&color=fff'" class="dh-avatar">
+      <img [src]="'https://ui-avatars.com/api/?name=' + userName + '&background=35373e&color=fff'" class="dh-avatar clickable" routerLink="/profile">
       <button class="dh-create" routerLink="/create-claim">+ Create Claim</button>
     </div>
   </header>
@@ -54,15 +54,7 @@
     </div>
   </div>
 
-  <!-- AI CHATBOT (IG STYLE) -->
-  <button class="chat-fab" [class.is-open]="chatOpen" (click)="toggleChat()"><div class="fab-inner">CHAT<span class="fab-dot"></span></div></button>
-  <div class="chat-win dark" [class.visible]="chatOpen">
-    <div class="cw-header"><span (click)="toggleChat()">←</span><div class="cw-id"><b>Nexus AI</b><p>Active</p></div></div>
-    <div class="cw-body" #chatBody>
-       <div *ngFor="let m of chatMessages" class="msg-row" [ngClass]="m.from"><div class="msg-bubble">{{ m.text }}</div></div>
-       <div *ngIf="isTyping" class="typing-bubble"><span></span><span></span><span></span></div>
-    </div>
-    <div class="cw-qr"><button class="qr-chip" *ngFor="let q of quickReplies" (click)="sendQuickReply(q)">{{ q }}</button></div>
-    <div class="cw-input-bar"><input [(ngModel)]="chatInput" (keyup.enter)="sendMessage()" placeholder="Message AI..."><button (click)="sendMessage()">➤</button></div>
-  </div>
+<!-- AI CHATBOT COMPONENT -->
+  <app-chatbot></app-chatbot>
 </div>
+

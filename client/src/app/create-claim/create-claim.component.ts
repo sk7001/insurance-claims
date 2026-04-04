@@ -117,7 +117,7 @@ export class CreateClaimComponent implements OnInit {
 
   // ✅ Get claims
   getClaims(): void {
-    const userId = localStorage.getItem('userId');
+    const userId = this.authService.getUserId();
     if (!userId) return;
 
     this.httpService.getClaimsByPolicyholder(userId).subscribe({
@@ -143,7 +143,7 @@ export class CreateClaimComponent implements OnInit {
       return;
     }
 
-    const userId = localStorage.getItem('userId');
+    const userId = this.authService.getUserId();
     if (!userId) return;
 
     this.httpService.createClaims(this.itemForm.value, userId).subscribe({

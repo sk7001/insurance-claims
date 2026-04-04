@@ -33,7 +33,7 @@ export class ViewClaimComponent implements OnInit {
   }
 
   getClaimsById() {
-    this.httpService.getClaimsByPolicyholder(localStorage.getItem('userId')).subscribe({
+    this.httpService.getClaimsByPolicyholder(this.authService.getUserId()).subscribe({
       next: (res: any) => {
         // ✅ store and sort by date desc
         this.claimList = this.sortByDateDesc(res || []);

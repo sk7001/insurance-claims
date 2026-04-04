@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { HttpService } from '../../services/http.service';
+import { AuthService } from '../../services/auth.service';
 
 type ChatMsg = {
   from: 'user' | 'bot';
@@ -33,7 +34,7 @@ export class ChatbotComponent implements OnInit {
 
   @ViewChild('chatBody') chatBody!: ElementRef<HTMLDivElement>;
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private authService: AuthService) {}
 
   ngOnInit(): void {
     // ✅ Sync with all possible trigger points (Dashboard header, Sidebar, etc.)
@@ -80,7 +81,7 @@ export class ChatbotComponent implements OnInit {
   }
 
   private sendInitialContext(): void {
-    const policyholderId = localStorage.getItem('userId');
+    const policyholderId = this.authService.getUserId();
 
     const payload = {
       policyholderId: Number(policyholderId),
@@ -122,7 +123,7 @@ export class ChatbotComponent implements OnInit {
       return;
     }
 
-    const policyholderId = localStorage.getItem('userId');
+    const policyholderId = this.authService.getUserId();
     this.messages.push({ from: 'user', text });
     this.lastUserMessage = text;
     this.inputText = '';

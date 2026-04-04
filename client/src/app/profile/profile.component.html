@@ -1,0 +1,96 @@
+<app-navbar></app-navbar>
+
+<div class="profile-shell fadeSlide">
+  <div class="profile-card">
+    
+    <div class="profile-header">
+      <div class="ph-back" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </div>
+      <div class="ph-info">
+        <h1>User Profile</h1>
+        <p>Manage your account settings and personal information</p>
+      </div>
+    </div>
+
+    <div class="profile-content" *ngIf="!loading; else loadingTpl">
+      
+      <div class="user-meta">
+        <div class="um-avatar">
+          <img [src]="'https://ui-avatars.com/api/?name=' + profileForm.get('fullName')?.value + '&background=35373e&color=fff'" alt="Avatar">
+        </div>
+        <div class="um-details">
+          <h2>{{ profileForm.get('fullName')?.value || 'User' }}</h2>
+          <span class="role-badge">{{ userRole }}</span>
+        </div>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          
+          <div class="form-field">
+            <label>Email address (Permanent)</label>
+            <div class="input-wrap disabled">
+              <span class="fico">✉️</span>
+              <input type="email" formControlName="email">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <span class="fico">👤</span>
+              <input type="text" formControlName="fullName" placeholder="Enter your full name">
+            </div>
+            <div class="error" *ngIf="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched">
+              Full name is required
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Username</label>
+            <div class="input-wrap">
+              <span class="fico">🆔</span>
+              <input type="text" formControlName="username" placeholder="Choose a username">
+            </div>
+            <div class="error" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
+              Username is required
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <span class="fico">📞</span>
+              <input type="text" formControlName="phone" placeholder="Enter 10-digit number" maxlength="10">
+            </div>
+            <div class="error" *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+              Please enter a valid 10-digit phone number
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-messages">
+          <div class="banner error" *ngIf="errorMsg">{{ errorMsg }}</div>
+          <div class="banner success" *ngIf="successMsg">{{ successMsg }}</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="save-btn" [disabled]="profileForm.invalid || saving">
+            <span>{{ saving ? 'Saving Changes...' : 'Save Profile Changes' }}</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+    <ng-template #loadingTpl>
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <p>Loading your profile...</p>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.edutech.insurance_claims_processing_system.entity.*;
 import com.edutech.insurance_claims_processing_system.repository.*;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -22,6 +24,7 @@ public class UserService implements UserDetailsService {
     private final UnderwriterRepository underwriterRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
+    private final OtpRepository otpRepository;
 
     @Autowired
     public UserService(
@@ -31,7 +34,8 @@ public class UserService implements UserDetailsService {
             PolicyholderRepository policyholderRepository,
             UnderwriterRepository underwriterRepository,
             PasswordEncoder passwordEncoder,
-            EmailService emailService) {
+            EmailService emailService,
+            OtpRepository otpRepository) {
 
         this.userRepository = userRepository;
         this.adjusterRepository = adjusterRepository;
@@ -40,6 +44,7 @@ public class UserService implements UserDetailsService {
         this.underwriterRepository = underwriterRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
+        this.otpRepository = otpRepository;
     }
 
     /* =========================
@@ -105,16 +110,42 @@ public class UserService implements UserDetailsService {
         return savedUser;
     }
 
+    public User getUserById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+    }
+
     /* =========================
        GET USER BY USERNAME
     ========================= */
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        String normalized = username.toLowerCase().trim();
+        return userRepository.findByUsername(normalized)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found for email: " + email));
     }
 
     /* =========================
-       SPRING SECURITY
+       UPDATE PROFILE
+    ========================= */
+    public User updateProfile(Long userId, User updatedData) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Only these 3 are editable per requirements
+        user.setFullName(updatedData.getFullName());
+        user.setUsername(updatedData.getUsername());
+        user.setPhoneNumber(updatedData.getPhoneNumber());
+
+        return userRepository.save(user);
+    }
+
+    /* =========================
+       SPRING SECURITY (LOGIN BY USERNAME)
     ========================= */
     @Override
     public UserDetails loadUserByUsername(String username)
@@ -128,6 +159,86 @@ public class UserService implements UserDetailsService {
     }
 
     /* =========================
+       OTP-BASED FORGOT PASSWORD
+    ========================= */
+    public void generateAndSendOtp(String email) {
+        String normalizedEmail = email.toLowerCase().trim();
+        // 1. Verify user exists (case-insensitive)
+        if (!userRepository.existsByEmailIgnoreCase(normalizedEmail)) {
+            throw new IllegalArgumentException("No account found with this email: " + normalizedEmail);
+        }
+
+        // 2. Clear old OTPs
+        otpRepository.deleteByEmail(normalizedEmail);
+
+        // 3. Generate 6-digit OTP
+        String otp = String.valueOf((int) ((Math.random() * (999999 - 100000)) + 100000));
+
+        // 4. Save with 5-min expiry
+        OtpRecord record = new OtpRecord(normalizedEmail, otp, 5);
+        otpRepository.save(record);
+
+        // 5. Send Email
+        emailService.sendSimpleMail(
+                email,
+                "Your Password Reset Code 🛡️",
+                "Your verification code is: " + otp + "\n\n" +
+                        "This code will expire in 5 minutes.\n\n" +
+                        "Regards,\nInsurance Claims Team"
+        );
+    }
+
+    public void verifyOtpAndResetPassword(String email, String otp, String newPassword) {
+        String normalizedEmail = email.toLowerCase().trim();
+        // 1. Find OTP
+        OtpRecord record = otpRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("No verification record found for this email: " + normalizedEmail));
+
+        // 2. Validate
+        if (record.isExpired()) {
+            otpRepository.delete(record);
+            throw new IllegalArgumentException("OTP has expired.");
+        }
+        if (!record.getOtp().equals(otp)) {
+            throw new IllegalArgumentException("Invalid OTP code.");
+        }
+
+        // 3. Reset Password
+        User user = userRepository.findByEmailIgnoreCase(normalizedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("User not found mid-reset for: " + normalizedEmail));
+        
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+
+        // 4. Cleanup
+        otpRepository.delete(record);
+
+        // 5. Send Success Email Notification
+        emailService.sendSimpleMail(
+                normalizedEmail,
+                "Password Reset Successful 🛡️",
+                "Hello " + (user.getFullName() != null ? user.getFullName() : user.getUsername()) + ",\n\n" +
+                        "This is a confirmation that your password has been successfully reset. " +
+                        "If you did not perform this action, please contact support immediately.\n\n" +
+                        "Regards,\nInsurance Claims Team"
+        );
+    }
+
+    public void verifyOtpOnly(String email, String otp) {
+        String normalizedEmail = email.toLowerCase().trim();
+        OtpRecord record = otpRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new IllegalArgumentException("No verification record found for this email: " + normalizedEmail));
+
+        if (record.isExpired()) {
+            otpRepository.delete(record);
+            throw new IllegalArgumentException("OTP has expired.");
+        }
+        if (!record.getOtp().equals(otp)) {
+            throw new IllegalArgumentException("Invalid OTP code.");
+        }
+    }
+
+    /* =========================
        COPY PROPERTIES
     ========================= */
     private void copyProperties(User source, User target) {
@@ -136,5 +247,6 @@ public class UserService implements UserDetailsService {
         target.setRole(source.getRole());
         target.setPassword(passwordEncoder.encode(source.getPassword()));
         target.setPhoneNumber(source.getPhoneNumber());
+        target.setFullName(source.getFullName());
     }
 }
