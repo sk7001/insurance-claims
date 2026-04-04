@@ -1,14 +1,75 @@
 <app-navbar></app-navbar>
 
 <div class="page">
-
   <h1 class="page-title">Create Claim</h1>
 
   <div class="form-card">
-
     <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
 
-      <!-- DESCRIPTION -->
+      <!-- ✅ INSURANCE TYPE (CUSTOM DROPDOWN LIKE ASSIGN) -->
+      <div class="form-group">
+        <label>Insurance Type</label>
+
+        <div class="dropdown" [class.open]="insuranceDropdownOpen">
+          <!-- Trigger -->
+          <button
+            type="button"
+            class="dropdown-trigger"
+            (click)="toggleInsuranceDropdown()"
+          >
+            <span class="trigger-text" *ngIf="!selectedInsuranceText">
+              Select Insurance Type
+            </span>
+
+            <span class="trigger-text" *ngIf="selectedInsuranceText">
+              {{ selectedInsuranceText }}
+            </span>
+
+            <span class="chev">▾</span>
+          </button>
+
+          <!-- Panel -->
+          <div class="dropdown-panel" *ngIf="insuranceDropdownOpen">
+            <div class="dropdown-search">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                class="dropdown-search-input"
+                placeholder="Search insurance type..."
+                [(ngModel)]="insuranceSearch"
+                (input)="filterInsuranceTypes()"
+                [ngModelOptions]="{ standalone: true }"
+              />
+            </div>
+
+            <div class="dropdown-list">
+              <button
+                type="button"
+                class="dropdown-item"
+                *ngFor="let t of filteredInsuranceTypes"
+                (click)="selectInsuranceType(t)"
+              >
+                <div class="item-main">
+                  <span class="item-desc">{{ t }}</span>
+                </div>
+              </button>
+
+              <div class="dropdown-empty" *ngIf="filteredInsuranceTypes.length === 0">
+                No insurance type found
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <small class="error-message" *ngIf="
+          itemForm.get('insuranceType')?.invalid &&
+          (itemForm.get('insuranceType')?.touched || itemForm.get('insuranceType')?.dirty || showError)
+        ">
+          Insurance type is required
+        </small>
+      </div>
+
+      <!-- ✅ DESCRIPTION -->
       <div class="form-group">
         <label>Description</label>
         <textarea
@@ -16,25 +77,37 @@
           placeholder="Describe the incident"
           formControlName="description">
         </textarea>
+
+        <small class="error-message" *ngIf="
+          itemForm.get('description')?.invalid &&
+          (itemForm.get('description')?.touched || itemForm.get('description')?.dirty || showError)
+        ">
+          Description is required
+        </small>
       </div>
 
-      <!-- INCIDENT DATE -->
+      <!-- ✅ INCIDENT DATE (NO FUTURE DATE) -->
       <div class="form-group">
         <label>Incident Date</label>
-        <input type="date" formControlName="date">
+        <input type="date" formControlName="date" [max]="maxDate">
+
+        <small class="error-message" *ngIf="
+          itemForm.get('date')?.invalid &&
+          (itemForm.get('date')?.touched || itemForm.get('date')?.dirty || showError)
+        ">
+          <span *ngIf="itemForm.get('date')?.errors?.['required']">Date is required</span>
+          <span *ngIf="itemForm.get('date')?.errors?.['futureDate']">Future date is not allowed</span>
+        </small>
       </div>
 
-      <!-- STATUS (hidden) -->
-      <input type="text" formControlName="status" value="Created" hidden>
+      <!-- STATUS hidden -->
+      <input type="text" formControlName="status" value="Initiated" hidden>
 
-      <!-- ACTION -->
       <button type="submit">
         Create Claim
       </button>
-
     </form>
 
-    <!-- MESSAGES -->
     <p class="success-message" *ngIf="showMessage">
       {{ responseMessage }}
     </p>
@@ -42,6 +115,5 @@
     <p class="error-message" *ngIf="showError">
       {{ errorMessage }}
     </p>
-
   </div>
 </div>

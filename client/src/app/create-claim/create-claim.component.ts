@@ -1,9 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, HostListener } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
-
 
 @Component({
   selector: 'app-create-claim',
@@ -13,32 +12,103 @@ import { AuthService } from '../../services/auth.service';
 export class CreateClaimComponent {
 
   itemForm: FormGroup;
-  formModel: any = { description: '', date: '', status: '' };
+
   showError = false;
   errorMessage: any;
-  claimList: any[] = [];
-  assignModel: any = {};
+
   showMessage: any;
   responseMessage: any;
+
+  claimList: any[] = [];
+
+  // ✅ date max = today
+  maxDate: string = new Date().toISOString().split('T')[0];
+
+  // ✅ Insurance types
+  insuranceTypes: string[] = [
+    'Health Insurance',
+    'Life Insurance',
+    'Motor / Vehicle Insurance',
+    'Home Insurance',
+    'Travel Insurance',
+    'Property Insurance',
+    'Business Insurance',
+    'Fire Insurance',
+    'Marine Insurance',
+    'Personal Accident Insurance'
+  ];
+
+  filteredInsuranceTypes: string[] = [];
+
+  insuranceDropdownOpen = false;
+  insuranceSearch = '';
+  selectedInsuranceText = '';
+
   constructor(
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
     private authService: AuthService
   ) {
+    this.filteredInsuranceTypes = [...this.insuranceTypes];
+
     this.itemForm = this.formBuilder.group({
+      insuranceType: ['', Validators.required],
       description: ['', Validators.required],
-      date: ['', Validators.required],
+      date: ['', [Validators.required, this.futureDateValidator]],
       status: ['Initiated', Validators.required]
     });
   }
 
+  // ✅ Prevent future date (even if user hacks HTML)
+  futureDateValidator(control: AbstractControl) {
+    if (!control.value) return null;
+
+    const selected = new Date(control.value);
+    const today = new Date();
+
+    selected.setHours(0, 0, 0, 0);
+    today.setHours(0, 0, 0, 0);
+
+    return selected > today ? { futureDate: true } : null;
+  }
+
+  // ✅ Dropdown open/close
+  toggleInsuranceDropdown() {
+    this.insuranceDropdownOpen = !this.insuranceDropdownOpen;
+  }
+
+  // ✅ close dropdown on outside click (same as assign)
+  @HostListener('document:click', ['$event'])
+  onDocClick(event: any) {
+    const target = event.target as HTMLElement;
+    if (!target.closest('.dropdown')) {
+      this.insuranceDropdownOpen = false;
+    }
+  }
+
+  filterInsuranceTypes() {
+    const q = (this.insuranceSearch || '').toLowerCase().trim();
+    this.filteredInsuranceTypes = this.insuranceTypes.filter(t =>
+      t.toLowerCase().includes(q)
+    );
+  }
+
+  selectInsuranceType(type: string) {
+    this.itemForm.patchValue({ insuranceType: type });
+    this.itemForm.get('insuranceType')?.markAsTouched();
+
+    this.selectedInsuranceText = type;
+    this.insuranceDropdownOpen = false;
+
+    this.insuranceSearch = '';
+    this.filteredInsuranceTypes = [...this.insuranceTypes];
+  }
 
   getClaims(): void {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      return;
-    }
+    if (!userId) return;
+
     this.httpService.getClaimsByPolicyholder(userId).subscribe({
       next: (res: any) => {
         this.claimList = res;
@@ -51,35 +121,41 @@ export class CreateClaimComponent {
   }
 
   onSubmit(): void {
-    console.log(this.itemForm.value);
-    if (this.itemForm.valid) {
-      const userId = localStorage.getItem('userId');
-      if (!userId) {
-        return;
-      }
-      this.httpService.createClaims(this.itemForm.value, userId).subscribe({
-        next: () => {
-          this.itemForm.reset({
-            description: '',
-            date: '',
-            status: null
-          });
-          this.getClaims();
-          this.showMessage = true;
-          this.responseMessage = "Claim created successfully";
-          alert("Claim created successfully");
-          this.router.navigateByUrl('/view-claim-status');
-        },
-        error: (err) => {
-          this.showError = true;
-          this.errorMessage = err;
-        }
-      });
-    } else {
+    this.showError = false;
+    this.showMessage = false;
+
+    if (this.itemForm.invalid) {
       this.showError = true;
+      this.errorMessage = "Please fill all fields correctly";
+      this.itemForm.markAllAsTouched();
       return;
     }
+
+    const userId = localStorage.getItem('userId');
+    if (!userId) return;
+
+    this.httpService.createClaims(this.itemForm.value, userId).subscribe({
+      next: () => {
+        this.itemForm.reset({
+          insuranceType: '',
+          description: '',
+          date: '',
+          status: 'Initiated'
+        });
+
+        this.selectedInsuranceText = '';
+        this.getClaims();
+
+        this.showMessage = true;
+        this.responseMessage = "Claim created successfully";
+        alert("Claim created successfully");
+
+        this.router.navigateByUrl('/view-claim-status');
+      },
+      error: (err) => {
+        this.showError = true;
+        this.errorMessage = err;
+      }
+    });
   }
 }
-
-

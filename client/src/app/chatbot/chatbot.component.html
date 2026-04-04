@@ -1,0 +1,57 @@
+<!-- Floating button -->
+<button class="chat-fab" type="button" (click)="toggleChat()" aria-label="Chatbot">
+  <span *ngIf="!isOpen">💬</span>
+  <span *ngIf="isOpen">✕</span>
+</button>
+
+<!-- Chat window -->
+<div class="chat-window" *ngIf="isOpen">
+  <div class="chat-header">
+    <div class="title">
+      <div class="name">Claim Bot</div>
+      <div class="sub">Ask about your claims</div>
+    </div>
+
+    <div class="queue" *ngIf="isQueued">
+      ⏳ In queue... retrying in {{ retrySeconds }}s
+    </div>
+  </div>
+
+  <div class="chat-body" #chatBody>
+    <div
+      class="msg"
+      *ngFor="let m of messages"
+      [class.user]="m.from === 'user'"
+      [class.bot]="m.from === 'bot'"
+    >
+      <div class="bubble">
+        <pre class="text">{{ m.text }}</pre>
+      </div>
+    </div>
+
+    <div class="typing" *ngIf="loading && !isQueued">
+      Thinking...
+    </div>
+  </div>
+
+  <div class="chat-footer">
+    <textarea
+      class="input"
+      rows="2"
+      placeholder="Type message... (Enter to send)"
+      [(ngModel)]="inputText"
+      [ngModelOptions]="{ standalone: true }"
+      (keydown)="onEnter($event)"
+      [disabled]="loading || isQueued"
+    ></textarea>
+
+    <button
+      class="send-btn"
+      type="button"
+      (click)="sendMessage()"
+      [disabled]="loading || isQueued"
+    >
+      Send
+    </button>
+  </div>
+</div>
