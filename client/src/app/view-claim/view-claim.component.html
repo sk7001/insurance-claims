@@ -1,19 +1,37 @@
 <app-navbar></app-navbar>
 
 <div class="page">
+  <!-- HEADER -->
+  <div class="page-header">
+    <h1 class="page-title">View Claim Status</h1>
 
-  <h1 class="page-title">View Claim Status</h1>
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input
+        class="search-input"
+        type="text"
+        placeholder="Search by Claim ID or Description..."
+        (input)="searchByDescId($event)"
+      />
+    </div>
+  </div>
 
+  <!-- ERROR MESSAGE -->
   <p class="error-message" *ngIf="showError">
     {{ errorMessage }}
   </p>
 
+  <!-- TABLE -->
   <div class="table-card">
-
     <table>
       <thead>
         <tr>
           <th>Claim ID</th>
+
+          <!-- ✅ NEW -->
+          <th>Type</th>
+
           <th>Description</th>
           <th>Status</th>
           <th>Date</th>
@@ -21,13 +39,17 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let claim of claimList">
-
+        <tr *ngFor="let claim of searchFilter">
           <td>
             <strong>#{{ claim.id }}</strong>
           </td>
 
-          <td>
+          <!-- ✅ NEW -->
+          <td class="type-col">
+            {{ claim.insuranceType || '-' }}
+          </td>
+
+          <td class="desc">
             {{ claim.description }}
           </td>
 
@@ -48,11 +70,15 @@
           <td>
             {{ claim.date | date }}
           </td>
+        </tr>
 
+        <!-- EMPTY STATE -->
+        <tr *ngIf="searchFilter?.length === 0">
+          <td colspan="5" class="empty">
+            No claims found
+          </td>
         </tr>
       </tbody>
     </table>
-
   </div>
-
 </div>

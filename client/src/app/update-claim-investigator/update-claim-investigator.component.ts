@@ -9,20 +9,21 @@ import { HttpService } from '../../services/http.service';
   templateUrl: './update-claim-investigator.component.html',
   styleUrls: ['./update-claim-investigator.component.scss']
 })
-
 export class UpdateClaimInvestigatorComponent implements OnInit {
-
 
   itemForm: FormGroup;
   formModel: any = { status: null };
+
   showError: boolean = false;
   errorMessage: any;
+
   claimList: any[] = [];
-  assignModel: any = {};
+  searchFilter: any[] = [];
+
   showMessage: any;
   responseMessage: any;
-  updateId: any;
 
+  updateId: any;
 
   constructor(
     public router: Router,
@@ -35,21 +36,26 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     });
   }
 
-
   ngOnInit(): void {
     this.getClaims();
   }
 
+  private sortByDateDesc(list: any[]): any[] {
+    return (list || []).sort((a, b) => {
+      const dateA = new Date(a?.date).getTime();
+      const dateB = new Date(b?.date).getTime();
+      return dateB - dateA;
+    });
+  }
 
   getClaims() {
     const userId = localStorage.getItem('userId');
-    if (!userId) {
-      return;
-    }
+    if (!userId) return;
 
     this.httpService.getClaimsByUnderwriter(userId).subscribe({
       next: (res: any) => {
-        this.claimList = res;
+        this.claimList = this.sortByDateDesc(res || []);
+        this.searchFilter = [...this.claimList];
       },
       error: (err) => {
         this.showError = true;
@@ -67,6 +73,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
       this.showError = true;
       return;
     }
+
     this.httpService
       .updateClaimsStatus(this.itemForm.value.status, this.updateId)
       .subscribe({
@@ -75,7 +82,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
           this.updateId = null;
           this.getClaims();
           setTimeout(() => {
-            alert("Claim updated successfully");
+            alert('Claim updated successfully');
           }, 300);
         },
         error: (err) => {
@@ -84,7 +91,34 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
         }
       });
   }
+
+  // ✅ UPDATED SEARCH: claim id/desc/status/type + policyholder details
+  searchByDescId(event: any) {
+    const q = (event.target.value || '').toLowerCase().trim();
+
+    const filtered = this.claimList.filter((claim) => {
+      const claimId = claim?.id != null ? String(claim.id).toLowerCase() : '';
+      const desc = claim?.description?.toString().toLowerCase() || '';
+      const status = claim?.status?.toString().toLowerCase() || '';
+      const type = claim?.insuranceType?.toString().toLowerCase() || '';
+
+      const phName = claim?.policyholder?.username?.toString().toLowerCase() || '';
+      const phEmail = claim?.policyholder?.email?.toString().toLowerCase() || '';
+      const phPhone = claim?.policyholder?.phoneNumber != null
+        ? String(claim.policyholder.phoneNumber).toLowerCase()
+        : '';
+
+      return (
+        claimId.includes(q) ||
+        desc.includes(q) ||
+        status.includes(q) ||
+        type.includes(q) ||
+        phName.includes(q) ||
+        phEmail.includes(q) ||
+        phPhone.includes(q)
+      );
+    });
+
+    this.searchFilter = this.sortByDateDesc(filtered);
+  }
 }
-
-
-

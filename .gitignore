@@ -1,0 +1,32 @@
+# ========================
+# Client (Angular)
+# ========================
+client/node_modules/
+client/dist/
+client/.angular/
+client/.cache/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.*
+
+# ========================
+# Server (Spring Boot / Java)
+# ========================
+server/target/
+*.class
+*.jar
+*.war
+
+# ========================
+# IDE / OS files
+# ========================
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
