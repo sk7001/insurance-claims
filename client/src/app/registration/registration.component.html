@@ -5,21 +5,43 @@
 
     <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
 
+      <!-- Username -->
       <div class="input-group">
         <input type="text" placeholder=" " formControlName="username">
         <label>Username</label>
 
-        <small class="error" *ngIf="itemForm.get('username')?.invalid &&
+        <small class="error"
+          *ngIf="itemForm.get('username')?.invalid &&
                  (itemForm.get('username')?.touched || itemForm.get('username')?.dirty)">
           Username is required
         </small>
       </div>
 
+      <!-- ✅ Phone Number -->
+      <div class="input-group">
+        <input type="tel" placeholder=" " formControlName="phoneNumber">
+        <label>Phone Number</label>
+
+        <!-- ✅ FIXED: phoneNumber instead of phone -->
+        <small class="error"
+          *ngIf="itemForm.get('phoneNumber')?.invalid &&
+                 (itemForm.get('phoneNumber')?.touched || itemForm.get('phoneNumber')?.dirty)">
+          <span *ngIf="itemForm.get('phoneNumber')?.errors?.['required']">
+            Phone number is required
+          </span>
+          <span *ngIf="itemForm.get('phoneNumber')?.errors?.['pattern']">
+            Enter a valid 10-digit phone number
+          </span>
+        </small>
+      </div>
+
+      <!-- Email -->
       <div class="input-group">
         <input type="email" placeholder=" " formControlName="email">
         <label>Email</label>
 
-        <small class="error" *ngIf="itemForm.get('email')?.invalid &&
+        <small class="error"
+          *ngIf="itemForm.get('email')?.invalid &&
                  (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)">
           <span *ngIf="itemForm.get('email')?.errors?.['required']">
             Email is required
@@ -30,16 +52,19 @@
         </small>
       </div>
 
+      <!-- Password -->
       <div class="input-group">
         <input type="password" placeholder=" " formControlName="password">
         <label>Password</label>
 
-        <small class="error" *ngIf="itemForm.get('password')?.invalid &&
+        <small class="error"
+          *ngIf="itemForm.get('password')?.invalid &&
                  (itemForm.get('password')?.touched || itemForm.get('password')?.dirty)">
           Password must be 8+ chars, uppercase, lowercase, number & symbol
         </small>
       </div>
 
+      <!-- Role -->
       <div class="input-group">
         <select formControlName="role">
           <option value="" disabled selected></option>
@@ -48,9 +73,11 @@
           <option value="UNDERWRITER">Underwriter</option>
           <option value="INVESTIGATOR">Investigator</option>
         </select>
+
         <label class="select-label">Role</label>
 
-        <small class="error" *ngIf="itemForm.get('role')?.invalid &&
+        <small class="error"
+          *ngIf="itemForm.get('role')?.invalid &&
                  (itemForm.get('role')?.touched || itemForm.get('role')?.dirty)">
           Role is required
         </small>
@@ -60,7 +87,10 @@
         Create Account
       </button>
 
-      <p class="server-message" [class.error]="isError" [class.success]="!isError" *ngIf="showMessage">
+      <p class="server-message"
+         [class.error]="isError"
+         [class.success]="!isError"
+         *ngIf="showMessage">
         {{ responseMessage }}
       </p>
 

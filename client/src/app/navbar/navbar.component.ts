@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
-import { response } from 'express';
 
 @Component({
   selector: 'app-navbar',
@@ -13,15 +10,30 @@ import { response } from 'express';
 export class NavbarComponent {
 
   IsLoggin: any = false;
-  roleName: string | null;
-  constructor(private authService: AuthService, private router: Router) {
+  roleName: string | null = null;
+  userName: string | null = null;
+  theme: string = 'dark';
 
+  constructor(private authService: AuthService, private router: Router) {
     this.IsLoggin = authService.getLoginStatus;
     this.roleName = authService.getRole;
+    this.userName = localStorage.getItem('name') || 'Sneja';
+    
     if (this.IsLoggin == false) {
       this.router.navigateByUrl('/login');
     }
   }
+
+  setTheme(t: string) {
+    this.theme = t;
+    if(t === 'light') document.body.classList.add('light-theme');
+    else document.body.classList.remove('light-theme');
+  }
+
+  openChat() {
+    window.dispatchEvent(new Event('open-chat-bot'));
+  }
+
   logout() {
     this.authService.logout();
     window.location.reload();

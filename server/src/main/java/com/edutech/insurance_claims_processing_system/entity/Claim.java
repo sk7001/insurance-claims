@@ -16,9 +16,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Claim {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    private String insuranceType;   // ✅ NEW FIELD
 
     private String description;
 
@@ -48,6 +51,9 @@ public class Claim {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    public String getInsuranceType() { return insuranceType; }   // ✅ getter
+    public void setInsuranceType(String insuranceType) { this.insuranceType = insuranceType; } // ✅ setter
+
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
@@ -68,5 +74,4 @@ public class Claim {
 
     public Investigation getInvestigation() { return investigation; }
     public void setInvestigation(Investigation investigation) { this.investigation = investigation; }
-
 }
