@@ -35,7 +35,14 @@ export class ChatbotComponent implements OnInit {
 
   constructor(private http: HttpService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // ✅ Sync with all possible trigger points (Dashboard header, Sidebar, etc.)
+    ['open-chat', 'open-chat-bot', 'toggle-chat-nexus'].forEach(evtName => {
+      window.addEventListener(evtName, () => {
+        if (!this.isOpen) this.toggleChat();
+      });
+    });
+  }
 
   toggleChat(): void {
     this.isOpen = !this.isOpen;
@@ -86,7 +93,7 @@ export class ChatbotComponent implements OnInit {
       next: (res: any) => {
         this.messages.push({
           from: 'bot',
-          text: res?.reply || 'Hi 👋 I am Claim Bot. Ask me anything about your claims.'
+          text: res?.reply || 'Hi 👋 I am Nexus AI. How can I help you with your claims today?'
         });
         this.loading = false;
         this.scrollToBottom();
@@ -106,7 +113,6 @@ export class ChatbotComponent implements OnInit {
     const text = (this.inputText || '').trim();
     if (!text) return;
 
-    // ✅ block sending while queued
     if (this.isQueued) {
       this.messages.push({
         from: 'bot',
@@ -117,71 +123,42 @@ export class ChatbotComponent implements OnInit {
     }
 
     const policyholderId = localStorage.getItem('userId');
-
-    // show user message
     this.messages.push({ from: 'user', text });
-
-    // store last message for retry
     this.lastUserMessage = text;
-
-    // clear input
     this.inputText = '';
     this.loading = true;
     this.scrollToBottom();
 
-    const payload = {
-      policyholderId: Number(policyholderId),
-      message: text
-    };
-
-    this.http.chatbotMessage(payload).subscribe({
+    this.http.chatbotMessage({ policyholderId: Number(policyholderId), message: text }).subscribe({
       next: (res: any) => {
         this.loading = false;
-
         const reply = res?.reply || 'No response';
-
-        // ✅ detect rate-limit retry seconds from reply
         const sec = this.extractRetrySeconds(reply);
         if (sec > 0) {
-          this.messages.push({
-            from: 'bot',
-            text: `⏳ You are in queue. Retrying in ${sec}s...`
-          });
+          this.messages.push({ from: 'bot', text: `⏳ Rate limit hit. Retrying in ${sec}s...` });
           this.startQueue(sec);
         } else {
           this.messages.push({ from: 'bot', text: reply });
         }
-
         this.scrollToBottom();
       },
       error: (err: any) => {
         this.loading = false;
-
-        // backend might return text error or json error
-        const raw = err?.error?.reply || err?.error || 'Gemini is busy. Please try again later.';
+        const raw = err?.error?.reply || err?.error || 'Busy. Try later.';
         const replyText = typeof raw === 'string' ? raw : JSON.stringify(raw);
-
         const sec = this.extractRetrySeconds(replyText);
         if (sec > 0) {
-          this.messages.push({
-            from: 'bot',
-            text: `⏳ You are in queue. Retrying in ${sec}s...`
-          });
+          this.messages.push({ from: 'bot', text: `⏳ Rate limit hit. Retrying in ${sec}s...` });
           this.startQueue(sec);
         } else {
-          this.messages.push({
-            from: 'bot',
-            text: 'Sorry, I could not respond right now.'
-          });
+          this.messages.push({ from: 'bot', text: 'Sorry, I encountered an error.' });
         }
-
         this.scrollToBottom();
       }
     });
   }
 
   onEnter(event: KeyboardEvent): void {
-    // Enter = send, Shift+Enter = new line
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.sendMessage();
@@ -191,29 +168,16 @@ export class ChatbotComponent implements OnInit {
   private startQueue(seconds: number): void {
     this.isQueued = true;
     this.retrySeconds = seconds;
-
-    if (this.retryTimer) {
-      clearInterval(this.retryTimer);
-      this.retryTimer = null;
-    }
-
+    if (this.retryTimer) clearInterval(this.retryTimer);
     this.retryTimer = setInterval(() => {
       this.retrySeconds--;
-
       if (this.retrySeconds <= 0) {
         clearInterval(this.retryTimer);
         this.retryTimer = null;
         this.isQueued = false;
-
-        // ✅ auto retry last message once
         if (this.lastUserMessage) {
           const msg = this.lastUserMessage;
           this.lastUserMessage = null;
-
-          this.messages.push({ from: 'bot', text: '✅ Retrying now...' });
-          this.scrollToBottom();
-
-          // resend same message
           this.inputText = msg;
           this.sendMessage();
         }
@@ -221,30 +185,19 @@ export class ChatbotComponent implements OnInit {
     }, 1000);
   }
 
-  // ✅ extracts retry seconds from common Gemini error messages
-  // Supports:
-  // "Please retry in 39.11651666s"
-  // `"retryDelay":"39s"`
   private extractRetrySeconds(text: string): number {
     if (!text) return 0;
-
     const m1 = text.match(/retry in\s+([0-9]+(\.[0-9]+)?)s/i);
     if (m1 && m1[1]) return Math.ceil(Number(m1[1]));
-
     const m2 = text.match(/"retryDelay"\s*:\s*"(\d+)s"/i);
-    if (m2 && m2[1]) return Number(m2[1]);
-
     const m3 = text.match(/retryDelay.*?(\d+)s/i);
-    if (m3 && m3[1]) return Number(m3[1]);
-
-    return 0;
+    return m2 ? Number(m2[1]) : (m3 ? Number(m3[1]) : 0);
   }
 
   private scrollToBottom(): void {
     try {
       const el = this.chatBody?.nativeElement;
-      if (!el) return;
-      el.scrollTop = el.scrollHeight;
+      if (el) el.scrollTop = el.scrollHeight;
     } catch {}
   }
 }

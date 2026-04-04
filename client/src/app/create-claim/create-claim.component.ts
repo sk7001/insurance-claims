@@ -1,4 +1,4 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
@@ -9,7 +9,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './create-claim.component.html',
   styleUrls: ['./create-claim.component.scss']
 })
-export class CreateClaimComponent {
+export class CreateClaimComponent implements OnInit {
 
   itemForm: FormGroup;
 
@@ -21,10 +21,10 @@ export class CreateClaimComponent {
 
   claimList: any[] = [];
 
-  // ✅ date max = today
+  // ✅ Max date = today
   maxDate: string = new Date().toISOString().split('T')[0];
 
-  // ✅ Insurance types
+  // ✅ Insurance types list
   insuranceTypes: string[] = [
     'Health Insurance',
     'Life Insurance',
@@ -50,8 +50,10 @@ export class CreateClaimComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService
   ) {
+    // ✅ initialize filtered list
     this.filteredInsuranceTypes = [...this.insuranceTypes];
 
+    // ✅ form setup
     this.itemForm = this.formBuilder.group({
       insuranceType: ['', Validators.required],
       description: ['', Validators.required],
@@ -60,7 +62,11 @@ export class CreateClaimComponent {
     });
   }
 
-  // ✅ Prevent future date (even if user hacks HTML)
+  ngOnInit(): void {
+    // Optional: initial load of claims
+  }
+
+  // ✅ Prevent future dates
   futureDateValidator(control: AbstractControl) {
     if (!control.value) return null;
 
@@ -73,12 +79,13 @@ export class CreateClaimComponent {
     return selected > today ? { futureDate: true } : null;
   }
 
-  // ✅ Dropdown open/close
-  toggleInsuranceDropdown() {
+  // ✅ Toggle dropdown
+  toggleInsuranceDropdown(event: Event) {
+    event.stopPropagation(); 
     this.insuranceDropdownOpen = !this.insuranceDropdownOpen;
   }
 
-  // ✅ close dropdown on outside click (same as assign)
+  // ✅ Close dropdown when clicking outside
   @HostListener('document:click', ['$event'])
   onDocClick(event: any) {
     const target = event.target as HTMLElement;
@@ -87,13 +94,15 @@ export class CreateClaimComponent {
     }
   }
 
+  // ✅ Filter insurance list
   filterInsuranceTypes() {
     const q = (this.insuranceSearch || '').toLowerCase().trim();
-    this.filteredInsuranceTypes = this.insuranceTypes.filter(t =>
-      t.toLowerCase().includes(q)
+    this.filteredInsuranceTypes = this.insuranceTypes.filter(type =>
+      type.toLowerCase().includes(q)
     );
   }
 
+  // ✅ Select insurance
   selectInsuranceType(type: string) {
     this.itemForm.patchValue({ insuranceType: type });
     this.itemForm.get('insuranceType')?.markAsTouched();
@@ -101,10 +110,12 @@ export class CreateClaimComponent {
     this.selectedInsuranceText = type;
     this.insuranceDropdownOpen = false;
 
+    // reset search
     this.insuranceSearch = '';
     this.filteredInsuranceTypes = [...this.insuranceTypes];
   }
 
+  // ✅ Get claims
   getClaims(): void {
     const userId = localStorage.getItem('userId');
     if (!userId) return;
@@ -120,6 +131,7 @@ export class CreateClaimComponent {
     });
   }
 
+  // ✅ Submit form
   onSubmit(): void {
     this.showError = false;
     this.showMessage = false;
@@ -136,6 +148,8 @@ export class CreateClaimComponent {
 
     this.httpService.createClaims(this.itemForm.value, userId).subscribe({
       next: () => {
+
+        // reset form
         this.itemForm.reset({
           insuranceType: '',
           description: '',
@@ -148,6 +162,7 @@ export class CreateClaimComponent {
 
         this.showMessage = true;
         this.responseMessage = "Claim created successfully";
+
         alert("Claim created successfully");
 
         this.router.navigateByUrl('/view-claim-status');

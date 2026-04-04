@@ -1,161 +1,102 @@
 <app-navbar></app-navbar>
 
-<div class="page">
-  <!-- PAGE HEADER -->
-  <div class="page-header">
-    <h1 class="page-title">Update Claims</h1>
-
-    <!-- SEARCH -->
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="Search by Claim / Type / Policyholder / Underwriter..."
-        (input)="searchByDescId($event)"
-      />
-    </div>
+<div class="uc-shell">
+  <!-- Same Apple Cinematic Backdrop -->
+  <div class="uc-backdrop">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
   </div>
 
-  <!-- TABLE CARD -->
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Claim ID</th>
+  <div class="uc-container">
+    <div class="uc-header">
+      <h2>Manage Claims</h2>
+      <p>Review and update existing claims within your workflow.</p>
+    </div>
 
-          <!-- ✅ NEW -->
-          <th>Type</th>
+    <!-- TABLE CARD -->
+    <div class="uc-card table-wrapper">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Underwriter</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let claim of claimList" class="uc-row">
+              <td class="td-bold">#{{ claim.id }}</td>
+              <td><span class="td-desc">{{ claim.description }}</span></td>
+              <td><span class="status-badge" [ngClass]="claim.status | lowercase">{{ claim.status }}</span></td>
+              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+              <td>
+                <ng-container *ngIf="claim.underwriter; else noUnderwriter">
+                  <div class="uw-cell">
+                    <div class="uw-name">{{ claim.underwriter.username }}</div>
+                    <div class="uw-email">{{ claim.underwriter.email }}</div>
+                  </div>
+                </ng-container>
+                <ng-template #noUnderwriter>
+                  <span class="no-underwriter">Unassigned</span>
+                </ng-template>
+              </td>
+              <td>
+                <button class="uc-action-btn" (click)="edit(claim)">
+                  Update
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-          <th>Description</th>
-          <th>Status</th>
-          <th>Date</th>
-
-          <!-- ✅ NEW -->
-          <th>Policyholder</th>
-
-          <th>Underwriter</th>
-          <th class="action-header">Action</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <tr *ngFor="let claim of searchFilter">
-          <td>
-            <strong>#{{ claim.id }}</strong>
-          </td>
-
-          <!-- ✅ NEW: CLAIM TYPE -->
-          <td class="type-col">
-            {{ claim.insuranceType || '-' }}
-          </td>
-
-          <td class="desc">
-            {{ claim.description }}
-          </td>
-
-          <!-- STATUS -->
-          <td>
-            <span
-              class="status-tag"
-              [ngClass]="{
-                'status-approved': claim.status === 'Approved',
-                'status-rejected': claim.status === 'Rejected',
-                'status-inprogress': claim.status === 'In progress',
-                'status-initiated': claim.status === 'Initiated'
-              }"
-            >
-              {{ claim.status }}
-            </span>
-          </td>
-
-          <td>
-            {{ claim.date | date }}
-          </td>
-
-          <!-- ✅ NEW: POLICYHOLDER DETAILS -->
-          <td>
-            <ng-container *ngIf="claim.policyholder; else noPolicyholder">
-              <div class="person">
-                <div class="person-name">{{ claim.policyholder.username }}</div>
-                <div class="muted">{{ claim.policyholder.email }}</div>
-                <div class="muted" *ngIf="claim.policyholder.phoneNumber">
-                  {{ claim.policyholder.phoneNumber }}
-                </div>
-              </div>
-            </ng-container>
-
-            <ng-template #noPolicyholder>
-              <span class="no-underwriter">Not Available</span>
-            </ng-template>
-          </td>
-
-          <!-- UNDERWRITER (same as before) -->
-          <td>
-            <ng-container *ngIf="claim.underwriter; else noUnderwriter">
-              <div class="underwriter">
-                <div>{{ claim.underwriter.username }}</div>
-                <div class="muted">{{ claim.underwriter.email }}</div>
-
-                <!-- optional show phone if exists -->
-                <div class="muted" *ngIf="claim.underwriter.phoneNumber">
-                  {{ claim.underwriter.phoneNumber }}
-                </div>
-              </div>
-            </ng-container>
-
-            <ng-template #noUnderwriter>
-              <span class="no-underwriter">Not Assigned</span>
-            </ng-template>
-          </td>
-
-          <td class="actions">
-            <button class="small-btn" (click)="edit(claim)">
-              Update
+    <!-- UPDATE FORM FLOAT CARD (Modal) -->
+    <div class="update-float-card" [class.show]="updatedId !== null && !closing" [class.closing]="closing">
+       <div class="ufc-inner">
+          <div class="ufc-header">
+            <h3>Update Claim #{{ updatedId }}</h3>
+            <button class="close-icon" type="button" (click)="cancelUpdate()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
             </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+          </div>
 
-  <!-- UPDATE FORM (same as before) -->
-  <div
-    class="form-card update-form"
-    *ngIf="updatedId || closing"
-    [class.hide]="closing"
-  >
-    <h2>Update Claim</h2>
+          <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="ufc-form">
+            <div class="input-group">
+              <label>Description</label>
+              <input type="text" formControlName="description" placeholder="Update description...">
+            </div>
 
-    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-      <div class="form-group">
-        <label>Description</label>
-        <input type="text" formControlName="description" />
-      </div>
+            <div class="row-group">
+              <div class="input-group half">
+                <label>Date</label>
+                <input type="date" formControlName="date">
+              </div>
 
-      <div class="form-group">
-        <label>Date</label>
-        <input type="date" formControlName="date" />
-      </div>
+              <div class="input-group half">
+                <label>Status</label>
+                <input type="text" formControlName="status" placeholder="Pending, Approved...">
+              </div>
+            </div>
 
-      <div class="form-group">
-        <label>Status</label>
-        <input type="text" formControlName="status" />
-      </div>
-
-      <div class="action-buttons">
-        <button type="submit" class="success-btn">
-          Save Changes
-        </button>
-
-        <button type="button" class="cancel-btn" (click)="cancelUpdate()">
-          Cancel
-        </button>
-      </div>
-    </form>
-
-    <div *ngIf="showError" class="error-box">
-      {{ errorMessage || 'Failed to update claim' }}
+            <div class="action-buttons">
+              <button type="submit" class="save-btn" [disabled]="!itemForm.valid">Save Changes</button>
+            </div>
+            
+            <div *ngIf="showError" class="error-msg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+              {{ errorMessage || 'Failed to update claim.' }}
+            </div>
+          </form>
+       </div>
     </div>
+    
+    <!-- Overlay for the float card -->
+    <div class="ufc-overlay" [class.show]="updatedId !== null && !closing" [class.closing]="closing" (click)="cancelUpdate()"></div>
+
   </div>
 </div>
