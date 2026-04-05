@@ -7,6 +7,7 @@
        <p class="page-subtitle">Search and update claim statuses quickly.</p>
     </div>
 
+    <!-- SEARCH -->
     <div class="dh-search">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
       <input
@@ -17,21 +18,16 @@
     </div>
   </div>
 
+  <!-- TABLE CARD -->
   <div class="table-card">
     <table>
       <thead>
         <tr>
           <th>Claim ID</th>
-
-          <!-- ✅ NEW -->
           <th>Type</th>
-
           <th>Description</th>
           <th>Status</th>
-
-          <!-- ✅ NEW -->
           <th>Policyholder</th>
-
           <th class="action-header">Action</th>
         </tr>
       </thead>
@@ -39,16 +35,15 @@
       <tbody>
         <tr *ngFor="let claim of searchFilter">
           <td>
-            <strong class="claim-id">#{{ claim.id }}</strong>
+            <strong class="td-bold">#{{ claim.id }}</strong>
           </td>
 
-          <!-- ✅ NEW: TYPE -->
           <td class="type-col">
             {{ claim.insuranceType || '-' }}
           </td>
 
-          <td class="desc">
-            {{ claim.description }}
+          <td>
+            <span class="td-desc">{{ claim.description }}</span>
           </td>
 
           <td>
@@ -65,7 +60,6 @@
             </span>
           </td>
 
-          <!-- ✅ NEW: POLICYHOLDER -->
           <td>
             <ng-container *ngIf="claim.policyholder; else noPolicyholder">
               <div class="policyholder">

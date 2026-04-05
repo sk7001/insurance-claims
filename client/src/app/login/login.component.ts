@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -58,7 +59,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private httpService: HttpService,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
 
     this.loginForm = this.fb.group({
@@ -159,14 +161,20 @@ export class LoginComponent implements OnInit {
         this.authService.saveUsername(data.username);
         this.authService.saveEmail(data.email);
         this.authService.saveFullName(data.fullName);
-        this.router.navigateByUrl('/dashbaord');
+        this.toastService.show('Login successful! Welcome back ✅', 'success');
+        
+        setTimeout(() => {
+          this.router.navigateByUrl('/dashbaord');
+        }, 1000);
       },
       error: (error: any) => {
         this.loginLoading = false;
         if (error?.error?.message) {
           this.loginErr = error.error.message;
+          this.toastService.show(error.error.message, 'error');
         } else {
           this.loginErr = 'Invalid username or password';
+          this.toastService.show('Invalid username or password', 'error');
         }
         this.triggerShake('login');
         setTimeout(() => this.loginErr = '', 4500);
@@ -196,6 +204,7 @@ export class LoginComponent implements OnInit {
    onForgotSubmit(): void {
      if (!this.forgotEmail || !this.forgotEmail.includes('@')) {
        this.forgotErr = 'Please enter a valid email address';
+       this.toastService.show('Please enter a valid email address', 'error');
        return;
      }
      this.forgotEmail = this.forgotEmail.toLowerCase().trim();
@@ -208,6 +217,7 @@ export class LoginComponent implements OnInit {
        next: (res: any) => {
          this.forgotLoading = false;
          this.forgotSucc = 'A 6-digit code has been sent to your email! ✅';
+         this.toastService.show('A 6-digit code has been sent to your email! ✅', 'success');
          this.forgotStep = 2; // Move to OTP verification step
          this.otpDigits = ['', '', '', '', '', ''];
          setTimeout(() => {
@@ -218,6 +228,7 @@ export class LoginComponent implements OnInit {
        error: (err: any) => {
          this.forgotLoading = false;
          this.forgotErr = err.error?.message || 'Email not found in our records';
+         this.toastService.show(err.error?.message || 'Email not found in our records', 'error');
        }
      });
    }
@@ -302,6 +313,7 @@ export class LoginComponent implements OnInit {
     const otp = this.otpDigits.join('');
     if (otp.length !== 6) {
       this.forgotErr = 'Please enter all 6 digits';
+      this.toastService.show('Please enter all 6 digits', 'error');
       return;
     }
 
@@ -313,11 +325,13 @@ export class LoginComponent implements OnInit {
       next: (res: any) => {
         this.forgotLoading = false;
         this.forgotSucc = 'Code verified! Please set your new password. 🛡️';
+        this.toastService.show('Code verified! Please set your new password. 🛡️', 'success');
         this.forgotStep = 3;
       },
       error: (err: any) => {
         this.forgotLoading = false;
         this.forgotErr = err.error?.message || 'Invalid or expired code';
+        this.toastService.show(err.error?.message || 'Invalid or expired code', 'error');
       }
     });
   }
@@ -326,12 +340,14 @@ export class LoginComponent implements OnInit {
      // Validate Strength
      if (!this.pwPattern.test(this.newPassword)) {
        this.forgotErr = 'New password must have 8+ characters, uppercase, lowercase, number, and special character 🛡️';
+       this.toastService.show('New password must have 8+ characters, uppercase, lowercase, number, and special character 🛡️', 'error');
        this.triggerShake('forgot');
        return;
      }
 
      if (this.newPassword !== this.confirmPassword) {
        this.forgotErr = 'Passwords do not match';
+       this.toastService.show('Passwords do not match', 'error');
        this.triggerShake('forgot');
        return;
      }
@@ -350,11 +366,13 @@ export class LoginComponent implements OnInit {
        next: (res: any) => {
          this.forgotLoading = false;
          this.forgotSucc = 'Password reset successfully! Redirecting... ✅';
+         this.toastService.show('Password reset successfully! Redirecting... ✅', 'success');
          setTimeout(() => this.toggleForgot(false), 3000);
        },
        error: (err: any) => {
          this.forgotLoading = false;
-         this.forgotErr = err.error?.message || 'Verification failed. Please check the code or try again.';
+         this.forgotErr = err.error?.message || 'Verification failed.';
+         this.toastService.show(err.error?.message || 'Verification failed. Please check the code or try again.', 'error');
          this.triggerShake('forgot');
        }
      });
@@ -393,6 +411,7 @@ export class LoginComponent implements OnInit {
       next: () => {
         this.regLoading = false;
         this.regSucc = 'Registered! Please check your email to verify your account.';
+        this.toastService.show('Registered! Please check your email to verify your account.', 'success');
 
         this.registerForm.reset();
         this.selRole = '';
@@ -407,11 +426,12 @@ export class LoginComponent implements OnInit {
 
         if (error?.error?.message) {
           this.regErr = error.error.message;
+          this.toastService.show(error.error.message, 'error');
         } else {
           this.regErr = 'Registration failed. Please try again.';
+          this.toastService.show('Registration failed. Please try again.', 'error');
         }
-
-        setTimeout(() => this.regErr = '', 4000);
+        setTimeout(() => this.regErr = '', 4500);
       }
     });
   }

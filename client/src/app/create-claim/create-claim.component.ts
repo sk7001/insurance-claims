@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/fo
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-create-claim',
@@ -48,7 +49,8 @@ export class CreateClaimComponent implements OnInit {
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
     // ✅ initialize filtered list
     this.filteredInsuranceTypes = [...this.insuranceTypes];
@@ -163,9 +165,11 @@ export class CreateClaimComponent implements OnInit {
         this.showMessage = true;
         this.responseMessage = "Claim created successfully";
 
-        alert("Claim created successfully");
+        this.toastService.show("Claim created successfully", "success");
 
-        this.router.navigateByUrl('/view-claim-status');
+        setTimeout(() => {
+          this.router.navigateByUrl('/view-claim-status');
+        }, 1500);
       },
       error: (err) => {
         this.showError = true;

@@ -43,7 +43,7 @@
       <tbody>
         <tr *ngFor="let claim of searchFilter">
           <td>
-            <strong>#{{ claim.id }}</strong>
+            <strong class="td-bold">#{{ claim.id }}</strong>
           </td>
 
           <!-- ✅ NEW -->
@@ -51,8 +51,8 @@
             {{ claim.insuranceType || '-' }}
           </td>
 
-          <td class="desc">
-            {{ claim.description }}
+          <td>
+            <span class="td-desc">{{ claim.description }}</span>
           </td>
 
           <td>

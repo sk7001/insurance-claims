@@ -155,37 +155,13 @@ tbody tr:hover {
    STATUS TAG
 ====================== */
 .status-tag {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  animation: fadeUp 0.4s ease both;
+  display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: capitalize; white-space: nowrap;
+  background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); animation: fadeUp 0.4s ease both;
 }
-
-/* Approved */
-.status-approved {
-  background: rgba(0, 230, 118, 0.15);
-  color: #00e676;
-}
-
-/* Rejected */
-.status-rejected {
-  background: rgba(255, 59, 48, 0.15);
-  color: #ff3b30;
-}
-
-/* In Progress */
-.status-inprogress {
-  background: rgba(255, 171, 0, 0.15);
-  color: #ffab00;
-}
-
-/* Initiated */
-.status-initiated {
-  background: rgba(59, 130, 246, 0.15);
-  color: $accent;
-}
+.status-tag.status-approved { background: rgba(0, 230, 118, 0.15); color: #00e676; border-color: rgba(0, 230, 118, 0.2); }
+.status-tag.status-rejected { background: rgba(255, 59, 48, 0.15); color: #ff3b30; border-color: rgba(255, 59, 48, 0.2); }
+.status-tag.status-inprogress { background: rgba(255, 171, 0, 0.15); color: #ffab00; border-color: rgba(255, 171, 0, 0.2); }
+.status-tag.status-initiated { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
 
 /* ======================
    EMPTY STATE
@@ -201,31 +177,73 @@ tbody tr:hover {
    ANIMATIONS
 ====================== */
 @keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes cardFloat {
-  from { opacity: 0; transform: translateY(26px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @keyframes rowPop {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
+  0% {
+    transform: translateX(0);
+  }
+
+  25% {
+    transform: translateX(-4px);
+  }
+
+  50% {
+    transform: translateX(4px);
+  }
+
+  75% {
+    transform: translateX(-4px);
+  }
+
+  100% {
+    transform: translateX(0);
+  }
 }
 
 /* ======================

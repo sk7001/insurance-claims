@@ -1,6 +1,5 @@
 package com.edutech.insurance_claims_processing_system.service;
 
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -14,23 +13,36 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-    // ✅ ASYNC = email runs in background
     @Async
-    public void sendSimpleMail(String to, String subject, String body) {
-
+    public void sendGenericHtmlMail(String to, String subject, String name, String contentHtml) {
         try {
             if (to == null || to.isEmpty()) return;
 
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(to);
-            message.setSubject(subject);
-            message.setText(body);
+            javax.mail.internet.MimeMessage message = mailSender.createMimeMessage();
+            org.springframework.mail.javamail.MimeMessageHelper helper = new org.springframework.mail.javamail.MimeMessageHelper(message, true, "UTF-8");
 
+            helper.setFrom("InsureCo <insure.co.customer@gmail.com>");
+            helper.setTo(to);
+            helper.setSubject(subject);
+
+            String htmlBody = "<div style=\"font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #03050a; color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5);\">"
+                + "  <div style=\"padding: 30px; text-align: center; border-bottom: 1px solid #1a1f33;\">"
+                + "    <h1 style=\"color: #e63350; margin: 0; font-weight: 800; letter-spacing: 2px;\">InsureCo</h1>"
+                + "  </div>"
+                + "  <div style=\"padding: 40px 30px; background-color: #0d0d1a;\">"
+                + "    <h2 style=\"margin-top: 0; color: #ffffff;\">Hello " + (name != null ? name : "User") + ",</h2>"
+                + "    <p style=\"color: #a0a5b5; line-height: 1.6; font-size: 16px;\">" + contentHtml + "</p>"
+                + "  </div>"
+                + "  <div style=\"padding: 20px; text-align: center; font-size: 12px; color: #4a5568;\">"
+                + "    &copy; " + java.time.Year.now().getValue() + " InsureCo. All rights reserved."
+                + "  </div>"
+                + "</div>";
+
+            helper.setText(htmlBody, true);
             mailSender.send(message);
 
         } catch (Exception e) {
-            // ✅ do NOT fail your API even if email fails
-            System.out.println("Email failed: " + e.getMessage());
+            System.out.println("Generic HTML Email failed: " + e.getMessage());
         }
     }
 
@@ -50,7 +62,7 @@ public class EmailService {
 
             String htmlBody = "<div style=\"font-family: 'Plus Jakarta Sans', Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #03050a; color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5);\">"
                 + "  <div style=\"padding: 30px; text-align: center; border-bottom: 1px solid #1a1f33;\">"
-                + "    <h1 style=\"color: #e63350; margin: 0; font-weight: 800; letter-spacing: 2px;\">INSURECO</h1>"
+                + "    <h1 style=\"color: #e63350; margin: 0; font-weight: 800; letter-spacing: 2px;\">InsureCo</h1>"
                 + "  </div>"
                 + "  <div style=\"padding: 40px 30px; background-color: #0d0d1a;\">"
                 + "    <h2 style=\"margin-top: 0; color: #ffffff;\">Welcome " + (name != null ? name : "User") + ",</h2>"

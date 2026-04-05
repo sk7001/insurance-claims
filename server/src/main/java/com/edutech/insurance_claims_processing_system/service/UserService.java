@@ -189,12 +189,13 @@ public class UserService implements UserDetailsService {
         otpRepository.save(record);
 
         // 5. Send Email
-        emailService.sendSimpleMail(
+        emailService.sendGenericHtmlMail(
                 email,
                 "Your Password Reset Code 🛡️",
-                "Your verification code is: " + otp + "\n\n" +
-                        "This code will expire in 5 minutes.\n\n" +
-                        "Regards,\nInsurance Claims Team"
+                email.split("@")[0],
+                "Your verification code is: <br/><br/>" +
+                        "<div style=\"font-size: 24px; font-weight: bold; padding: 15px; background: #1a1f33; display: inline-block; border-radius: 8px; letter-spacing: 5px; color: #00c853;\">" + otp + "</div><br/><br/>" +
+                        "This code will expire in 5 minutes."
         );
     }
 
@@ -224,13 +225,12 @@ public class UserService implements UserDetailsService {
         otpRepository.delete(record);
 
         // 5. Send Success Email Notification
-        emailService.sendSimpleMail(
+        emailService.sendGenericHtmlMail(
                 normalizedEmail,
                 "Password Reset Successful 🛡️",
-                "Hello " + (user.getFullName() != null ? user.getFullName() : user.getUsername()) + ",\n\n" +
-                        "This is a confirmation that your password has been successfully reset. " +
-                        "If you did not perform this action, please contact support immediately.\n\n" +
-                        "Regards,\nInsurance Claims Team"
+                (user.getFullName() != null ? user.getFullName() : user.getUsername()),
+                "This is a confirmation that your password has been successfully reset. " +
+                "If you did not perform this action, please contact support immediately."
         );
     }
 

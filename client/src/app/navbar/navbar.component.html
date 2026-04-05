@@ -46,11 +46,18 @@
         <span>Assign Claim</span>
       </div>
 
-      <div class="ds-pill-item" *ngIf="roleName === 'ADJUSTER' || roleName === 'UNDERWRITER' || roleName === 'ADMIN' || !roleName" routerLink="/update-claim" routerLinkActive="active">
+      <div class="ds-pill-item" *ngIf="roleName === 'ADJUSTER' || roleName === 'ADMIN' || !roleName" routerLink="/update-claim" routerLinkActive="active">
         <div class="ds-icon-box">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
         </div>
-        <span>Process Claims</span>
+        <span>Manage Claims</span>
+      </div>
+
+      <div class="ds-pill-item" *ngIf="roleName === 'UNDERWRITER' || roleName === 'ADMIN' || !roleName" routerLink="/update-claim-investigator" routerLinkActive="active">
+        <div class="ds-icon-box">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span>Review Claims</span>
       </div>
 
       <div class="ds-pill-item" *ngIf="roleName === 'INVESTIGATOR' || roleName === 'ADMIN' || !roleName" routerLink="/create-investigator" routerLinkActive="active">
