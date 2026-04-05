@@ -1,6 +1,7 @@
 package com.edutech.insurance_claims_processing_system.service;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -96,18 +97,23 @@ public class UserService implements UserDetailsService {
                 throw new IllegalArgumentException("Invalid role: " + user.getRole());
         }
 
-        /* ✅ SEND WELCOME EMAIL */
-        emailService.sendSimpleMail(
-                savedUser.getEmail(),
-                "Welcome to Insurance Claims System ✅",
-                "Dear " + savedUser.getUsername() + ",\n\n" +
-                        "Your account has been successfully created.\n\n" +
-                        "Role: " + savedUser.getRole() + "\n\n" +
-                        "You can now log in and start using the system.\n\n" +
-                        "Regards,\nInsurance Claims Team"
+        /* ✅ SEND VERIFICATION EMAIL */
+        emailService.sendVerificationHtmlMail(
+            savedUser.getEmail(),
+            savedUser.getFullName(),
+            savedUser.getVerificationToken()
         );
 
         return savedUser;
+    }
+
+    public void verifyEmailToken(String token) {
+        User user = userRepository.findByVerificationToken(token)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired verification token."));
+        
+        user.setVerified(true);
+        user.setVerificationToken(null);
+        userRepository.save(user);
     }
 
     public User getUserById(Long id) {
@@ -155,6 +161,10 @@ public class UserService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
+                user.isVerified(),
+                true,
+                true,
+                true,
                 new ArrayList<>());
     }
 
@@ -248,5 +258,7 @@ public class UserService implements UserDetailsService {
         target.setPassword(passwordEncoder.encode(source.getPassword()));
         target.setPhoneNumber(source.getPhoneNumber());
         target.setFullName(source.getFullName());
+        target.setVerified(false);
+        target.setVerificationToken(UUID.randomUUID().toString());
     }
 }

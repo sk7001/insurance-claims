@@ -161,11 +161,15 @@ export class LoginComponent implements OnInit {
         this.authService.saveFullName(data.fullName);
         this.router.navigateByUrl('/dashbaord');
       },
-      error: () => {
+      error: (error: any) => {
         this.loginLoading = false;
-        this.loginErr = 'Invalid username or password';
+        if (error?.error?.message) {
+          this.loginErr = error.error.message;
+        } else {
+          this.loginErr = 'Invalid username or password';
+        }
         this.triggerShake('login');
-        setTimeout(() => this.loginErr = '', 3500);
+        setTimeout(() => this.loginErr = '', 4500);
       }
     });
   }
@@ -388,7 +392,7 @@ export class LoginComponent implements OnInit {
     this.httpService.registerUser(payload).subscribe({
       next: () => {
         this.regLoading = false;
-        this.regSucc = 'User registered successfully';
+        this.regSucc = 'Registered! Please check your email to verify your account.';
 
         this.registerForm.reset();
         this.selRole = '';

@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -47,6 +49,8 @@ public class RegisterAndLoginController {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
+        } catch (DisabledException e) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Please verify your email before logging in. Check your inbox.");
         } catch (AuthenticationException e) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password");
         }
@@ -54,6 +58,31 @@ public class RegisterAndLoginController {
         String token = jwtUtil.generateToken(user.getUsername());
         return ResponseEntity
                 .ok(new LoginResponse(user.getId(), token, user.getUsername(), user.getEmail(), user.getRole(), user.getFullName()));
+    }
+
+    /* =========================
+       VERIFY EMAIL (HTML RESPONSE)
+    ========================= */
+    @GetMapping(value = "/verify", produces = "text/html")
+    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+        try {
+            userService.verifyEmailToken(token);
+            String htmlResponse = "<html><head><style>"
+                    + "body { font-family: 'Arial', sans-serif; background-color: #03050a; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }"
+                    + ".container { text-align: center; background: #0d0d1a; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }"
+                    + "h2 { color: #22c55e; }"
+                    + "a { display: inline-block; margin-top: 20px; background: #e63350; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; }"
+                    + "</style></head><body>"
+                    + "<div class='container'><h2>✅ Email Verified Successfully!</h2><p>Your account is now active.</p>"
+                    + "<a href='https://orchardsolve.lntedutech.com/project/1395/proxy/5000/login'>Return to Login</a></div>"
+                    + "</body></html>";
+            return ResponseEntity.ok(htmlResponse);
+        } catch (IllegalArgumentException e) {
+            String htmlError = "<html><body style='background-color: #03050a; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif;'>"
+                    + "<div style='text-align: center; background: #0d0d1a; padding: 40px; border-radius: 12px;'>"
+                    + "<h2 style='color: #e63350;'>❌ Verification Failed</h2><p>" + e.getMessage() + "</p></div></body></html>";
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(htmlError);
+        }
     }
 
     /* =========================
