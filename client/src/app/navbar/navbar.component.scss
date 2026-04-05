@@ -1,22 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 :root {
-  --nav-bg: #1c1d21;      // Dribbble Dark Sidebar Color
+  --nav-bg: #1c1d21; // Dribbble Dark Sidebar Color
   --nav-hover: #2a2b30;
   --nav-active: #2a2b30;
   --text-main: #f5f5f5;
   --text-dim: #90929a;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 .d-sidebar {
   position: fixed;
-  top: 16px; left: 16px; bottom: 16px;
+  top: 16px;
+  left: 16px;
+  bottom: 16px;
   width: 260px;
   background: var(--nav-bg);
   border-radius: 28px;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   padding: 30px 24px;
   font-family: 'Inter', sans-serif;
   z-index: 1000;
@@ -26,97 +31,197 @@
   margin-bottom: 40px;
 }
 
-.ds-section { margin-bottom: 24px; }
+.ds-section {
+  margin-bottom: 24px;
+}
 
 .ds-label {
-  display: flex; align-items: center; gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 10px 14px;
   color: var(--text-dim);
-  font-size: 14px; font-weight: 500;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.3s ease;
-  
-  span { display: flex; align-items: center; gap: 12px; }
-  svg { color: var(--text-dim); }
-  
-  &:hover { 
-    background: var(--nav-hover); 
-    color: var(--text-main); 
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  svg {
+    color: var(--text-dim);
+  }
+
+  &:hover {
+    background: var(--nav-hover);
+    color: var(--text-main);
     transform: translateX(4px);
-    svg { color: var(--text-main); } 
+
+    svg {
+      color: var(--text-main);
+    }
   }
 }
 
 .ds-group-label {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 14px;
-  color: var(--text-main); font-size: 14px; font-weight: 600;
-  cursor: pointer;
-  
-  span { display: flex; align-items: center; gap: 12px; }
-  svg { color: var(--text-main); }
-  
-  &.m-top { margin-top: 16px; color: var(--text-dim); font-weight: 500; svg { color: var(--text-dim); } }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  margin-top: 32px;
 }
 
-.ds-menu {
-  list-style: none; padding: 0; margin: 4px 0 0;
-  
-  li a {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px 12px 42px;
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 14px; font-weight: 500;
+.ds-pills-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ds-pill-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+
+  .ds-icon-box {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.03);
     border-radius: 12px;
     transition: all 0.3s ease;
-    
-    &:hover { 
-      color: var(--text-main); 
-      background: rgba(255, 255, 255, 0.05);
-      transform: translateX(4px);
+    color: var(--text-dim);
+
+    svg {
+      transition: all 0.3s ease;
     }
-    
-    &.active {
-      background: var(--nav-active);
+  }
+
+  span {
+    opacity: 0.85;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-main);
+    transform: translateX(4px);
+
+    .ds-icon-box {
+      background: rgba(255, 255, 255, 0.1);
       color: var(--text-main);
-      box-shadow: inset 3px 0 0 white;
+      transform: scale(1.05);
+    }
+  }
+
+  &.active {
+    background: linear-gradient(135deg, rgba(82, 113, 255, 0.1) 0%, rgba(82, 113, 255, 0.02) 100%);
+    color: #5271ff;
+    box-shadow: 0 4px 15px rgba(82, 113, 255, 0.1);
+    border: 1px solid rgba(82, 113, 255, 0.1);
+
+    .ds-icon-box {
+      background: #5271ff;
+      color: white;
+      box-shadow: 0 0 15px rgba(82, 113, 255, 0.4);
+    }
+
+    span {
+      font-weight: 600;
+      opacity: 1;
     }
   }
 }
+
+// Removed old .ds-menu styles in favor of .ds-pill-item
 
 .ds-count {
   padding: 4px 10px;
   border-radius: 12px;
-  font-size: 12px; font-weight: 600; color: #000;
-  
-  &.orange { background: #ffaa82; color: #000; }
-  &.green  { background: #96f0ba; color: #000; }
+  font-size: 12px;
+  font-weight: 600;
+  color: #000;
+
+  &.orange {
+    background: #ffaa82;
+    color: #000;
+  }
+
+  &.green {
+    background: #96f0ba;
+    color: #000;
+  }
 }
 
 .ds-bottom {
   margin-top: auto;
-  display: flex; flex-direction: column; gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .ds-profile-btn {
-  display: flex; align-items: center; gap: 12px;
-  width: 100%; border: 1px solid rgba(255,255,255,0.05); cursor: pointer; text-align: left;
-  background: var(--nav-hover);
-  border-radius: 16px; padding: 12px;
-  transition: 0.2s;
-  
-  &:hover { background: #35363b; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
-  
-  .ds-avatar {
-    width: 42px; height: 42px; border-radius: 12px;
-    object-fit: cover; border: none;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 20px;
+  padding: 10px;
+  transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
   }
-  
+
+  .ds-avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    object-fit: cover;
+    border: none;
+  }
+
   .ds-pinfo {
-    h4 { font-size: 14px; font-weight: 600; color: var(--text-main); margin: 0 0 2px 0; }
-    p { font-size: 12px; font-weight: 500; color: var(--text-dim); margin: 0; }
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 0 0 2px 0;
+    }
+
+    p {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dim);
+      margin: 0;
+    }
   }
 }
 
@@ -126,17 +231,29 @@
 }
 
 .ds-logout {
-  width: 100%; height: 48px;
-  border-radius: 16px; border: none;
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  border: none;
   background: rgba(255, 59, 48, 0.1);
   color: #ff3b30;
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  cursor: pointer; transition: 0.2s;
-  font-family: inherit; font-size: 14px; font-weight: 600;
-  
-  &:hover { background: #ff3b30; color: #fff; transform: translateY(-2px); }
-  
-  .logout-text { padding-top: 1px; }
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: 0.2s;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:hover {
+    background: #ff3b30;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  .logout-text {
+    padding-top: 1px;
+  }
 }
-
-

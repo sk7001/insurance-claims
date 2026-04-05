@@ -37,6 +37,11 @@ export class ChatbotComponent implements OnInit {
   constructor(private http: HttpService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistory(userId);
+    }
+
     // ✅ Sync with all possible trigger points (Dashboard header, Sidebar, etc.)
     ['open-chat', 'open-chat-bot', 'toggle-chat-nexus'].forEach(evtName => {
       window.addEventListener(evtName, () => {
@@ -48,9 +53,8 @@ export class ChatbotComponent implements OnInit {
   toggleChat(): void {
     this.isOpen = !this.isOpen;
 
-    // ✅ when closing: reset everything, next open starts fresh
+    // ✅ when closing: just hide, don't reset (preserves history)
     if (!this.isOpen) {
-      this.resetChat();
       return;
     }
 
@@ -94,8 +98,9 @@ export class ChatbotComponent implements OnInit {
       next: (res: any) => {
         this.messages.push({
           from: 'bot',
-          text: res?.reply || 'Hi 👋 I am Nexus AI. How can I help you with your claims today?'
+          text: res?.reply || 'Hi! I am Nexus AI, your dedicated claims specialist. How can I assist you with your insurance today?'
         });
+        this.saveHistory();
         this.loading = false;
         this.scrollToBottom();
       },
@@ -141,6 +146,7 @@ export class ChatbotComponent implements OnInit {
         } else {
           this.messages.push({ from: 'bot', text: reply });
         }
+        this.saveHistory();
         this.scrollToBottom();
       },
       error: (err: any) => {
@@ -154,6 +160,7 @@ export class ChatbotComponent implements OnInit {
         } else {
           this.messages.push({ from: 'bot', text: 'Sorry, I encountered an error.' });
         }
+        this.saveHistory();
         this.scrollToBottom();
       }
     });
@@ -200,5 +207,37 @@ export class ChatbotComponent implements OnInit {
       const el = this.chatBody?.nativeElement;
       if (el) el.scrollTop = el.scrollHeight;
     } catch {}
+  }
+
+  public formatText(text: string): string {
+    if (!text) return '';
+    let f = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #fff; font-weight: 800;">$1</strong>');
+    f = f.replace(/\n/g, '<br>');
+    return f;
+  }
+
+  // ✅ HISTORY SYNC
+  private saveHistory(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+    const data = {
+      messages: this.messages,
+      initSent: this.initSent
+    };
+    localStorage.setItem(`chat_nexus_${userId}`, JSON.stringify(data));
+  }
+
+  private loadHistory(userId: string): void {
+    const raw = localStorage.getItem(`chat_nexus_${userId}`);
+    if (raw) {
+      try {
+        const data = JSON.parse(raw);
+        this.messages = data.messages || [];
+        this.initSent = data.initSent || false;
+      } catch {
+        this.messages = [];
+        this.initSent = false;
+      }
+    }
   }
 }

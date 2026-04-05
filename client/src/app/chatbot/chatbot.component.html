@@ -46,7 +46,7 @@
     </div>
 
     <div class="msg-row" *ngFor="let m of messages" [ngClass]="m.from">
-      <div class="msg-bubble">{{ m.text }}</div>
+      <div class="msg-bubble" [innerHTML]="formatText(m.text)"></div>
     </div>
 
     <div class="msg-row bot" *ngIf="loading">
