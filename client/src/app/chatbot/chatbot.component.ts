@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
 
@@ -12,7 +12,9 @@ type ChatMsg = {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewChecked {
+
+  private shouldScroll = false;
 
   isOpen = false;
 
@@ -202,10 +204,25 @@ export class ChatbotComponent implements OnInit {
     return m2 ? Number(m2[1]) : (m3 ? Number(m3[1]) : 0);
   }
 
+  ngAfterViewChecked(): void {
+    if (this.shouldScroll) {
+      this.doScroll();
+      this.shouldScroll = false;
+    }
+  }
+
   private scrollToBottom(): void {
+    this.shouldScroll = true;
+    // Also fire with a small delay as a fallback
+    setTimeout(() => this.doScroll(), 50);
+  }
+
+  private doScroll(): void {
     try {
       const el = this.chatBody?.nativeElement;
-      if (el) el.scrollTop = el.scrollHeight;
+      if (el) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      }
     } catch {}
   }
 

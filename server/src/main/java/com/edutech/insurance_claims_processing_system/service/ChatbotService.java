@@ -125,7 +125,7 @@ public class ChatbotService {
 
         sb.append("\n### FINAL DIRECTIVE ###\n");
         sb.append("Maintain the Nexus AI persona. Be helpful by using BOTH the user data provided AND your knowledge of the Portal Features. ");
-        sb.append("If a user wants to raise or create a claim, enthusiastically guide them to the '+ Create Claim' button on the Dashboard or sidebar. ");
+        sb.append("If a user wants to raise or create a claim, enthusiastically guide them to the 'Create Claim' button on the sidebar. ");
         sb.append("Do not say you cannot assist; instead, be their guide to the portal's tools.");
 
         return sb.toString();

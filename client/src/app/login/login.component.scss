@@ -184,6 +184,7 @@ $redDark: #b01e3a;
   border-radius: 28px;
   overflow: hidden;
   box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.08);
+  transition: min-height 0.7s cubic-bezier(.68, -.55, .27, 1.55);
 
   @media (max-width: 860px) { width: 95vw; min-height: unset; }
 }
@@ -198,6 +199,9 @@ $redDark: #b01e3a;
   justify-content: center;
   padding: 30px 34px;
   overflow-y: auto;
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
+  &::-webkit-scrollbar { display: none; } /* Chrome/Safari */
   transition: all .7s cubic-bezier(.68, -.55, .27, 1.55);
 
   h2 { font-size: 23px; font-weight: 800; color: #0d0d1a; margin-bottom: 3px; }
@@ -208,6 +212,7 @@ $redDark: #b01e3a;
 .sign-up { left: 0; z-index: 1; opacity: 0; }
 
 .card.reg {
+  min-height: 760px; /* Taller for register form with all errors visible */
   .sign-in { transform: translateX(100%); opacity: 0; z-index: 1; }
   .sign-up { transform: translateX(100%); opacity: 1; z-index: 2; }
   .ovcont { transform: translateX(-100%); }

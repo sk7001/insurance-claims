@@ -135,11 +135,19 @@ export class HttpService {
      USER PROFILE
   ========================= */
   getUserProfile(id: any): Observable<any> {
-    return this.http.get(this.serverName + `/api/user/profile/${id}`);
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.get(this.serverName + `/api/user/profile/${id}`, { headers });
   }
 
   updateProfile(id: any, data: any): Observable<any> {
-    return this.http.put(this.serverName + `/api/user/profile/${id}`, data);
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.put(this.serverName + `/api/user/profile/${id}`, data, { headers });
   }
 
   /* =========================

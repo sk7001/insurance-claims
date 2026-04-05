@@ -28,6 +28,24 @@
       <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
         <div class="form-grid">
           
+          <!-- ROW 1: ID + Role (Read-Only) -->
+          <div class="form-field">
+            <label>User ID</label>
+            <div class="input-wrap disabled">
+              <span class="fico">🆔</span>
+              <input type="text" [value]="userId || '—'" disabled>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Role</label>
+            <div class="input-wrap disabled">
+              <span class="fico">🛡️</span>
+              <input type="text" [value]="userRole || '—'" disabled>
+            </div>
+          </div>
+
+          <!-- ROW 2: Email + Full Name -->
           <div class="form-field">
             <label>Email address (Permanent)</label>
             <div class="input-wrap disabled">
@@ -47,10 +65,11 @@
             </div>
           </div>
 
+          <!-- ROW 3: Username + Phone -->
           <div class="form-field">
             <label>Username</label>
             <div class="input-wrap">
-              <span class="fico">🆔</span>
+              <span class="fico">👤</span>
               <input type="text" formControlName="username" placeholder="Choose a username">
             </div>
             <div class="error" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">

@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -46,11 +45,15 @@ export class ProfileComponent implements OnInit {
     this.httpService.getUserProfile(this.userId).subscribe({
       next: (user: any) => {
         this.profileForm.patchValue({
-          fullName: user.fullName,
-          username: user.username,
-          email: user.email,
-          phone: user.phoneNumber
+          fullName: user.fullName || '',
+          username: user.username || '',
+          email: user.email || '',
+          phone: user.phoneNumber ? String(user.phoneNumber) : ''
         });
+        // Also update the role from the API response if available
+        if (user.role) {
+          this.userRole = user.role;
+        }
         this.loading = false;
       },
       error: () => {
