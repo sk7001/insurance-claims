@@ -1,9 +1,61 @@
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #f0f0f5; // Global Light Theme Base
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+
+  /* Global Theme Tokens */
+  --brand-green: #10b981;
+  --brand-green-hover: #059669;
+  --brand-green-bg: #f0fdf4;
+  --brand-glow: rgba(16, 185, 129, 0.4);
+}
+
+/* ================== GLOBAL LAYOUT ================== */
+.app-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  background: #f0f0f5;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Main scrollable area */
+.content-area {
+  height: 100vh;
+  width: 100%; /* Default to full width for Login/Registration */
+  overflow-y: auto;
+  position: relative;
+  transition: all 0.3s ease;
+  
+  &.has-sidebar {
+    margin-left: 292px; /* 260px sidebar + 32px gap */
+    width: calc(100vw - 292px);
+
+    /* Responsive: remove margin on small screens */
+    @media (max-width: 1024px) {
+      margin-left: 0;
+      width: 100vw;
+    }
+  }
+
+  /* Smooth scrolling for page content */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+}
+
+/* Common Light Shadow */
+.light-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
 /* ================== TOAST NOTIFICATIONS ================== */
@@ -18,12 +70,12 @@ body {
 }
 
 .custom-toast {
-  background: #1c1d21;
-  color: #fff;
+  background: #ffffff;
+  color: #1a1a1a;
   padding: 14px 20px 14px 16px;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   gap: 12px;
@@ -48,8 +100,13 @@ body {
     width: 4px;
   }
 
-  &.toast-success .toast-indicator { background: #00e676; }
-  &.toast-error .toast-indicator { background: #ff3b30; }
+  &.toast-success .toast-indicator {
+    background: #10b981;
+  }
+
+  &.toast-error .toast-indicator {
+    background: #ef4444;
+  }
 
   .toast-icon {
     font-size: 18px;
@@ -58,6 +115,5 @@ body {
   .toast-message {
     font-size: 14px;
     font-weight: 600;
-    color: #f1f1f1;
   }
 }

@@ -1,7 +1,7 @@
-<nav class="d-sidebar">
+<nav class="d-sidebar" style="position: fixed; top: 16px; left: 16px; width: 260px; height: calc(100vh - 32px); flex-shrink: 0; background: #ffffff; border-radius: 28px; display: flex; flex-direction: column; padding: 30px 24px; border: 1px solid rgba(0, 0, 0, 0.05); z-index: 1000;">
   <div class="ds-brand">
-    <button class="ds-profile-btn" *ngIf="userName" routerLink="/profile">
-       <img [src]="'https://ui-avatars.com/api/?name=' + userName + '&background=474a51&color=fff'" class="ds-avatar">
+    <button class="ds-profile-btn" *ngIf="userName" routerLink="/profile" routerLinkActive="active">
+       <img [src]="'https://ui-avatars.com/api/?name=' + (fullName || userName) + '&background=10b981&color=fff'" class="ds-avatar">
        <div class="ds-pinfo">
          <h4>{{ userName }}</h4>
          <p *ngIf="roleName">{{ roleName }}</p>
@@ -60,7 +60,7 @@
         <span>Review Claims</span>
       </div>
 
-      <div class="ds-pill-item" *ngIf="roleName === 'INVESTIGATOR' || roleName === 'ADMIN' || !roleName" routerLink="/create-investigator" routerLinkActive="active">
+      <div class="ds-pill-item" *ngGot="roleName === 'INVESTIGATOR' || roleName === 'ADMIN' || !roleName" routerLink="/create-investigator" routerLinkActive="active">
         <div class="ds-icon-box">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
         </div>
@@ -70,8 +70,6 @@
   </div>
 
   <div class="ds-bottom">
-
-
     <!-- Toggles & Logout row -->
     <div class="ds-toggles-row">
       <button class="ds-logout" (click)="logout()" title="Logout">
@@ -81,4 +79,3 @@
     </div>
   </div>
 </nav>
-

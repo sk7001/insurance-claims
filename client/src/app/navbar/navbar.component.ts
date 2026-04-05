@@ -12,24 +12,21 @@ export class NavbarComponent {
   IsLoggin: any = false;
   roleName: string | null = null;
   userName: string | null = null;
+  fullName: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
     this.IsLoggin = authService.getLoginStatus;
     this.roleName = authService.getRole;
     this.userName = authService.getUsername;
+    this.fullName = authService.getFullName;
     
     if (this.IsLoggin == false) {
       this.router.navigateByUrl('/login');
     }
   }
 
-
-
-
-
   logout() {
     this.authService.logout();
     window.location.reload();
   }
 }
-

@@ -3,7 +3,6 @@
 /* ================== SHELL ================== */
 .cc-shell {
   min-height: 100vh;
-  margin-left: 290px;
   background: #f0f0f5;
   font-family: 'Inter', sans-serif;
   display: flex;
@@ -14,7 +13,8 @@
 
 .cc-container {
   width: 100%;
-  max-width: 580px; /* Slightly wider to accommodate complex drop downs */
+  max-width: 580px;
+  /* Slightly wider to accommodate complex drop downs */
 }
 
 /* ================== CARD ================== */
@@ -28,8 +28,15 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ================== BANNER ================== */
@@ -75,8 +82,15 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 .cc-banner h2 {
@@ -206,7 +220,7 @@
   color: #1a1a1f;
   font-family: 'Inter', sans-serif;
   transition: 0.2s;
-  
+
   &:focus {
     border-color: #1a1a1f;
     background: #fff;
@@ -216,7 +230,7 @@
 .dropdown-list {
   max-height: 260px;
   overflow-y: auto;
-  
+
   &::-webkit-scrollbar {
     width: 6px;
   }
@@ -317,8 +331,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ================== SUBMIT BUTTON ================== */
@@ -370,8 +391,13 @@
 }
 
 @keyframes shine {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* RESPONSIVE */
@@ -379,11 +405,11 @@
   .cc-shell {
     margin-left: 0;
   }
-  
+
   .complex-item {
     flex-direction: column;
   }
-  
+
   .claim-right {
     text-align: left;
     margin-top: 6px;

@@ -24,7 +24,6 @@
 
 .db-shell {
   min-height: 100vh;
-  margin-left: 290px; // account for sidebar
   background: var(--bg-main);
   font-family: 'Inter', sans-serif;
   color: var(--text-primary);
@@ -1173,49 +1172,95 @@
 
 /* ================== ANIMATIONS ================== */
 @keyframes fadeSlide {
-  0% { opacity: 0; transform: translateY(-20px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes cardFloat {
-  0% { opacity: 0; transform: translateY(40px); }
-  100% { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes itemPop {
-  0% { opacity: 0; transform: scale(0.9); }
-  100% { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 @keyframes rowPop {
-  0% { opacity: 0; transform: translateX(-10px); }
-  100% { opacity: 1; transform: translateX(0); }
+  0% {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 /* Apply staggered animations */
 .qa-item {
   animation: itemPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+
   @for $i from 1 through 6 {
-    &:nth-child(#{$i}) { animation-delay: #{$i * 0.08s}; }
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.08s};
+    }
   }
 }
 
-.d-card, .cute-card {
+.d-card,
+.cute-card {
   animation: cardFloat 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-.overview-card { animation-delay: 0.1s; }
-.donut-card { animation-delay: 0.2s; }
-.list-card { animation-delay: 0.3s; }
+.overview-card {
+  animation-delay: 0.1s;
+}
+
+.donut-card {
+  animation-delay: 0.2s;
+}
+
+.list-card {
+  animation-delay: 0.3s;
+}
+
 .cute-card {
   @for $i from 1 through 8 {
-    &:nth-child(#{$i}) { animation-delay: #{0.2s + ($i * 0.1s)}; }
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.2s + ($i * 0.1s)};
+    }
   }
 }
 
 .list-item {
   animation: rowPop 0.4s ease both;
+
   @for $i from 1 through 10 {
-    &:nth-child(#{$i}) { animation-delay: #{0.4s + ($i * 0.05s)}; }
+    &:nth-child(#{$i}) {
+      animation-delay: #{0.4s + ($i * 0.05s)};
+    }
   }
 }

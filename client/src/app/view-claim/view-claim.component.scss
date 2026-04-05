@@ -11,7 +11,6 @@ $error: #ef4444;
 
 .page {
   min-height: 100vh;
-  margin-left: 290px;
   padding: 30px 40px;
   background: var(--bg-main);
   animation: fadeSlide 0.45s ease both;
@@ -108,60 +107,116 @@ $error: #ef4444;
   animation: cardFloat 0.55s ease both;
 }
 
+/* ======================
+   TABLE STYLES
+====================== */
 table {
   width: 100%;
   border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 16px 14px;
-  font-size: 14px;
-  border-bottom: 1px solid var(--border-light);
-  color: var(--text-main);
+  text-align: left;
 }
 
 th {
-  text-align: left;
-  color: var(--text-dim);
   font-weight: 600;
+  color: var(--text-dim);
+  padding: 18px 14px;
+  font-size: 13px;
   text-transform: uppercase;
-  font-size: 12px;
   letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+td {
+  padding: 16px 14px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-main);
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: middle;
+  transition: 0.3s;
 }
 
 tbody tr {
-  animation: rowPop 0.3s ease both;
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid var(--border-light);
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.03);
+    transform: scale(1.005);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+
+    td {
+      border-bottom-color: transparent;
+      border-radius: 12px;
+    }
+  }
 }
 
-tbody tr:hover {
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.desc {
-  max-width: 420px;
-  line-height: 1.5;
-  color: var(--text-dim);
+.td-bold {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--text-main);
 }
 
 .type-col {
   font-weight: 600;
+  font-size: 14px;
   color: var(--text-main);
   white-space: nowrap;
+}
+
+.td-desc {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--text-dim);
+  display: block;
+  max-width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* ======================
    STATUS TAG
 ====================== */
 .status-tag {
-  display: inline-flex; align-items: center; padding: 6px 14px; border-radius: 999px; font-size: 12px; font-weight: 700; text-transform: capitalize; white-space: nowrap;
-  background: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.2); animation: fadeUp 0.4s ease both;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  white-space: nowrap;
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  animation: fadeUp 0.4s ease both;
 }
-.status-tag.status-approved { background: rgba(0, 230, 118, 0.15); color: #00e676; border-color: rgba(0, 230, 118, 0.2); }
-.status-tag.status-rejected { background: rgba(255, 59, 48, 0.15); color: #ff3b30; border-color: rgba(255, 59, 48, 0.2); }
-.status-tag.status-inprogress { background: rgba(255, 171, 0, 0.15); color: #ffab00; border-color: rgba(255, 171, 0, 0.2); }
-.status-tag.status-initiated { background: rgba(59, 130, 246, 0.15); color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
+
+.status-tag.status-approved {
+  background: rgba(0, 230, 118, 0.15);
+  color: #00e676;
+  border-color: rgba(0, 230, 118, 0.2);
+}
+
+.status-tag.status-rejected {
+  background: rgba(255, 59, 48, 0.15);
+  color: #ff3b30;
+  border-color: rgba(255, 59, 48, 0.2);
+}
+
+.status-tag.status-inprogress {
+  background: rgba(255, 171, 0, 0.15);
+  color: #ffab00;
+  border-color: rgba(255, 171, 0, 0.2);
+}
+
+.status-tag.status-initiated {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.2);
+}
 
 /* ======================
    EMPTY STATE
