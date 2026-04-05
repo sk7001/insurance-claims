@@ -1,4 +1,5 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewChecked } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
 
@@ -33,7 +34,7 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
   claims: any[] = [];
   showViewAllMenu = false;
 
-  constructor(private authService: AuthService, private httpService: HttpService) {}
+  constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {}
 
   ngOnInit(): void {
     this.role = this.authService.getRole;
@@ -49,12 +50,17 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   ngAfterViewChecked(): void { }
 
+  // ───────── NAVIGATION ─────────
+  goToProfile() {
+    this.router.navigate(['/profile']);
+  }
+
   // ───────── API & DATA ─────────
   loadDashboardData() {
-    if (this.role === 'ADJUSTER' || this.role === 'ADMIN') { this.httpService.getAllClaims().subscribe(res => this.processClaims(res)); }
-    else if (this.role === 'POLICYHOLDER') { this.httpService.getClaimsByPolicyholder(this.userId).subscribe(res => this.processClaims(res)); }
-    else if (this.role === 'UNDERWRITER') { this.httpService.getClaimsByUnderwriter(this.userId).subscribe(res => this.processClaims(res)); }
-    else if (this.role === 'INVESTIGATOR') { this.httpService.getInvestigations().subscribe(res => this.processClaims(res)); }
+    if (this.role === 'ADJUSTER' || this.role === 'ADMIN') { this.httpService.getAllClaims().subscribe((res: any) => this.processClaims(res)); }
+    else if (this.role === 'POLICYHOLDER') { this.httpService.getClaimsByPolicyholder(this.userId).subscribe((res: any) => this.processClaims(res)); }
+    else if (this.role === 'UNDERWRITER') { this.httpService.getClaimsByUnderwriter(this.userId).subscribe((res: any) => this.processClaims(res)); }
+    else if (this.role === 'INVESTIGATOR') { this.httpService.getInvestigations().subscribe((res: any) => this.processClaims(res)); }
   }
 
   processClaims(data: any[]) {
