@@ -1,16 +1,18 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { SpeechService } from '../../services/speech.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-create-claim',
   templateUrl: './create-claim.component.html',
   styleUrls: ['./create-claim.component.scss']
 })
-export class CreateClaimComponent implements OnInit {
+export class CreateClaimComponent implements OnInit, OnDestroy {
 
   itemForm: FormGroup;
 
@@ -45,12 +47,16 @@ export class CreateClaimComponent implements OnInit {
   insuranceSearch = '';
   selectedInsuranceText = '';
 
+  isRecording = false;
+  private speechSub: Subscription | null = null;
+
   constructor(
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    public speechService: SpeechService
   ) {
     // ✅ initialize filtered list
     this.filteredInsuranceTypes = [...this.insuranceTypes];
@@ -65,7 +71,20 @@ export class CreateClaimComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Optional: initial load of claims
+    // ✅ Listen for speech transcripts
+    this.speechSub = this.speechService.getTranscript().subscribe((text: string) => {
+      const current = this.itemForm.get('description')?.value || '';
+      this.itemForm.patchValue({
+        description: current + (current ? ' ' : '') + text
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.speechSub) {
+      this.speechSub.unsubscribe();
+    }
+    this.speechService.stop();
   }
 
   // ✅ Prevent future dates
@@ -85,6 +104,21 @@ export class CreateClaimComponent implements OnInit {
   toggleInsuranceDropdown(event: Event) {
     event.stopPropagation(); 
     this.insuranceDropdownOpen = !this.insuranceDropdownOpen;
+  }
+
+  toggleSpeechRecording() {
+    if (!this.speechService.isSupported()) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    if (this.isRecording) {
+      this.speechService.stop();
+      this.isRecording = false;
+    } else {
+      this.speechService.start();
+      this.isRecording = true;
+    }
   }
 
   // ✅ Close dropdown when clicking outside
@@ -126,7 +160,7 @@ export class CreateClaimComponent implements OnInit {
       next: (res: any) => {
         this.claimList = res;
       },
-      error: (err) => {
+      error: (err: any) => {
         this.showError = true;
         this.errorMessage = err;
       }
@@ -171,7 +205,7 @@ export class CreateClaimComponent implements OnInit {
           this.router.navigateByUrl('/view-claim-status');
         }, 1500);
       },
-      error: (err) => {
+      error: (err: any) => {
         this.showError = true;
         this.errorMessage = err;
       }

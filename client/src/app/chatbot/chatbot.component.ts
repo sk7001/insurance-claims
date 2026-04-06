@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked, OnDestroy } from '@angular/core';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
+import { SpeechService } from '../../services/speech.service';
+import { Subscription } from 'rxjs';
 
 type ChatMsg = {
   from: 'user' | 'bot';
@@ -12,7 +14,7 @@ type ChatMsg = {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit, AfterViewChecked {
+export class ChatbotComponent implements OnInit, AfterViewChecked, OnDestroy {
 
   private shouldScroll = false;
 
@@ -34,9 +36,16 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
   // ✅ store last user message for auto-retry
   private lastUserMessage: string | null = null;
 
+  isRecording = false;
+  private speechSub: Subscription | null = null;
+
   @ViewChild('chatBody') chatBody!: ElementRef<HTMLDivElement>;
 
-  constructor(private http: HttpService, private authService: AuthService) {}
+  constructor(
+    private http: HttpService,
+    private authService: AuthService,
+    public speechService: SpeechService
+  ) {}
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -50,6 +59,18 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
         if (!this.isOpen) this.toggleChat();
       });
     });
+
+    // ✅ Listen for speech transcripts
+    this.speechSub = this.speechService.getTranscript().subscribe((text: string) => {
+      this.inputText += (this.inputText ? ' ' : '') + text;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.speechSub) {
+      this.speechSub.unsubscribe();
+    }
+    this.speechService.stop();
   }
 
   toggleChat(): void {
@@ -67,6 +88,34 @@ export class ChatbotComponent implements OnInit, AfterViewChecked {
     }
 
     setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  toggleSpeechRecording(): void {
+    if (!this.speechService.isSupported()) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    if (this.isRecording) {
+      this.speechService.stop();
+      this.isRecording = false;
+    } else {
+      this.speechService.start();
+      this.isRecording = true;
+    }
+  }
+
+  clearChatLogs(): void {
+    if (confirm('Are you sure you want to clear your chat history?')) {
+      this.messages = [];
+      this.initSent = false;
+      const userId = this.authService.getUserId();
+      if (userId) {
+        localStorage.removeItem(`chat_nexus_${userId}`);
+      }
+      this.toggleChat(); // Close and reopen to trigger fresh __INIT__
+      setTimeout(() => this.toggleChat(), 100);
+    }
   }
 
   private resetChat(): void {
