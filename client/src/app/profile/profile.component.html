@@ -1,0 +1,126 @@
+
+<div class="profile-shell fadeSlide">
+  <div class="profile-card">
+    
+    <div class="profile-header">
+      <div class="ph-back" (click)="goBack()">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      </div>
+      <div class="ph-info">
+        <h1>User Profile</h1>
+        <p>Manage your account settings and personal information</p>
+      </div>
+    </div>
+
+    <div class="profile-content" *ngIf="!loading; else loadingTpl">
+      
+      <div class="user-meta">
+        <div class="um-avatar">
+          <img [src]="'https://ui-avatars.com/api/?name=' + (profileForm.get('fullName')?.value || 'User') + '&background=6366f1&color=fff'" alt="Avatar">
+        </div>
+        <div class="um-details">
+          <h2>{{ profileForm.get('fullName')?.value || 'User Account' }}</h2>
+          <span class="role-badge">{{ userRole }}</span>
+        </div>
+      </div>
+
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+        <div class="form-grid">
+          
+          <!-- ROW 1: ID + Role (Read-Only) -->
+          <div class="form-field">
+            <label>User ID</label>
+            <div class="input-wrap disabled">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><line x1="19" y1="8" x2="19" y2="14"></line><line x1="22" y1="11" x2="16" y2="11"></line></svg>
+              </span>
+              <input type="text" [value]="userId || '—'" disabled>
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Role</label>
+            <div class="input-wrap disabled">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              </span>
+              <input type="text" [value]="userRole || '—'" disabled>
+            </div>
+          </div>
+
+          <!-- ROW 2: Email + Full Name -->
+          <div class="form-field">
+            <label>Email address (Permanent)</label>
+            <div class="input-wrap disabled">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+              </span>
+              <input type="email" formControlName="email">
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Full Name</label>
+            <div class="input-wrap">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+              </span>
+              <input type="text" formControlName="fullName" placeholder="Enter your full name">
+            </div>
+            <div class="error" *ngIf="profileForm.get('fullName')?.invalid && profileForm.get('fullName')?.touched">
+              Full name is required
+            </div>
+          </div>
+
+          <!-- ROW 3: Username + Phone -->
+          <div class="form-field">
+            <label>Username</label>
+            <div class="input-wrap">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+              </span>
+              <input type="text" formControlName="username" placeholder="Choose a username">
+            </div>
+            <div class="error" *ngIf="profileForm.get('username')?.invalid && profileForm.get('username')?.touched">
+              Username is required
+            </div>
+          </div>
+
+          <div class="form-field">
+            <label>Phone Number</label>
+            <div class="input-wrap">
+              <span class="fico">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+              </span>
+              <input type="text" formControlName="phone" placeholder="Enter 10-digit number" maxlength="10">
+            </div>
+            <div class="error" *ngIf="profileForm.get('phone')?.invalid && profileForm.get('phone')?.touched">
+              Please enter a valid 10-digit phone number
+            </div>
+          </div>
+
+        </div>
+
+        <div class="form-messages">
+          <div class="banner error" *ngIf="errorMsg">{{ errorMsg }}</div>
+          <div class="banner success" *ngIf="successMsg">{{ successMsg }}</div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="save-btn" [disabled]="profileForm.invalid || saving">
+            <span>{{ saving ? 'Saving Changes...' : 'Save Profile Changes' }}</span>
+          </button>
+        </div>
+      </form>
+
+    </div>
+
+    <ng-template #loadingTpl>
+      <div class="loading-box">
+        <div class="spinner"></div>
+        <p>Loading your profile...</p>
+      </div>
+    </ng-template>
+
+  </div>
+</div>

@@ -1,162 +1,239 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-:root {
-  --nav-bg: #1c1d21;      // Dribbble Dark Sidebar Color
-  --nav-hover: #2a2b30;
-  --nav-active: #2a2b30;
-  --text-main: #f5f5f5;
-  --text-dim: #90929a;
+:host {
+  display: contents;
 }
 
-* { box-sizing: border-box; }
+:root {
+  --nav-bg: #ffffff; // Premium White Sidebar
+  --nav-hover: #f5f5f7;
+  --text-main: #1a1a1a;
+  --text-dim: #64748b;
+}
 
+/* ================== SIDEBAR ================== */
 .d-sidebar {
-  position: fixed;
-  top: 16px; left: 16px; bottom: 16px;
+  position: fixed; /* Fixed position for robustness */
+  top: 16px;
+  left: 16px;
   width: 260px;
+  height: calc(100vh - 32px);
   background: var(--nav-bg);
   border-radius: 28px;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   padding: 30px 24px;
   font-family: 'Inter', sans-serif;
   z-index: 1000;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
 }
 
 .ds-brand {
-  display: flex; justify-content: flex-start; margin-bottom: 40px;
-  .logo-mark {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: #474a51; // A lighter grey for the logo
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: inset 0 -4px 8px rgba(0,0,0,0.2);
-  }
+  margin-bottom: 40px;
 }
 
-.ds-section { margin-bottom: 24px; }
+.ds-section {
+  margin-bottom: 24px;
+}
 
 .ds-label {
-  display: flex; align-items: center; gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
   padding: 10px 14px;
   color: var(--text-dim);
-  font-size: 14px; font-weight: 500;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   border-radius: 12px;
   transition: all 0.3s ease;
-  
-  span { display: flex; align-items: center; gap: 12px; }
-  svg { color: var(--text-dim); }
-  
-  &:hover { 
-    background: var(--nav-hover); 
-    color: var(--text-main); 
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  svg {
+    color: var(--text-dim);
+  }
+
+  &:hover {
+    background: var(--nav-hover);
+    color: var(--text-main);
     transform: translateX(4px);
-    svg { color: var(--text-main); } 
+
+    svg {
+      color: var(--text-main);
+    }
   }
 }
 
 .ds-group-label {
-  display: flex; justify-content: space-between; align-items: center;
-  padding: 10px 14px;
-  color: var(--text-main); font-size: 14px; font-weight: 600;
-  cursor: pointer;
-  
-  span { display: flex; align-items: center; gap: 12px; }
-  svg { color: var(--text-main); }
-  
-  &.m-top { margin-top: 16px; color: var(--text-dim); font-weight: 500; svg { color: var(--text-dim); } }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 14px;
+  color: #94a3b8;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  font-weight: 700;
+  margin-top: 32px;
 }
 
-.ds-menu {
-  list-style: none; padding: 0; margin: 4px 0 0;
-  
-  li a {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 14px 12px 42px;
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 14px; font-weight: 500;
+.ds-pills-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.ds-pill-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  border-radius: 20px;
+  color: var(--text-dim);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  background: transparent;
+
+  .ds-icon-box {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fafc;
     border-radius: 12px;
     transition: all 0.3s ease;
-    
-    &:hover { 
-      color: var(--text-main); 
-      background: rgba(255, 255, 255, 0.05);
-      transform: translateX(4px);
-    }
-    
-    &.active {
-      background: var(--nav-active);
-      color: var(--text-main);
-      box-shadow: inset 3px 0 0 white;
+    color: #64748b;
+
+    svg {
+      transition: all 0.3s ease;
     }
   }
-}
 
-.ds-count {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px; font-weight: 600; color: #000;
-  
-  &.orange { background: #ffaa82; color: #000; }
-  &.green  { background: #96f0ba; color: #000; }
+  span {
+    opacity: 0.85;
+  }
+
+  &:hover {
+    background: #f1f5f9;
+    color: var(--text-main);
+    transform: translateX(4px);
+
+    .ds-icon-box {
+      background: #ffffff;
+      color: var(--brand-primary);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+  }
+
+  &.active {
+    background: var(--brand-primary-bg);
+    color: var(--brand-primary);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+
+    .ds-icon-box {
+      background: var(--brand-primary);
+      color: white;
+      box-shadow: 0 4px 16px var(--brand-glow); // Premium Active Glow fix
+    }
+
+    span {
+      font-weight: 600;
+      opacity: 1;
+    }
+  }
 }
 
 .ds-bottom {
   margin-top: auto;
-  display: flex; flex-direction: column; gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.ds-profile {
-  display: flex; align-items: center; gap: 12px;
-  padding: 10px 0;
-  
-  .ds-avatar {
-    width: 44px; height: 44px; border-radius: 50%;
-    border: 2px solid #2a2b30;
-  }
-  
-  .ds-pinfo {
-    h4 { font-size: 14px; font-weight: 600; color: var(--text-main); margin: 0 0 2px 0; }
-    p { font-size: 12px; font-weight: 500; color: var(--text-dim); margin: 0; }
-  }
-}
-
-.ds-toggles-row {
-  display: flex; align-items: center; justify-content: space-between;
+.ds-profile-btn {
+  display: flex;
+  align-items: center;
   gap: 12px;
-}
+  width: 100%;
+  border: 1px solid #e2e8f0; // Visible light border
+  cursor: pointer;
+  text-align: left;
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 12px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
 
-.ds-toggles {
-  display: flex; background: var(--nav-hover);
-  border-radius: 40px; padding: 6px;
-  justify-content: flex-start;
-  width: max-content;
-  gap: 4px;
-  
-  .dt-btn {
-    width: 38px; height: 38px;
-    border-radius: 50%; border: none;
-    background: transparent;
-    color: var(--text-dim);
-    display: flex; align-items: center; justify-content: center;
-    cursor: pointer; transition: 0.2s;
-    svg { width: 16px; height: 16px; }
-    
-    &:hover { color: var(--text-main); }
-    &.active { background: #3c3e46; color: var(--text-main); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  &:hover {
+    background: #ffffff;
+    transform: translateY(-2px);
+    border-color: var(--brand-primary);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
+  }
+
+  .ds-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    object-fit: cover;
+    border: 2px solid #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+
+  .ds-pinfo {
+    h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin: 0 0 2px 0;
+    }
+
+    p {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-dim);
+      margin: 0;
+    }
   }
 }
 
 .ds-logout {
-  width: 48px; height: 48px;
-  border-radius: 16px; border: none;
-  background: rgba(255, 59, 48, 0.1);
-  color: #ff3b30;
-  display: flex; align-items: center; justify-content: center;
-  cursor: pointer; transition: 0.2s;
-  
-  &:hover { background: #ff3b30; color: #fff; transform: translateY(-2px); }
+  width: 100%;
+  height: 48px;
+  border-radius: 16px;
+  border: 1px solid #fee2e2;
+  background: #fef2f2;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+
+  &:hover {
+    background: #ef4444;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+  }
+
+  .logout-text {
+    padding-top: 1px;
+  }
 }
-
-

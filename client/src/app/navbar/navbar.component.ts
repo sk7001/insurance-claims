@@ -12,26 +12,17 @@ export class NavbarComponent {
   IsLoggin: any = false;
   roleName: string | null = null;
   userName: string | null = null;
-  theme: string = 'dark';
+  fullName: string | null = null;
 
   constructor(private authService: AuthService, private router: Router) {
     this.IsLoggin = authService.getLoginStatus;
     this.roleName = authService.getRole;
-    this.userName = localStorage.getItem('name') || 'Sneja';
+    this.userName = authService.getUsername;
+    this.fullName = authService.getFullName;
     
     if (this.IsLoggin == false) {
       this.router.navigateByUrl('/login');
     }
-  }
-
-  setTheme(t: string) {
-    this.theme = t;
-    if(t === 'light') document.body.classList.add('light-theme');
-    else document.body.classList.remove('light-theme');
-  }
-
-  openChat() {
-    window.dispatchEvent(new Event('open-chat-bot'));
   }
 
   logout() {
@@ -39,4 +30,3 @@ export class NavbarComponent {
     window.location.reload();
   }
 }
-

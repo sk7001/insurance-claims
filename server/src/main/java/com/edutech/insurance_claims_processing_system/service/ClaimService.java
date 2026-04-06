@@ -87,13 +87,12 @@ public class ClaimService {
         Claim savedClaim = claimRepository.save(claim);
 
         // Email notification
-        emailService.sendSimpleMail(
+        emailService.sendGenericHtmlMail(
                 policyholder.getEmail(),
                 "Claim Submitted Successfully",
-                "Dear " + policyholder.getUsername() + ",\n\n" +
-                        "Your claim (ID: #" + savedClaim.getId() + ") has been successfully submitted.\n\n" +
-                        "Current Status: Initiated\n\n" +
-                        "Regards,\nInsurance Claims Team"
+                policyholder.getUsername(),
+                "Your claim (ID: <strong>#" + savedClaim.getId() + "</strong>) has been successfully submitted.<br/><br/>" +
+                        "Current Status: <span style=\"color: #e63350; font-weight: bold;\">Initiated</span>"
         );
 
         return savedClaim;
@@ -113,21 +112,19 @@ public class ClaimService {
 
         // Email based on status
         if ("Approved".equalsIgnoreCase(status)) {
-            emailService.sendSimpleMail(
+            emailService.sendGenericHtmlMail(
                     policyholder.getEmail(),
                     "Claim Approved ✅",
-                    "Dear " + policyholder.getUsername() + ",\n\n" +
-                            "Good news! Your claim (ID: #" + claim.getId() + ") has been APPROVED.\n\n" +
-                            "Regards,\nInsurance Claims Team"
+                    policyholder.getUsername(),
+                    "Good news! Your claim (ID: <strong>#" + claim.getId() + "</strong>) has been <strong>APPROVED</strong>."
             );
         } else if ("Rejected".equalsIgnoreCase(status)) {
-            emailService.sendSimpleMail(
+            emailService.sendGenericHtmlMail(
                     policyholder.getEmail(),
                     "Claim Rejected ❌",
-                    "Dear " + policyholder.getUsername() + ",\n\n" +
-                            "We regret to inform you that your claim (ID: #" + claim.getId() + ") has been REJECTED.\n\n" +
-                            "Please contact support for more details.\n\n" +
-                            "Regards,\nInsurance Claims Team"
+                    policyholder.getUsername(),
+                    "We regret to inform you that your claim (ID: <strong>#" + claim.getId() + "</strong>) has been <strong style=\"color: #e63350;\">REJECTED</strong>.<br/><br/>" +
+                            "Please contact support for more details."
             );
         }
 
@@ -164,14 +161,12 @@ public class ClaimService {
         Claim updatedClaim = claimRepository.save(claim);
 
         // Email notification to policyholder
-        emailService.sendSimpleMail(
+        emailService.sendGenericHtmlMail(
                 claim.getPolicyholder().getEmail(),
                 "Claim Assigned for Review",
-                "Dear " + claim.getPolicyholder().getUsername() + ",\n\n" +
-                        "Your claim (ID: #" + claim.getId() + ") is now being reviewed.\n\n" +
-                        "Assigned Underwriter: " + underwriter.getUsername() + "\n\n" +
-                        "Status:" + claim.getStatus() + "\n\n" +
-                        "Regards,\nInsurance Claims Team"
+                claim.getPolicyholder().getUsername(),
+                "Your claim (ID: <strong>#" + claim.getId() + "</strong>) is now being reviewed.<br/><br/>" +
+                        "Status: <strong>" + claim.getStatus() + "</strong>"
         );
 
         return updatedClaim;

@@ -14,6 +14,7 @@ import { AssignClaimComponent } from './assign-claim/assign-claim.component';
 import { CreateInvestigatorComponent } from './create-investigator/create-investigator.component';
 import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/update-claim-investigator.component';
 import { ViewClaimComponent } from './view-claim/view-claim.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 const routes: Routes = [
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'create-investigator', component: CreateInvestigatorComponent },
   { path: 'update-claim-investigator', component: UpdateClaimInvestigatorComponent },
   { path: 'view-claim-status', component: ViewClaimComponent },
+  { path: 'profile', component: ProfileComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 ];

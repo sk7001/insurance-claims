@@ -1,16 +1,14 @@
-<app-navbar></app-navbar>
-
 <div class="page">
   <div class="page-header">
-    <div>
-      <h1 class="page-title">Review Claims</h1>
-      <p class="page-subtitle">Search and update claim statuses quickly.</p>
+    <div class="header-text">
+       <h1 class="page-title">Review Claims</h1>
+       <p class="page-subtitle">Search and update claim statuses quickly.</p>
     </div>
 
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
+    <!-- SEARCH -->
+    <div class="dh-search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" /></svg>
       <input
-        class="search-input"
         type="text"
         placeholder="Search by claim/type/policyholder/status..."
         (input)="searchByDescId($event)"
@@ -18,21 +16,16 @@
     </div>
   </div>
 
+  <!-- TABLE CARD -->
   <div class="table-card">
     <table>
       <thead>
         <tr>
           <th>Claim ID</th>
-
-          <!-- ✅ NEW -->
           <th>Type</th>
-
           <th>Description</th>
           <th>Status</th>
-
-          <!-- ✅ NEW -->
           <th>Policyholder</th>
-
           <th class="action-header">Action</th>
         </tr>
       </thead>
@@ -40,16 +33,15 @@
       <tbody>
         <tr *ngFor="let claim of searchFilter">
           <td>
-            <strong class="claim-id">#{{ claim.id }}</strong>
+            <strong class="td-bold">#{{ claim.id }}</strong>
           </td>
 
-          <!-- ✅ NEW: TYPE -->
           <td class="type-col">
             {{ claim.insuranceType || '-' }}
           </td>
 
-          <td class="desc">
-            {{ claim.description }}
+          <td>
+            <span class="td-desc">{{ claim.description }}</span>
           </td>
 
           <td>
@@ -66,7 +58,6 @@
             </span>
           </td>
 
-          <!-- ✅ NEW: POLICYHOLDER -->
           <td>
             <ng-container *ngIf="claim.policyholder; else noPolicyholder">
               <div class="policyholder">
@@ -85,13 +76,32 @@
 
           <!-- ACTION -->
           <td class="actions">
-            <button class="action-btn approve" (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
-              Approve
-            </button>
+            <!-- Case 1: Already Approved -->
+            <ng-container *ngIf="claim.status === 'Approved'">
+              <button class="action-btn approved-locked" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-right: 6px;"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Approved
+              </button>
+            </ng-container>
 
-            <button class="action-btn reject" (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
-              Reject
-            </button>
+            <!-- Case 2: Already Rejected -->
+            <ng-container *ngIf="claim.status === 'Rejected'">
+              <button class="action-btn rejected-locked" disabled>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="margin-right: 6px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                Rejected
+              </button>
+            </ng-container>
+
+            <!-- Case 3: Pending Decision (Initiated, In progress, etc.) -->
+            <ng-container *ngIf="claim.status !== 'Approved' && claim.status !== 'Rejected'">
+              <button class="action-btn approve" (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
+                Approve
+              </button>
+
+              <button class="action-btn reject" (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
+                Reject
+              </button>
+            </ng-container>
           </td>
         </tr>
 

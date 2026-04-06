@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
 import { HttpService } from '../../services/http.service';
+import { AuthService } from '../../services/auth.service';
 
 type ChatMsg = {
   from: 'user' | 'bot';
@@ -11,7 +12,9 @@ type ChatMsg = {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewChecked {
+
+  private shouldScroll = false;
 
   isOpen = false;
 
@@ -33,9 +36,14 @@ export class ChatbotComponent implements OnInit {
 
   @ViewChild('chatBody') chatBody!: ElementRef<HTMLDivElement>;
 
-  constructor(private http: HttpService) {}
+  constructor(private http: HttpService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistory(userId);
+    }
+
     // ✅ Sync with all possible trigger points (Dashboard header, Sidebar, etc.)
     ['open-chat', 'open-chat-bot', 'toggle-chat-nexus'].forEach(evtName => {
       window.addEventListener(evtName, () => {
@@ -47,9 +55,8 @@ export class ChatbotComponent implements OnInit {
   toggleChat(): void {
     this.isOpen = !this.isOpen;
 
-    // ✅ when closing: reset everything, next open starts fresh
+    // ✅ when closing: just hide, don't reset (preserves history)
     if (!this.isOpen) {
-      this.resetChat();
       return;
     }
 
@@ -80,7 +87,7 @@ export class ChatbotComponent implements OnInit {
   }
 
   private sendInitialContext(): void {
-    const policyholderId = localStorage.getItem('userId');
+    const policyholderId = this.authService.getUserId();
 
     const payload = {
       policyholderId: Number(policyholderId),
@@ -93,8 +100,9 @@ export class ChatbotComponent implements OnInit {
       next: (res: any) => {
         this.messages.push({
           from: 'bot',
-          text: res?.reply || 'Hi 👋 I am Nexus AI. How can I help you with your claims today?'
+          text: res?.reply || 'Hi! I am Nexus AI, your dedicated claims specialist. How can I assist you with your insurance today?'
         });
+        this.saveHistory();
         this.loading = false;
         this.scrollToBottom();
       },
@@ -122,7 +130,7 @@ export class ChatbotComponent implements OnInit {
       return;
     }
 
-    const policyholderId = localStorage.getItem('userId');
+    const policyholderId = this.authService.getUserId();
     this.messages.push({ from: 'user', text });
     this.lastUserMessage = text;
     this.inputText = '';
@@ -140,6 +148,7 @@ export class ChatbotComponent implements OnInit {
         } else {
           this.messages.push({ from: 'bot', text: reply });
         }
+        this.saveHistory();
         this.scrollToBottom();
       },
       error: (err: any) => {
@@ -153,6 +162,7 @@ export class ChatbotComponent implements OnInit {
         } else {
           this.messages.push({ from: 'bot', text: 'Sorry, I encountered an error.' });
         }
+        this.saveHistory();
         this.scrollToBottom();
       }
     });
@@ -194,10 +204,57 @@ export class ChatbotComponent implements OnInit {
     return m2 ? Number(m2[1]) : (m3 ? Number(m3[1]) : 0);
   }
 
+  ngAfterViewChecked(): void {
+    if (this.shouldScroll) {
+      this.doScroll();
+      this.shouldScroll = false;
+    }
+  }
+
   private scrollToBottom(): void {
+    this.shouldScroll = true;
+    // Also fire with a small delay as a fallback
+    setTimeout(() => this.doScroll(), 50);
+  }
+
+  private doScroll(): void {
     try {
       const el = this.chatBody?.nativeElement;
-      if (el) el.scrollTop = el.scrollHeight;
+      if (el) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      }
     } catch {}
+  }
+
+  public formatText(text: string): string {
+    if (!text) return '';
+    let f = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #fff; font-weight: 800;">$1</strong>');
+    f = f.replace(/\n/g, '<br>');
+    return f;
+  }
+
+  // ✅ HISTORY SYNC
+  private saveHistory(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+    const data = {
+      messages: this.messages,
+      initSent: this.initSent
+    };
+    localStorage.setItem(`chat_nexus_${userId}`, JSON.stringify(data));
+  }
+
+  private loadHistory(userId: string): void {
+    const raw = localStorage.getItem(`chat_nexus_${userId}`);
+    if (raw) {
+      try {
+        const data = JSON.parse(raw);
+        this.messages = data.messages || [];
+        this.initSent = data.initSent || false;
+      } catch {
+        this.messages = [];
+        this.initSent = false;
+      }
+    }
   }
 }

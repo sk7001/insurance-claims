@@ -3,7 +3,7 @@
 /* ================== SHELL ================== */
 .cc-shell {
   min-height: 100vh;
-  margin-left: 290px; /* Account for sidebar */
+  /* Account for sidebar */
   background: #f0f0f5;
   font-family: 'Inter', sans-serif;
   display: flex;
@@ -29,8 +29,15 @@
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(32px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ================== BANNER ================== */
@@ -39,7 +46,8 @@
   background: #1a1a1f;
   padding: 34px 36px 68px;
   overflow: hidden;
-  border-radius: 30px 30px 0 0; /* Maintain rounding since card is now overflow: visible */
+  border-radius: 30px 30px 0 0;
+  /* Maintain rounding since card is now overflow: visible */
 }
 
 .cc-banner-dots {
@@ -76,8 +84,15 @@
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0.2; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
 }
 
 .cc-banner h2 {
@@ -198,7 +213,8 @@
 }
 
 .dropdown-menu {
-  display: block !important; /* Override Bootstrap display: none */
+  display: block !important;
+  /* Override Bootstrap display: none */
   position: absolute;
   top: 105%;
   left: 0;
@@ -239,8 +255,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ================== SUBMIT BUTTON ================== */
@@ -292,8 +315,13 @@
 }
 
 @keyframes shine {
-  0%   { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 /* ================== MESSAGE BOXES ================== */
@@ -322,8 +350,15 @@
 }
 
 @keyframes popIn {
-  from { opacity: 0; transform: scale(0.93) translateY(8px); }
-  to   { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.93) translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 /* ================== FOOTER NOTE ================== */

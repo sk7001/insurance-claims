@@ -22,6 +22,11 @@ public class User {
     private String email;
     private String role; // POLICYHOLDER, ADJUSTER, UNDERWRITER, INVESTIGATOR
     private Long phoneNumber;
+    private String fullName;
+    
+    private boolean isVerified = false;
+    private String verificationToken;
+
     public User() {}
 
     public Long getId() { return id; }
@@ -42,5 +47,12 @@ public class User {
     public Long getPhoneNumber() { return phoneNumber; }
     public void setPhoneNumber(Long phoneNumber) { this.phoneNumber = phoneNumber; }
 
+    public String getFullName() { return fullName; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
 
+    public boolean isVerified() { return isVerified; }
+    public void setVerified(boolean verified) { isVerified = verified; }
+
+    public String getVerificationToken() { return verificationToken; }
+    public void setVerificationToken(String verificationToken) { this.verificationToken = verificationToken; }
 }
