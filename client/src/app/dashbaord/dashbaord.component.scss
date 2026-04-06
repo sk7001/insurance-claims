@@ -681,10 +681,10 @@
     transition: all 0.3s ease;
 
     &:hover {
-      background: #2f3238;
-      border-color: rgba(255, 255, 255, 0.15);
+      background: #f8fafc;
+      border-color: #cbd5e1;
       transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
     }
 
     .li-icon {

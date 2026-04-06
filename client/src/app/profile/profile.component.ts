@@ -26,7 +26,7 @@ export class ProfileComponent implements OnInit {
   ) {
     this.userId = this.authService.getUserId();
     this.userRole = this.authService.getRole || 'USER';
-    
+
     this.profileForm = this.fb.group({
       fullName: ['', Validators.required],
       username: ['', Validators.required],
@@ -80,8 +80,17 @@ export class ProfileComponent implements OnInit {
       next: (user: any) => {
         this.saving = false;
         this.successMsg = 'Profile updated successfully! ✅';
-        // Update stored names if needed
-        this.authService.saveUsername(user.username);
+
+        // ✅ Store updated values in local storage
+        // Option 1: Use API response (best)
+        this.authService.saveUser(user);
+
+        // ✅ If API doesn't return full user properly, fallback using form values
+        if (!user) {
+          this.authService.saveFullName(this.profileForm.value.fullName);
+          this.authService.saveUsername(this.profileForm.value.username);
+          this.authService.savePhoneNumber(this.profileForm.value.phone);
+        }
       },
       error: (err: any) => {
         this.saving = false;

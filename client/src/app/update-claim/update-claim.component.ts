@@ -20,6 +20,9 @@ export class UpdateClaimComponent implements OnInit {
 
   claimList: any[] = [];
   searchFilter: any[] = [];
+  activeClaimsList: any[] = [];
+  resolvedClaimsList: any[] = [];
+  activeTab: 'pending' | 'completed' = 'pending';
 
   assignModel: any = {};
   showMessage: any;
@@ -60,6 +63,7 @@ export class UpdateClaimComponent implements OnInit {
       next: (res: any) => {
         this.claimList = this.sortByDateDesc(res || []);
         this.searchFilter = [...this.claimList];
+        this.updateLists();
       },
       error: (err) => {
         this.showError = true;
@@ -161,5 +165,15 @@ export class UpdateClaimComponent implements OnInit {
     });
 
     this.searchFilter = this.sortByDateDesc(filtered);
+    this.updateLists();
+  }
+
+  updateLists() {
+    this.activeClaimsList = this.searchFilter.filter(c => c.status === 'Initiated' || c.status === 'In progress' || c.status === 'Pending');
+    this.resolvedClaimsList = this.searchFilter.filter(c => c.status === 'Approved' || c.status === 'Rejected');
+  }
+
+  setTab(tab: 'pending' | 'completed') {
+    this.activeTab = tab;
   }
 }

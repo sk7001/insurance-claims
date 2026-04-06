@@ -32,7 +32,7 @@ body {
   width: 100%; /* Default to full width for Login/Registration */
   overflow-y: auto;
   position: relative;
-  transition: all 0.3s ease;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   
   &.has-sidebar {
     margin-left: 292px; /* 260px sidebar + 32px gap */
@@ -43,6 +43,11 @@ body {
       margin-left: 0;
       width: 100vw;
     }
+  }
+
+  body.sidebar-collapsed &.has-sidebar {
+    margin-left: 120px; /* 88px sidebar + 32px gap */
+    width: calc(100vw - 120px);
   }
 
   /* Smooth scrolling for page content */

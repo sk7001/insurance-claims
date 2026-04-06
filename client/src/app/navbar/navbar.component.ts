@@ -13,6 +13,7 @@ export class NavbarComponent {
   roleName: string | null = null;
   userName: string | null = null;
   fullName: string | null = null;
+  isCollapsed: boolean = false;
 
   constructor(private authService: AuthService, private router: Router) {
     this.IsLoggin = authService.getLoginStatus;
@@ -28,5 +29,14 @@ export class NavbarComponent {
   logout() {
     this.authService.logout();
     window.location.reload();
+  }
+
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+    if (this.isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+    }
   }
 }
