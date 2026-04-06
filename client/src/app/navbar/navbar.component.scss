@@ -10,7 +10,8 @@
 
 /* ================== SIDEBAR ================== */
 .d-sidebar {
-  position: fixed; /* Fixed position for robustness */
+  position: fixed;
+  /* Fixed position for robustness */
   top: 16px;
   left: 16px;
   width: 260px;
@@ -23,65 +24,56 @@
   font-family: 'Inter', sans-serif;
   z-index: 1000;
   border: 1px solid rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.05);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
   flex-shrink: 0;
-  transition: width 0.3s ease, padding 0.3s ease;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-x: hidden;
+  white-space: nowrap;
+
+  .ds-pinfo { transition: opacity 0.2s ease; }
+  .ds-group-label { transition: opacity 0.2s ease; }
+  .ds-pill-item span { transition: opacity 0.2s ease; }
+  .logout-text { transition: opacity 0.2s ease; }
 
   &.collapsed {
     width: 88px;
-    padding: 30px 16px;
+    padding: 30px 10px;
 
-    .ds-brand {
-      display: flex;
-      justify-content: center;
+    .sidebar-header-actions {
+      width: 68px;
     }
 
-    .ds-profile-btn {
-      padding: 12px;
-      justify-content: center;
-    }
-
-    .ds-pinfo { display: none; }
-    .ds-group-label { display: none; }
-    .ds-pill-item span { display: none; margin: 0; }
-
-    .ds-pill-item {
-      padding: 12px;
-      justify-content: center;
-    }
-
-    .ds-icon-box { margin: 0; }
-    
-    .logout-text { display: none; }
-    
-    .ds-logout {
-      padding: 12px;
+    .ds-pinfo, .ds-group-label, .ds-pill-item span, .logout-text { 
+      opacity: 0; 
+      pointer-events: none; 
     }
   }
 }
 
-.collapse-btn {
-  position: absolute;
-  top: 32px;
-  right: -14px;
-  width: 28px;
-  height: 28px;
-  background: var(--nav-bg);
-  border: 1px solid #e2e8f0;
-  border-radius: 50%;
+.sidebar-header-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 16px;
+  width: 212px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.sleek-toggle-btn {
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   color: var(--text-dim);
-  z-index: 1001;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-  transition: all 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: var(--brand-primary);
-    transform: scale(1.1);
+    background: var(--nav-hover);
+    color: var(--text-main);
   }
 }
 
@@ -150,6 +142,7 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  width: 212px;
   padding: 12px 16px;
   border-radius: 20px;
   color: var(--text-dim);
@@ -221,7 +214,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  width: 100%;
+  width: 212px;
   border: 1px solid #e2e8f0; // Visible light border
   cursor: pointer;
   text-align: left;
@@ -265,7 +258,7 @@
 }
 
 .ds-logout {
-  width: 100%;
+  width: 212px;
   height: 48px;
   border-radius: 16px;
   border: 1px solid #fee2e2;
@@ -273,8 +266,9 @@
   color: #ef4444;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: flex-start;
+  padding: 0 16px;
+  gap: 16px;
   cursor: pointer;
   transition: all 0.2s;
   font-family: inherit;
