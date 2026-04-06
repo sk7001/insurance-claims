@@ -1,12 +1,8 @@
-$accent: #3b82f6; // Tech Blue
 $error: #ef4444;
 
-:root {
-  --bg-main: #101114;
-  --bg-card: #1c1d21;
-  --text-main: #ffffff;
-  --text-dim: #90929a;
-  --border-light: rgba(255, 255, 255, 0.08);
+:host {
+  --success: #10b981;
+  --error: #ef4444;
 }
 
 .page {
@@ -51,13 +47,13 @@ $error: #ef4444;
   display: flex;
   align-items: center;
   gap: 14px;
-  background: var(--bg-card);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: 30px;
   padding: 12px 20px;
   width: 420px;
   max-width: 100%;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
   transition: box-shadow 0.25s ease, border-color 0.25s ease;
 
   svg {
@@ -79,8 +75,8 @@ $error: #ef4444;
   }
 
   &:focus-within {
-    border-color: $accent;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px var(--brand-glow);
   }
 }
 
@@ -99,11 +95,11 @@ $error: #ef4444;
    TABLE CARD
 ====================== */
 .table-card {
-  background: var(--bg-card);
+  background: #ffffff;
   padding: 24px;
   border-radius: 22px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-  border: 1px solid var(--border-light);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
   animation: cardFloat 0.55s ease both;
 }
 
@@ -141,9 +137,9 @@ tbody tr {
   border-bottom: 1px solid var(--border-light);
 
   &:hover {
-    background: rgba(255, 255, 255, 0.03);
+    background: #f8fafc;
     transform: scale(1.005);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 
     td {
       border-bottom-color: transparent;
@@ -188,9 +184,9 @@ tbody tr {
   font-weight: 700;
   text-transform: capitalize;
   white-space: nowrap;
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--brand-primary);
+  border: 1px solid rgba(99, 102, 241, 0.2);
   animation: fadeUp 0.4s ease both;
 }
 
@@ -213,9 +209,9 @@ tbody tr {
 }
 
 .status-tag.status-initiated {
-  background: rgba(59, 130, 246, 0.15);
-  color: #3b82f6;
-  border-color: rgba(59, 130, 246, 0.2);
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--brand-primary);
+  border-color: rgba(99, 102, 241, 0.2);
 }
 
 /* ======================

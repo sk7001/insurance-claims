@@ -132,18 +132,18 @@
 
     .ds-icon-box {
       background: #ffffff;
-      color: var(--brand-green);
+      color: var(--brand-primary);
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     }
   }
 
   &.active {
-    background: var(--brand-green-bg);
-    color: var(--brand-green);
-    border: 1px solid rgba(16, 185, 129, 0.1);
+    background: var(--brand-primary-bg);
+    color: var(--brand-primary);
+    border: 1px solid rgba(99, 102, 241, 0.1);
 
     .ds-icon-box {
-      background: var(--brand-green);
+      background: var(--brand-primary);
       color: white;
       box-shadow: 0 4px 16px var(--brand-glow); // Premium Active Glow fix
     }
@@ -179,8 +179,8 @@
   &:hover {
     background: #ffffff;
     transform: translateY(-2px);
-    border-color: var(--brand-green);
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.15);
+    border-color: var(--brand-primary);
+    box-shadow: 0 10px 20px rgba(99, 102, 241, 0.15);
   }
 
   .ds-avatar {
