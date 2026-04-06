@@ -10,9 +10,15 @@ import { HttpService } from '../../services/http.service';
 export class ViewClaimComponent implements OnInit {
 
   claimList: any[] = [];
-  showError: boolean = false;
-  errorMessage: any;
   searchFilter: any[] = [];
+
+  activeClaimsList: any[] = [];
+  resolvedClaimsList: any[] = [];
+
+  activeTab: 'pending' | 'completed' = 'pending';
+
+  showError = false;
+  errorMessage: any;
 
   constructor(
     public httpService: HttpService,
@@ -23,42 +29,60 @@ export class ViewClaimComponent implements OnInit {
     this.getClaimsById();
   }
 
-  /** ✅ helper: sort by date DESC (latest first) */
   private sortByDateDesc(list: any[]): any[] {
-    return list.sort((a, b) => {
-      const dateA = new Date(a.date).getTime();   // assumes claim.date exists
-      const dateB = new Date(b.date).getTime();
-      return dateB - dateA; // DESC
-    });
+    return (list || []).sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
   }
 
   getClaimsById() {
     this.httpService.getClaimsByPolicyholder(this.authService.getUserId()).subscribe({
       next: (res: any) => {
-        // ✅ store and sort by date desc
         this.claimList = this.sortByDateDesc(res || []);
-        this.searchFilter = [...this.claimList]; // keep same sorted order
-        console.log(this.claimList);
+        this.searchFilter = [...this.claimList];
+        this.updateLists();
       },
-      error: (err) => {
+      error: () => {
         this.showError = true;
         this.errorMessage = "No claims found";
       }
     });
   }
 
+  /** 🔥 SAME LOGIC AS OTHER COMPONENTS */
+  updateLists() {
+    this.activeClaimsList = this.searchFilter.filter(c =>
+      c.status === 'Initiated' ||
+      c.status === 'In progress' ||
+      c.status === 'Pending'
+    );
+
+    this.resolvedClaimsList = this.searchFilter.filter(c =>
+      c.status === 'Approved' ||
+      c.status === 'Rejected'
+    );
+  }
+
   searchByDescId(event: any) {
-    const searchInput = (event.target.value || '').toLowerCase().trim();
+    const q = (event.target.value || '').toLowerCase().trim();
 
     const filtered = this.claimList.filter((claim) => {
+      const id = String(claim?.id || '').toLowerCase();
+      const desc = claim?.description?.toLowerCase() || '';
+      const status = claim?.status?.toLowerCase() || '';
+
       return (
-        claim.id?.toString().toLowerCase().includes(searchInput) ||
-        claim.status?.toString().toLowerCase().includes(searchInput) ||
-        claim.description?.toString().toLowerCase().includes(searchInput)
+        id.includes(q) ||
+        desc.includes(q) ||
+        status.includes(q)
       );
     });
 
-    // ✅ keep filtered list also sorted by date desc
     this.searchFilter = this.sortByDateDesc(filtered);
+    this.updateLists();
+  }
+
+  setTab(tab: 'pending' | 'completed') {
+    this.activeTab = tab;
   }
 }

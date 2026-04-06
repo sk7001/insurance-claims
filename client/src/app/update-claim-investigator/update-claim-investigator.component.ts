@@ -13,27 +13,26 @@ import { ToastService } from '../../services/toast.service';
 export class UpdateClaimInvestigatorComponent implements OnInit {
 
   itemForm: FormGroup;
-  formModel: any = { status: null };
-
-  showError: boolean = false;
-  errorMessage: any;
 
   claimList: any[] = [];
   searchFilter: any[] = [];
 
-  assignModel: any = {};
-  showMessage: any;
-  responseMessage: any;
+  activeClaimsList: any[] = [];
+  resolvedClaimsList: any[] = [];
 
-  activeTab: 'in-progress' | 'completed' = 'in-progress';
+  activeTab: 'pending' | 'completed' = 'pending';
   searchTerm: string = '';
 
-  closing = false;
   updatedId: number | null = null;
+  closing = false;
+
+  assignModel: any = {};
+
+  showError = false;
+  errorMessage: any;
 
   constructor(
-    public router: Router,
-    public httpService: HttpService,
+    private httpService: HttpService,
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private toastService: ToastService
@@ -50,11 +49,9 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
   }
 
   private sortByDateDesc(list: any[]): any[] {
-    return (list || []).sort((a, b) => {
-      const dateA = new Date(a?.date).getTime();
-      const dateB = new Date(b?.date).getTime();
-      return dateB - dateA;
-    });
+    return (list || []).sort((a, b) =>
+      new Date(b.date).getTime() - new Date(a.date).getTime()
+    );
   }
 
   getClaims() {
@@ -64,13 +61,54 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     this.httpService.getClaimsByUnderwriter(userId).subscribe({
       next: (res: any) => {
         this.claimList = this.sortByDateDesc(res || []);
-        this.applyFilters();
-      },
-      error: (err) => {
-        this.showError = true;
-        this.errorMessage = err;
+        this.searchFilter = [...this.claimList];
+        this.updateLists();
       }
     });
+  }
+
+  /** 🔥 SAME LOGIC AS FIRST COMPONENT */
+  updateLists() {
+    this.activeClaimsList = this.searchFilter.filter(c =>
+      c.status === 'Initiated' ||
+      c.status === 'In progress' ||
+      c.status === 'Pending'
+    );
+
+    this.resolvedClaimsList = this.searchFilter.filter(c =>
+      c.status === 'Approved' ||
+      c.status === 'Rejected'
+    );
+  }
+
+  searchByDescId(event: any) {
+    const q = (event.target.value || '').toLowerCase().trim();
+
+    const filtered = this.claimList.filter((claim) => {
+      const claimId = String(claim?.id || '').toLowerCase();
+      const desc = claim?.description?.toLowerCase() || '';
+      const status = claim?.status?.toLowerCase() || '';
+      const type = claim?.insuranceType?.toLowerCase() || '';
+
+      const phName = claim?.policyholder?.username?.toLowerCase() || '';
+      const phEmail = claim?.policyholder?.email?.toLowerCase() || '';
+
+      return (
+        claimId.includes(q) ||
+        desc.includes(q) ||
+        status.includes(q) ||
+        type.includes(q) ||
+        phName.includes(q) ||
+        phEmail.includes(q)
+      );
+    });
+
+    this.searchFilter = this.sortByDateDesc(filtered);
+    this.updateLists();
+  }
+
+  setTab(tab: 'pending' | 'completed') {
+    this.activeTab = tab;
   }
 
   edit(val: any) {
@@ -84,38 +122,21 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     });
   }
 
-  formatDate(date: string | Date): string {
+  formatDate(date: any): string {
     const d = new Date(date);
-    const year = d.getFullYear();
-    const month = ('0' + (d.getMonth() + 1)).slice(-2);
-    const day = ('0' + d.getDate()).slice(-2);
-    return `${year}-${month}-${day}`;
+    return d.toISOString().split('T')[0];
   }
 
-  onSubmit(): void {
-    if (this.itemForm.invalid) {
-      this.showError = true;
-      return;
-    }
+  onSubmit() {
+    if (this.itemForm.invalid) return;
 
-    this.assignModel.date = this.itemForm.controls['date'].value;
-    this.assignModel.status = this.itemForm.controls['status'].value;
-    this.assignModel.description = this.itemForm.controls['description'].value;
+    Object.assign(this.assignModel, this.itemForm.value);
 
     this.httpService.updateClaims(this.assignModel, this.updatedId).subscribe({
       next: () => {
-        this.itemForm.reset({
-          description: '',
-          date: '',
-          status: null
-        });
         this.updatedId = null;
         this.getClaims();
-        this.toastService.show('Claim updated successfully', 'success');
-      },
-      error: (err) => {
-        this.showError = true;
-        this.errorMessage = err;
+        this.toastService.show('Updated successfully', 'success');
       }
     });
   }
@@ -126,53 +147,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     setTimeout(() => {
       this.updatedId = null;
       this.itemForm.reset();
-      this.showError = false;
       this.closing = false;
     }, 300);
-  }
-
-  searchByDescId(event: any) {
-    this.searchTerm = (event.target.value || '').toLowerCase().trim();
-    this.applyFilters();
-  }
-
-  setTab(tab: 'in-progress' | 'completed') {
-    this.activeTab = tab;
-    this.applyFilters();
-  }
-
-  applyFilters() {
-    const q = this.searchTerm;
-
-    const filtered = this.claimList.filter((claim) => {
-      // 1. Filter by Tab
-      const isCompleted = claim.status === 'Approved' || claim.status === 'Rejected';
-      if (this.activeTab === 'completed' && !isCompleted) return false;
-      if (this.activeTab === 'in-progress' && isCompleted) return false;
-
-      if (!q) return true;
-
-      // 2. Filter by Search Query
-      const claimId = claim?.id != null ? String(claim.id).toLowerCase() : '';
-      const desc = claim?.description?.toString().toLowerCase() || '';
-      const status = claim?.status?.toString().toLowerCase() || '';
-      const type = claim?.insuranceType?.toString().toLowerCase() || '';
-
-      const phName = claim?.policyholder?.username?.toString().toLowerCase() || '';
-      const phEmail = claim?.policyholder?.email?.toString().toLowerCase() || '';
-      const phPhone = claim?.policyholder?.phoneNumber != null ? String(claim.policyholder.phoneNumber).toLowerCase() : '';
-
-      return (
-        claimId.includes(q) ||
-        desc.includes(q) ||
-        status.includes(q) ||
-        type.includes(q) ||
-        phName.includes(q) ||
-        phEmail.includes(q) ||
-        phPhone.includes(q)
-      );
-    });
-
-    this.searchFilter = this.sortByDateDesc(filtered);
   }
 }
