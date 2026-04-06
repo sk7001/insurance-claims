@@ -27,7 +27,7 @@
       </div>
       <div class="cute-kpi-grid">
         <div class="cute-card" *ngFor="let k of kpiCards" routerLink="/view-claim-status">
-          <div class="cc-icon" [ngClass]="'type-' + k.color">●</div><p>{{ k.label }}</p><h2>{{ k.value }}</h2>
+          <div class="cc-icon" [ngClass]="'type-' + k.color"><i class="bi" [ngClass]="k.icon"></i></div><p>{{ k.label }}</p><h2>{{ k.value }}</h2>
         </div>
       </div>
     </div>
@@ -50,7 +50,7 @@
         </div>
         <div class="donut-legend" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
           <div class="leg-item" *ngFor="let seg of donutSegments">
-            <div class="leg-icon" [style.color]="seg.color">●</div>
+            <div class="leg-icon" [style.color]="seg.color"><i class="bi" [ngClass]="seg.icon"></i></div>
             <div>
               <p style="margin: 0;">{{ seg.label }}</p>
               <h3 style="margin: 0;">{{ seg.count }}</h3>

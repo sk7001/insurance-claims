@@ -37,6 +37,11 @@ export class AuthService {
     return localStorage.getItem('fullName');
   }
 
+  // ✅ NEW: phone getter
+  get getPhoneNumber(): string | null {
+    return localStorage.getItem('phoneNumber');
+  }
+
   get getLoginStatus(): boolean {
     return !!localStorage.getItem('token');
   }
@@ -53,6 +58,7 @@ export class AuthService {
     localStorage.removeItem('username');
     localStorage.removeItem('email');
     localStorage.removeItem('fullName');
+    localStorage.removeItem('phoneNumber'); // ✅ NEW
     this.token = null;
     this.isLoggedIn = false
   }
@@ -69,11 +75,31 @@ export class AuthService {
     localStorage.setItem('fullName', name);
   }
 
+  // ✅ NEW: save phone
+  savePhoneNumber(phoneNumber: string) {
+    localStorage.setItem('phoneNumber', phoneNumber);
+  }
+
   saveUserId(userid: string) {
     localStorage.setItem('userId', userid);
   }
 
   getUserId(): string | null {
     return localStorage.getItem('userId');
+  }
+
+  // ✅ OPTIONAL (but very useful): save all in one shot
+  saveUser(user: any) {
+    if (!user) return;
+    if (user.username) this.saveUsername(user.username);
+    if (user.fullName) this.saveFullName(user.fullName);
+    if (user.email) this.saveEmail(user.email);
+    if (user.role) this.SetRole(user.role);
+
+    // phone can come as phone or phoneNumber
+    const phone = user.phoneNumber ?? user.phone;
+    if (phone !== undefined && phone !== null) {
+      this.savePhoneNumber(String(phone));
+    }
   }
 }
