@@ -21,10 +21,15 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
   claimList: any[] = [];
   searchFilter: any[] = [];
 
+  assignModel: any = {};
   showMessage: any;
   responseMessage: any;
 
-  updateId: any;
+  activeTab: 'in-progress' | 'completed' = 'in-progress';
+  searchTerm: string = '';
+
+  closing = false;
+  updatedId: number | null = null;
 
   constructor(
     public router: Router,
@@ -34,7 +39,9 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     private toastService: ToastService
   ) {
     this.itemForm = this.formBuilder.group({
-      status: [this.formModel.status, Validators.required]
+      description: ['', Validators.required],
+      date: ['', Validators.required],
+      status: ['', Validators.required],
     });
   }
 
@@ -57,7 +64,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     this.httpService.getClaimsByUnderwriter(userId).subscribe({
       next: (res: any) => {
         this.claimList = this.sortByDateDesc(res || []);
-        this.searchFilter = [...this.claimList];
+        this.applyFilters();
       },
       error: (err) => {
         this.showError = true;
@@ -66,8 +73,23 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     });
   }
 
-  edit(val: any): void {
-    this.updateId = val.id;
+  edit(val: any) {
+    this.updatedId = val.id;
+    this.assignModel = val;
+
+    this.itemForm.patchValue({
+      description: val.description,
+      status: val.status,
+      date: this.formatDate(val.date),
+    });
+  }
+
+  formatDate(date: string | Date): string {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = ('0' + (d.getMonth() + 1)).slice(-2);
+    const day = ('0' + d.getDate()).slice(-2);
+    return `${year}-${month}-${day}`;
   }
 
   onSubmit(): void {
@@ -76,29 +98,61 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
       return;
     }
 
-    this.httpService
-      .updateClaimsStatus(this.itemForm.value.status, this.updateId)
-      .subscribe({
-        next: () => {
-          this.itemForm.reset();
-          this.updateId = null;
-          this.getClaims();
-          setTimeout(() => {
-            this.toastService.show('Claim updated successfully', 'success');
-          }, 300);
-        },
-        error: (err) => {
-          this.showError = true;
-          this.errorMessage = err;
-        }
-      });
+    this.assignModel.date = this.itemForm.controls['date'].value;
+    this.assignModel.status = this.itemForm.controls['status'].value;
+    this.assignModel.description = this.itemForm.controls['description'].value;
+
+    this.httpService.updateClaims(this.assignModel, this.updatedId).subscribe({
+      next: () => {
+        this.itemForm.reset({
+          description: '',
+          date: '',
+          status: null
+        });
+        this.updatedId = null;
+        this.getClaims();
+        this.toastService.show('Claim updated successfully', 'success');
+      },
+      error: (err) => {
+        this.showError = true;
+        this.errorMessage = err;
+      }
+    });
   }
 
-  // ✅ UPDATED SEARCH: claim id/desc/status/type + policyholder details
+  cancelUpdate() {
+    this.closing = true;
+
+    setTimeout(() => {
+      this.updatedId = null;
+      this.itemForm.reset();
+      this.showError = false;
+      this.closing = false;
+    }, 300);
+  }
+
   searchByDescId(event: any) {
-    const q = (event.target.value || '').toLowerCase().trim();
+    this.searchTerm = (event.target.value || '').toLowerCase().trim();
+    this.applyFilters();
+  }
+
+  setTab(tab: 'in-progress' | 'completed') {
+    this.activeTab = tab;
+    this.applyFilters();
+  }
+
+  applyFilters() {
+    const q = this.searchTerm;
 
     const filtered = this.claimList.filter((claim) => {
+      // 1. Filter by Tab
+      const isCompleted = claim.status === 'Approved' || claim.status === 'Rejected';
+      if (this.activeTab === 'completed' && !isCompleted) return false;
+      if (this.activeTab === 'in-progress' && isCompleted) return false;
+
+      if (!q) return true;
+
+      // 2. Filter by Search Query
       const claimId = claim?.id != null ? String(claim.id).toLowerCase() : '';
       const desc = claim?.description?.toString().toLowerCase() || '';
       const status = claim?.status?.toString().toLowerCase() || '';
@@ -106,9 +160,7 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
 
       const phName = claim?.policyholder?.username?.toString().toLowerCase() || '';
       const phEmail = claim?.policyholder?.email?.toString().toLowerCase() || '';
-      const phPhone = claim?.policyholder?.phoneNumber != null
-        ? String(claim.policyholder.phoneNumber).toLowerCase()
-        : '';
+      const phPhone = claim?.policyholder?.phoneNumber != null ? String(claim.policyholder.phoneNumber).toLowerCase() : '';
 
       return (
         claimId.includes(q) ||
