@@ -33,6 +33,7 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   claims: any[] = [];
   showViewAllMenu = false;
+  donutSegments: any[] = [];
 
   constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {}
 
@@ -70,11 +71,37 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
     this.claims = data.map(c => {
       const status = c.status || 'Initiated';
       if (status === 'Initiated') initiated++; else if (status === 'Approved') approved++; else if (status === 'Rejected') rejected++; else pending++;
-      return { id: 'CLM-' + c.id, desc: c.description || c.insuranceType || 'Claim Detail', status, date: new Date(c.date).toLocaleDateString(), severity: status === 'Rejected' ? 'high' : (status === 'Approved' ? 'low' : 'med'), val: '$' + (Math.floor(Math.random() * 1000) + 100) };
+      return { id: 'CLM-' + c.id, desc: c.description || c.insuranceType || 'Claim Detail', status, cssClass: status.toLowerCase().split(' ').join('-'), date: new Date(c.date).toLocaleDateString(), severity: status === 'Rejected' ? 'high' : (status === 'Approved' ? 'low' : 'med'), val: '$' + (Math.floor(Math.random() * 1000) + 100) };
     });
 
     this.metrics = { totalClaims: data.length, claimsInitiated: initiated, approved, pending, rejected };
     this.kpiCards.forEach((k, i) => { k.value = Object.values(this.metrics)[i]; });
+
+    // Calculate Donut Segments
+    const total = data.length || 1;
+    let cumulative = 0;
+    const statuses = [
+      { key: 'Approved', count: approved, color: '#10b981' },
+      { key: 'Pending', count: pending, color: '#f59e0b' },
+      { key: 'Initiated', count: initiated, color: '#3b82f6' },
+      { key: 'Rejected', count: rejected, color: '#ef4444' }
+    ];
+
+    this.donutSegments = statuses
+      .filter(s => s.count > 0)
+      .map(s => {
+        const percentage = s.count / total;
+        const length = percentage * 502.65;
+        const segment = {
+          label: s.key,
+          count: s.count,
+          color: s.color,
+          dasharray: `${length} 502.65`,
+          dashoffset: -cumulative
+        };
+        cumulative += length;
+        return segment;
+      });
   }
 
 

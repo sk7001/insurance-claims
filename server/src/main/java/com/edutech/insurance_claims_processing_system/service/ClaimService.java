@@ -165,7 +165,24 @@ public class ClaimService {
                 claim.getPolicyholder().getEmail(),
                 "Claim Assigned for Review",
                 claim.getPolicyholder().getUsername(),
-                "Your claim (ID: <strong>#" + claim.getId() + "</strong>) is now being reviewed.<br/><br/>" +
+                "Your claim (ID: <strong>#" + claim.getId() + "</strong>) is now being reviewed by your Underwriter.<br/><br/>" +
+                        "<strong>Underwriter Contact Details:</strong><br/>" +
+                        "Name: " + underwriter.getFullName() + "<br/>" +
+                        "Email: " + underwriter.getEmail() + "<br/>" +
+                        "Phone: " + underwriter.getPhoneNumber() + "<br/><br/>" +
+                        "Status: <strong>" + claim.getStatus() + "</strong>"
+        );
+
+        // Email notification to underwriter
+        emailService.sendGenericHtmlMail(
+                underwriter.getEmail(),
+                "Claim Assigned",
+                underwriter.getUsername(),
+                "A new claim (ID: <strong>#" + claim.getId() + "</strong>) has been assigned to you for review.<br/><br/>" +
+                        "<strong>Policyholder Contact Details:</strong><br/>" +
+                        "Name: " + claim.getPolicyholder().getFullName() + "<br/>" +
+                        "Email: " + claim.getPolicyholder().getEmail() + "<br/>" +
+                        "Phone: " + claim.getPolicyholder().getPhoneNumber() + "<br/><br/>" +
                         "Status: <strong>" + claim.getStatus() + "</strong>"
         );
 

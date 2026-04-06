@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
     { value: 'POLICYHOLDER', label: 'Policyholder', icon: '🧑' },
     { value: 'ADJUSTER',     label: 'Adjuster',     icon: '📋' },
     { value: 'UNDERWRITER',  label: 'Underwriter',  icon: '📝' },
-    { value: 'INVESTIGATOR', label: 'Investigator', icon: '🔍' }
+    // { value: 'INVESTIGATOR', label: 'Investigator', icon: '🔍' }
   ];
 
   public pwPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
