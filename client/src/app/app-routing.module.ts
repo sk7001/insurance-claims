@@ -15,6 +15,8 @@ import { CreateInvestigatorComponent } from './create-investigator/create-invest
 import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/update-claim-investigator.component';
 import { ViewClaimComponent } from './view-claim/view-claim.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AdminUserManagementComponent } from './admin-user-management/admin-user-management.component'; 
+import { AdminClaimsComponent } from './admin-claims/admin-claims.component'; 
 
 
 const routes: Routes = [
@@ -28,6 +30,8 @@ const routes: Routes = [
   { path: 'update-claim-investigator', component: UpdateClaimInvestigatorComponent },
   { path: 'view-claim-status', component: ViewClaimComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'admin/users', component: AdminUserManagementComponent },
+  { path: 'admin/claims', component: AdminClaimsComponent },
   { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
   { path: '**', redirectTo: '/dashboard', pathMatch: 'full' },
 ];

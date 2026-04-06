@@ -20,6 +20,8 @@ import { ViewClaimComponent } from './view-claim/view-claim.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SpeechService } from '../services/speech.service';
+import { AdminUserManagementComponent } from './admin-user-management/admin-user-management.component'; 
+import { AdminClaimsComponent } from './admin-claims/admin-claims.component'; 
 
 @NgModule({
   declarations: [
@@ -35,7 +37,9 @@ import { SpeechService } from '../services/speech.service';
     NavbarComponent,
     ViewClaimComponent,
     ChatbotComponent,
-    ProfileComponent
+    ProfileComponent,
+    AdminUserManagementComponent,
+    AdminClaimsComponent
   ],
   imports: [
     BrowserModule,

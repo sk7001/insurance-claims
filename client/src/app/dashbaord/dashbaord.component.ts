@@ -13,7 +13,12 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
   role!: string | null;
   userId!: string | null;
   userName = 'User';
+  isAdminUser = false;
   currentTime = '';
+  pendingUsers: any[] = [];
+  allUsers: any[] = [];
+  systemClaims: any[] = []; // Full system claims list
+  adminTab: string = 'overview'; // 'overview', 'users', 'claims'
   private timerInt: any;
   metrics = {
     totalClaims: 0,
@@ -35,16 +40,51 @@ export class DashbaordComponent implements OnInit, OnDestroy, AfterViewChecked {
   showViewAllMenu = false;
   donutSegments: any[] = [];
 
-  constructor(private authService: AuthService, private httpService: HttpService, private router: Router) {}
+  constructor(private authService: AuthService, private httpService: HttpService, private router: Router) { }
 
   ngOnInit(): void {
     this.role = this.authService.getRole;
     this.userId = this.authService.getUserId();
     this.userName = this.authService.getFullName || this.authService.getUsername || '';
+    this.isAdminUser = this.authService.getUsername === 'admin';
 
     this.updateClock();
     this.timerInt = setInterval(() => this.updateClock(), 1000);
     this.loadDashboardData();
+    if (this.isAdminUser) {
+      this.loadPendingUsers();
+      this.loadAllUsers();
+    }
+  }
+
+  setAdminTab(tab: string) {
+    this.adminTab = tab;
+  }
+
+  loadAllUsers() {
+    this.httpService.getAllUsers().subscribe((res: any) => {
+      this.allUsers = res;
+    });
+  }
+
+  loadPendingUsers() {
+    this.httpService.getPendingUsers().subscribe((res: any) => {
+      this.pendingUsers = res;
+    });
+  }
+
+  approvePendingUser(userId: any) {
+    this.httpService.approveUser(userId).subscribe(() => {
+      this.loadPendingUsers();
+    });
+  }
+
+  rejectPendingUser(userId: any) {
+    if (confirm('Are you sure you want to reject and delete this request?')) {
+      this.httpService.rejectUser(userId).subscribe(() => {
+        this.loadPendingUsers();
+      });
+    }
   }
 
   ngOnDestroy(): void { clearInterval(this.timerInt); }

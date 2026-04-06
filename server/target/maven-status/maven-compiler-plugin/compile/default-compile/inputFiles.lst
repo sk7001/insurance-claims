@@ -25,6 +25,7 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/RegisterAndLoginController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigation.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigator.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/AdminController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/ResetRequest.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/AdjusterRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/AdjusterController.java

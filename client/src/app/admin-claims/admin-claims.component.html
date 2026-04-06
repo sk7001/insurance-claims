@@ -1,0 +1,66 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>Global Claims Oversight 📑</h1>
+    <p>Audit and monitor all insurance claims across the system.</p>
+  </header>
+
+  <div class="admin-actions-bar">
+    <div class="search-box">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <line x1="21" y1="21" x2="16.65" y2="16.65" />
+      </svg>
+      <input type="text" [(ngModel)]="searchTerm" (input)="applyFilters()" placeholder="Search by Claim ID or Description...">
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="statusFilter" (change)="applyFilters()">
+        <option value="all">All Statuses</option>
+        <option value="pending">Pending</option>
+        <option value="approved">Approved</option>
+        <option value="rejected">Rejected</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    <div class="claims-table-wrapper" *ngIf="filteredClaims.length > 0; else noClaims">
+      <table class="claims-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Policyholder</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let c of filteredClaims">
+            <td><b class="claim-id">#{{ c.id }}</b></td>
+            <td>User #{{ c.policyholderId }}</td>
+            <td class="td-desc">{{ c.description || 'No description provided' }}</td>
+            <td><b>${{ c.claimAmount }}</b></td>
+            <td><span class="type-badge">{{ c.type || 'Standard' }}</span></td>
+            <td>
+              <span class="status-pill" [ngClass]="getStatusClass(c.status)">
+                {{ c.status }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noClaims>
+      <div class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#e2e8f0" stroke-width="2">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+          <polyline points="22 4 12 14.01 9 11.01" />
+        </svg>
+        <p>No claims found matching your criteria.</p>
+      </div>
+    </ng-template>
+  </div>
+</div>

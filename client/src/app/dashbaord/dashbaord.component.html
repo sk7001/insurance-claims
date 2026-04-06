@@ -7,7 +7,13 @@
       <p>Summary of your insurance claims.</p>
     </div>
     
-    <div style="margin-left: auto;">
+    <div style="margin-left: auto; display: flex; align-items: center; gap: 16px;">
+      <!-- ✅ ADMIN TAB TOGGLE -->
+      <div class="admin-tab-bar" *ngIf="isAdminUser">
+        <button [class.active]="adminTab === 'overview'" (click)="setAdminTab('overview')">Overview</button>
+        <button [class.active]="adminTab === 'users'" (click)="setAdminTab('users')">System Users</button>
+        <button [class.active]="adminTab === 'claims'" (click)="setAdminTab('claims')">Global Claims</button>
+      </div>
       <div class="dh-time-badge">{{ currentTime }}</div>
     </div>
   </header>
@@ -28,6 +34,29 @@
       <div class="cute-kpi-grid">
         <div class="cute-card" *ngFor="let k of kpiCards" routerLink="/view-claim-status">
           <div class="cc-icon" [ngClass]="'type-' + k.color"><i class="bi" [ngClass]="k.icon"></i></div><p>{{ k.label }}</p><h2>{{ k.value }}</h2>
+        </div>
+      </div>
+
+      <!-- ✅ ADMIN: PENDING USER REQUESTS (ONLY FOR USERNAME 'admin') -->
+      <div class="d-card admin-card" *ngIf="isAdminUser && pendingUsers.length > 0">
+        <div class="card-head">
+          <h2 class="c-title">New User Requests 🛡️</h2>
+          <span class="d-badge status-pending">{{ pendingUsers.length }} Pending</span>
+        </div>
+        <div class="admin-user-list">
+          <div class="user-request-item" *ngFor="let u of pendingUsers">
+            <div class="uri-info">
+              <div class="uri-avatar">user</div>
+              <div>
+                <h4>{{ u.fullName }}</h4>
+                <p>@{{ u.username }} • Role: <b>{{ u.role }}</b></p>
+              </div>
+            </div>
+            <div class="uri-actions">
+              <button class="btn-approve" (click)="approvePendingUser(u.id)">Approve</button>
+              <button class="btn-reject" (click)="rejectPendingUser(u.id)">Reject</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -64,6 +93,60 @@
             <h4>{{ c.id }}</h4><span class="d-badge" [ngClass]="c.cssClass">{{ c.status }}</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ADMIN: SYSTEM USERS LIST -->
+  <div class="admin-system-view" *ngIf="isAdminUser && adminTab === 'users'">
+    <div class="d-card list-card">
+      <div class="card-head"><h2 class="c-title">All System Users</h2></div>
+      <div class="user-table-container">
+        <table class="simple-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of allUsers">
+              <td><b>{{ u.fullName }}</b></td>
+              <td>@{{ u.username }}</td>
+              <td>{{ u.role }}</td>
+              <td><span class="d-badge" [ngClass]="u.approved ? 'status-approved' : 'status-pending'">{{ u.approved ? 'Active' : 'Pending' }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ✅ ADMIN: GLOBAL CLAIMS LIST -->
+  <div class="admin-system-view" *ngIf="isAdminUser && adminTab === 'claims'">
+    <div class="d-card list-card">
+      <div class="card-head"><h2 class="c-title">Every Claim in System</h2></div>
+      <div class="user-table-container">
+        <table class="simple-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>PolicyholderID</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of claims">
+              <td><b style="color: #6366f1;">{{ c.id }}</b></td>
+              <td>#{{ c.policyholderId || 'N/A' }}</td>
+              <td><span class="d-badge" [ngClass]="c.cssClass">{{ c.status }}</span></td>
+              <td>{{ c.date }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -8,9 +8,10 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class HttpService {
+
   public serverName = environment.apiUrl;
 
-  constructor(private http: HttpClient, private authService: AuthService) {}
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
   getInvestigations(): Observable<any> {
     const authToken = this.authService.getToken();
@@ -101,9 +102,9 @@ export class HttpService {
     // ✅ FIXED: &amp; -> &
     return this.http.put(
       this.serverName
-        + '/api/adjuster/claim/' + details.claimId
-        + '/assign?underwriterId=' + details.underwriterId
-        + '&adjusterId=' + this.authService.getUserId(),
+      + '/api/adjuster/claim/' + details.claimId
+      + '/assign?underwriterId=' + details.underwriterId
+      + '&adjusterId=' + this.authService.getUserId(),
       details,
       { headers: headers }
     );
@@ -163,5 +164,34 @@ export class HttpService {
 
   verifyReset(payload: any): Observable<any> {
     return this.http.post(this.serverName + `/api/user/forgot-password/verify-reset`, payload, { responseType: 'text' });
+  }
+
+  getAllUsers() {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.get(this.serverName + `/api/admin/users`, { headers: headers });
+  }
+  rejectUser(userId: any) {
+    const authToken = this.authService.getToken();    
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.delete(this.serverName + `/api/admin/reject/${userId}`, { headers: headers });
+  }
+  getPendingUsers() {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.get(this.serverName + `/api/admin/pending`, { headers: headers });
+  }
+  approveUser(userId: any) {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.post(this.serverName + `/api/admin/approve/${userId}`, { headers: headers });
   }
 }

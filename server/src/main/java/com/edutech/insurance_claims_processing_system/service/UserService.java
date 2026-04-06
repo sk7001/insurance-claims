@@ -1,6 +1,7 @@
 package com.edutech.insurance_claims_processing_system.service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,6 +98,14 @@ public class UserService implements UserDetailsService {
                 throw new IllegalArgumentException("Invalid role: " + user.getRole());
         }
 
+        /* ✅ SET APPROVAL STATUS */
+        if ("POLICYHOLDER".equalsIgnoreCase(savedUser.getRole()) || ("ADJUSTER".equalsIgnoreCase(savedUser.getRole()) && "admin".equalsIgnoreCase(savedUser.getUsername()))) {
+            savedUser.setApproved(true);
+        } else {
+            savedUser.setApproved(false);
+        }
+        userRepository.save(savedUser);
+
         /* ✅ SEND VERIFICATION EMAIL */
         emailService.sendVerificationHtmlMail(
             savedUser.getEmail(),
@@ -148,6 +157,48 @@ public class UserService implements UserDetailsService {
         user.setPhoneNumber(updatedData.getPhoneNumber());
 
         return userRepository.save(user);
+    }
+
+    /* =========================
+       ADMIN: APPROVAL WORKFLOW
+    ========================= */
+    public java.util.List<User> getPendingUsers() {
+        return userRepository.findByIsApprovedFalse();
+    }
+
+    public User approveUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+        
+        user.setApproved(true);
+        
+        // Preset password: username + phone number
+        String presetPassword = user.getUsername() + user.getPhoneNumber();
+        user.setPassword(passwordEncoder.encode(presetPassword));
+        
+        User approvedUser = userRepository.save(user);
+
+        // Notify user via email
+        emailService.sendGenericHtmlMail(
+            approvedUser.getEmail(),
+            "Registration Approved! 🎊",
+            approvedUser.getFullName(),
+            "Your account has been approved by our administration. <br/><br/>" +
+            "<b>Login Credentials:</b><br/>" +
+            "Username: " + approvedUser.getUsername() + "<br/>" +
+            "Password: " + presetPassword + "<br/><br/>" +
+            "Please login and change your password immediately."
+        );
+
+        return approvedUser;
+    }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
     }
 
     /* =========================
@@ -260,5 +311,6 @@ public class UserService implements UserDetailsService {
         target.setFullName(source.getFullName());
         target.setVerified(false);
         target.setVerificationToken(UUID.randomUUID().toString());
+        target.setApproved(false); // Default to false, specific logic in registerUser
     }
 }

@@ -1,0 +1,78 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <h1>User Management 🛡️</h1>
+    <p>Manage registrations, approvals, and system users.</p>
+  </header>
+
+  <div class="admin-tabs">
+    <button [class.active]="currentTab === 'pending'" (click)="setTab('pending')">
+      Pending Requests <span class="badge" *ngIf="pendingUsers.length > 0">{{ pendingUsers.length }}</span>
+    </button>
+    <button [class.active]="currentTab === 'policyholders'" (click)="setTab('policyholders')">Policyholders</button>
+    <button [class.active]="currentTab === 'adjusters'" (click)="setTab('adjusters')">Adjusters</button>
+    <button [class.active]="currentTab === 'underwriters'" (click)="setTab('underwriters')">Underwriters</button>
+  </div>
+
+  <div class="admin-content">
+    <!-- PENDING USERS -->
+    <div *ngIf="currentTab === 'pending'">
+      <div class="user-grid" *ngIf="pendingUsers.length > 0; else noPending">
+        <div class="user-card" *ngFor="let u of pendingUsers">
+          <div class="user-info">
+            <div class="user-avatar">{{ u.username[0] | uppercase }}</div>
+            <div>
+              <h3>{{ u.fullName }}</h3>
+              <p>@{{ u.username }} • {{ u.role }}</p>
+              <p class="user-meta">Phone: {{ u.phoneNumber }}</p>
+            </div>
+          </div>
+          <div class="user-actions">
+            <button class="btn-approve" (click)="approveUser(u.id)">Approve</button>
+            <button class="btn-reject" (click)="rejectUser(u.id)">Reject</button>
+          </div>
+        </div>
+      </div>
+      <ng-template #noPending>
+        <div class="empty-state">No pending registration requests.</div>
+      </ng-template>
+    </div>
+
+    <!-- FILTERED USERS (BY ROLE) -->
+    <div *ngIf="currentTab !== 'pending'">
+      <div class="user-table-wrapper" *ngIf="filteredUsers.length > 0; else noUsers">
+        <table class="user-table">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Phone</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let u of filteredUsers">
+              <td>
+                <div class="table-user">
+                  <div class="avatar-sm">{{ u.username[0] | uppercase }}</div>
+                  <span>{{ u.fullName }}</span>
+                </div>
+              </td>
+              <td>@{{ u.username }}</td>
+              <td>{{ u.email }}</td>
+              <td>{{ u.phoneNumber }}</td>
+              <td>
+                <span class="status-pill" [class.approved]="u.approved">
+                  {{ u.approved ? 'Active' : 'Pending' }}
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <ng-template #noUsers>
+        <div class="empty-state">No users found for this role.</div>
+      </ng-template>
+    </div>
+  </div>
+</div>

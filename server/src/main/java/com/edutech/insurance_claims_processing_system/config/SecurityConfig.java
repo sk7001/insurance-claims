@@ -58,6 +58,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/adjuster/**").hasAuthority("ADJUSTER")
                 .antMatchers("/api/investigator/**").hasAuthority("INVESTIGATOR")
                 .antMatchers("/api/underwriter/**").hasAuthority("UNDERWRITER")
+                .antMatchers("/api/admin/**").hasAuthority("ADJUSTER")
 
                 .anyRequest().authenticated()
                 .and()
