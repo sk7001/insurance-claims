@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.edutech.insurance_claims_processing_system.dto.LoginRequest;
@@ -30,6 +31,9 @@ public class RegisterAndLoginController {
     private final UserService userService;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+
+    @Value("${app.project.id}")
+    private String projectId;
 
     @Autowired
     public RegisterAndLoginController(UserService userService, JwtUtil jwtUtil,
@@ -74,7 +78,7 @@ public class RegisterAndLoginController {
                     + "a { display: inline-block; margin-top: 20px; background: #e63350; color: #fff; padding: 12px 24px; text-decoration: none; border-radius: 50px; font-weight: bold; }"
                     + "</style></head><body>"
                     + "<div class='container'><h2>✅ Email Verified Successfully!</h2><p>Your account is now active.</p>"
-                    + "<a href='https://orchardsolve.lntedutech.com/project/1395/proxy/5000/login'>Return to Login</a></div>"
+                    + "<a href='https://orchardsolve.lntedutech.com/project/" + projectId + "/proxy/5000/login?verified=true'>Return to Login</a></div>"
                     + "</body></html>";
             return ResponseEntity.ok(htmlResponse);
         } catch (IllegalArgumentException e) {

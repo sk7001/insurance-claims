@@ -1,105 +1,322 @@
-<div class="auth-wrapper">
-  <div class="auth-card fadeUp">
+<div class="shell reg-only" [class.intro-active]="false">
 
-    <h2>Create Account</h2>
+  <svg class="bg-canvas" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <radialGradient id="night" cx="50%" cy="30%" r="70%">
+        <stop offset="0%" stop-color="#12182b"/>
+        <stop offset="100%" stop-color="#05070e"/>
+      </radialGradient>
+      <radialGradient id="headlight" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ffebb3" stop-opacity="0.8"/>
+        <stop offset="100%" stop-color="#ffebb3" stop-opacity="0"/>
+      </radialGradient>
+      <radialGradient id="crash" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ff3366" stop-opacity="0.9"/>
+        <stop offset="80%" stop-color="#e63350" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#e63350" stop-opacity="0"/>
+      </radialGradient>
+      <filter id="blurLg"><feGaussianBlur stdDeviation="8" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    </defs>
+    
+    <rect width="100%" height="100%" fill="url(#night)"/>
+    
+    <!-- Lightning Flash -->
+    <rect width="100%" height="100%" fill="#fff" opacity="0" pointer-events="none">
+      <animate attributeName="opacity" values="0; 0; 0.8; 0; 0; 0.3; 0" keyTimes="0; 0.45; 0.46; 0.48; 0.8; 0.82; 1" dur="15s" repeatCount="indefinite" />
+    </rect>
+    
+    <!-- Skyline silhouette scrolling -->
+    <g fill="#0b0f1a">
+      <animateTransform attributeName="transform" type="translate" values="0,0; -1440,0" dur="120s" repeatCount="indefinite" />
+      <g>
+        <rect x="100" y="200" width="150" height="400"/>
+        <rect x="280" y="100" width="200" height="500"/>
+        <rect x="520" y="300" width="120" height="300"/>
+        
+        <rect x="900" y="250" width="140" height="350"/>
+        <rect x="1080" y="80" width="220" height="520"/>
+        <rect x="1350" y="220" width="160" height="380"/>
+        
+        <!-- Repeated -->
+        <rect x="1540" y="200" width="150" height="400"/>
+        <rect x="1720" y="100" width="200" height="500"/>
+        <rect x="1960" y="300" width="120" height="300"/>
+        
+        <!-- Fire Building 2 -->
+        <g transform="translate(2120, 150)">
+           <rect width="180" height="450" fill="#0b0f1a"/>
+           <!-- Fire glow pulsating -->
+           <circle cx="90" cy="150" r="40" fill="#ff6600" opacity="0.6" filter="url(#blurLg)">
+              <animate attributeName="opacity" values="0.2; 0.8; 0.4; 0.9; 0.2" dur="1.8s" repeatCount="indefinite"/>
+              <animate attributeName="r" values="30; 50; 35; 60; 30" dur="1.9s" repeatCount="indefinite"/>
+           </circle>
+           <circle cx="90" cy="150" r="10" fill="#fff" opacity="0.8" filter="url(#blurLg)"/>
+        </g>
+        
+        <rect x="2340" y="250" width="140" height="350"/>
+        <rect x="2520" y="80" width="220" height="520"/>
+      </g>
+    </g>
 
-    <form [formGroup]="itemForm" (ngSubmit)="onRegister()">
+    <!-- Glowing skyline windows -->
+    <g fill="rgba(255, 235, 179, 0.15)">
+      <animateTransform attributeName="transform" type="translate" values="0,0; -1440,0" dur="120s" repeatCount="indefinite" />
+      <rect x="320" y="120" width="10" height="15"/>
+      <rect x="320" y="150" width="10" height="15"/>
+      <rect x="350" y="120" width="10" height="15"/>
+      <rect x="700" y="180" width="15" height="20"/>
+      <rect x="730" y="180" width="15" height="20"/>
+      <rect x="1100" y="100" width="12" height="15"/>
+      <rect x="1760" y="120" width="10" height="15"/>
+      <rect x="1760" y="150" width="10" height="15"/>
+      <rect x="1790" y="120" width="10" height="15"/>
+      <rect x="2140" y="180" width="15" height="20"/>
+      <rect x="2170" y="180" width="15" height="20"/>
+      <rect x="2540" y="100" width="12" height="15"/>
+    </g>
 
-      <!-- Username -->
-      <div class="input-group">
-        <input type="text" placeholder=" " formControlName="username">
-        <label>Username</label>
+    <!-- Rain (moving diagonal lines) -->
+    <g stroke="#ffffff" stroke-width="1.5" opacity="0.12">
+      <line x1="100" y1="-100" x2="-100" y2="1000">
+        <animateTransform attributeName="transform" type="translate" values="500,-1000; -500,1000" dur="0.8s" repeatCount="indefinite"/>
+      </line>
+      <line x1="500" y1="-100" x2="300" y2="1000">
+        <animateTransform attributeName="transform" type="translate" values="500,-1000; -500,1000" dur="0.6s" repeatCount="indefinite"/>
+      </line>
+      <line x1="900" y1="-100" x2="700" y2="1000">
+        <animateTransform attributeName="transform" type="translate" values="500,-1000; -500,1000" dur="0.9s" repeatCount="indefinite"/>
+      </line>
+      <line x1="1300" y1="-100" x2="1100" y2="1000">
+        <animateTransform attributeName="transform" type="translate" values="500,-1000; -500,1000" dur="0.7s" repeatCount="indefinite"/>
+      </line>
+      <line x1="1700" y1="-100" x2="1500" y2="1000">
+        <animateTransform attributeName="transform" type="translate" values="500,-1000; -500,1000" dur="0.8s" repeatCount="indefinite"/>
+      </line>
+    </g>
 
-        <small class="error"
-          *ngIf="itemForm.get('username')?.invalid &&
-                 (itemForm.get('username')?.touched || itemForm.get('username')?.dirty)">
-          Username is required
-        </small>
+    <!-- Helicopter & Searchlight -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="1600,80; -600,140" dur="25s" repeatCount="indefinite" />
+      <polygon points="40,25 -200,800 300,800" fill="url(#headlight)" opacity="0.3">
+        <animateTransform attributeName="transform" type="rotate" values="-20 40 25; 20 40 25; -20 40 25" dur="6s" repeatCount="indefinite"/>
+      </polygon>
+      <path d="M0,20 Q10,0 40,0 Q70,0 80,20 Q70,30 40,30 Q10,30 0,20 Z" fill="#1e2a4a"/>
+      <path d="M80,15 L120,5 L130,20 L80,25 Z" fill="#1e2a4a"/>
+      <line x1="10" y1="-5" x2="70" y2="-5" stroke="#fff" stroke-width="2">
+         <animateTransform attributeName="transform" type="scale" values="1 1; 0.1 1; 1 1" dur="0.1s" repeatCount="indefinite" transform-origin="40 -5"/>
+      </line>
+      <line x1="40" y1="0" x2="40" y2="-5" stroke="#1e2a4a" stroke-width="3"/>
+      <circle cx="125" cy="12" r="6" fill="none" stroke="#fff" stroke-width="1" opacity="0.5"/>
+      <circle cx="20" cy="15" r="4" fill="#a0b9e6" opacity="0.8"/>
+    </g>
+    
+    <!-- Dark Road -->
+    <rect x="0" y="550" width="100%" height="350" fill="#080a12"/>
+    <rect x="0" y="530" width="100%" height="20" fill="#151b2d"/>
+    
+    <g stroke="rgba(255,255,255,0.05)" stroke-width="2">
+       <line x1="0" y1="535" x2="3000" y2="535" stroke-dasharray="40 20">
+         <animate attributeName="stroke-dashoffset" values="0; -120" dur="3s" repeatCount="indefinite"/>
+       </line>
+    </g>
+
+    <line x1="0" y1="725" x2="1440" y2="725" stroke="#f5c518" stroke-width="4" stroke-dasharray="60 100" opacity="0.6">
+      <animate attributeName="stroke-dashoffset" values="0; -160" dur="0.8s" repeatCount="indefinite" />
+    </line>
+
+    <!-- Distant bus just driving by normally on the top lane -->
+    <g transform="translate(-400, 580)">
+      <animateTransform attributeName="transform" type="translate" values="-400,580; 1600,580" dur="14s" repeatCount="indefinite" />
+      <rect width="280" height="85" rx="12" fill="#1e2a4a"/>
+      <rect x="20" y="15" width="45" height="35" rx="4" fill="#a0b9e6" opacity="0.6"/>
+      <rect x="80" y="15" width="45" height="35" rx="4" fill="#a0b9e6" opacity="0.6"/>
+      <rect x="140" y="15" width="45" height="35" rx="4" fill="#a0b9e6" opacity="0.6"/>
+      <rect x="200" y="15" width="45" height="35" rx="4" fill="#a0b9e6" opacity="0.6"/>
+      <path d="M280,65 L450,90 L450,40 Z" fill="url(#headlight)"/>
+      <circle cx="270" cy="65" r="5" fill="#fff" filter="url(#blurLg)"/>
+      <circle cx="60" cy="85" r="16" fill="#04060a"/>
+      <circle cx="220" cy="85" r="16" fill="#04060a"/>
+    </g>
+
+    <!-- Front Lane: The Crash Scenario -->
+    <!-- Car 1 (Victim) drives, stops suddenly -->
+    <g transform="translate(-200, 750)">
+      <animateTransform attributeName="transform" type="translate" values="-200,750; 500,750; 500,750; 1600,750" keyTimes="0; 0.25; 0.7; 1" dur="12s" repeatCount="indefinite" />
+      <ellipse cx="60" cy="50" rx="65" ry="10" fill="#000" opacity="0.5"/>
+      <rect width="130" height="42" rx="10" fill="#2a3f5f"/>
+      <path d="M20,0 L100,0 L120,20 L10,20 Z" fill="#1a253b" transform="translate(0, -10)" />
+      <rect x="0" y="20" width="8" height="12" rx="2" fill="#800">
+        <animate attributeName="fill" values="#800; #ff0033; #ff0033; #800" keyTimes="0; 0.22; 0.7; 0.72" dur="12s" repeatCount="indefinite"/>
+      </rect>
+      <circle cx="25" cy="42" r="12" fill="#04060a"/>
+      <circle cx="105" cy="42" r="12" fill="#04060a"/>
+    </g>
+
+    <!-- Car 2 (At Fault) follows, crashes into Car 1 -->
+    <g transform="translate(-400, 750)">
+      <animateTransform attributeName="transform" type="translate" values="-400,750; 370,750; 370,750; 1470,750" keyTimes="0; 0.26; 0.7; 1" dur="12s" repeatCount="indefinite" />
+      <ellipse cx="65" cy="50" rx="70" ry="10" fill="#000" opacity="0.5"/>
+      <rect width="140" height="45" rx="12" fill="#4a5568"/>
+      <path d="M140,25 L350,55 L350,5 Z" fill="url(#headlight)"/>
+      <circle cx="135" cy="25" r="6" fill="#fff" filter="url(#blurLg)"/>
+      <circle cx="30" cy="45" r="12" fill="#04060a"/>
+      <circle cx="115" cy="45" r="12" fill="#04060a"/>
+    </g>
+
+    <!-- The Collision Effect (Sparks & Danger glow) -->
+    <g>
+      <circle cx="500" cy="770" r="150" fill="url(#crash)" opacity="0">
+         <animate attributeName="opacity" values="0; 0; 1; 0.3; 0" keyTimes="0; 0.255; 0.26; 0.4; 1" dur="12s" repeatCount="indefinite"/>
+      </circle>
+      <!-- Sparks -->
+      <g stroke="#ffebb3" stroke-width="3" opacity="0" transform="translate(500, 770)">
+         <animate attributeName="opacity" values="0; 0; 1; 0; 0" keyTimes="0; 0.255; 0.26; 0.32; 1" dur="12s" repeatCount="indefinite"/>
+         <line x1="0" y1="0" x2="-25" y2="-40" />
+         <line x1="0" y1="0" x2="10" y2="-50" />
+         <line x1="0" y1="0" x2="-40" y2="-10" />
+         <line x1="0" y1="0" x2="30" y2="-20" />
+         <animateTransform attributeName="transform" type="scale" values="0; 1.5; 0" keyTimes="0; 0.26; 0.3" dur="12s" repeatCount="indefinite"/>
+      </g>
+    </g>
+
+    <!-- Fire Engine Rushing by (opposite lane) -->
+    <g transform="translate(2500, 710)">
+       <animateTransform attributeName="transform" type="translate" values="2500,710; 2500,710; -500,710; -500,710" keyTimes="0; 0.4; 0.6; 1" dur="16s" repeatCount="indefinite" />
+       <!-- Body -->
+       <rect x="0" y="0" width="220" height="70" rx="6" fill="#cc0000"/>
+       <rect x="0" y="30" width="220" height="10" fill="#fff"/>
+       <rect x="10" y="10" width="40" height="30" fill="#1e2a4a"/>
+       <!-- Headlights (left side) -->
+       <path d="M0,50 L-300,80 L-300,20 Z" fill="url(#headlight)"/>
+       <circle cx="5" cy="50" r="5" fill="#fff" filter="url(#blurLg)"/>
+       <!-- Flashing red/blue sirens -->
+       <rect x="20" y="-8" width="15" height="8" rx="2" fill="#fff">
+         <animate attributeName="fill" values="#fff; #ff0000; #fff" dur="0.25s" repeatCount="indefinite"/>
+       </rect>
+       <rect x="60" y="-8" width="15" height="8" rx="2" fill="#fff">
+         <animate attributeName="fill" values="#fff; #0044ff; #fff" dur="0.25s" repeatCount="indefinite" begin="0.12s"/>
+       </rect>
+       <circle cx="40" cy="70" r="15" fill="#04060a"/>
+       <circle cx="150" cy="70" r="15" fill="#04060a"/>
+       <circle cx="185" cy="70" r="15" fill="#04060a"/>
+    </g>
+
+    <!-- The Pedestrian / Man walking on Sidewalk (y=510-530) -->
+    <!-- Walking towards the accident -->
+    <g transform="translate(1500, 500)">
+       <animateTransform attributeName="transform" type="translate" values="1500,500; 550,500; 550,500; -200,500" keyTimes="0; 0.25; 0.7; 1" dur="12s" repeatCount="indefinite"/>
+       <!-- Umbrella (Since it's raining!) -->
+       <path d="M-20,-15 Q0,-35 20,-15 Z" fill="#000" opacity="0.8"/>
+       <line x1="0" y1="-15" x2="0" y2="5" stroke="#fff" stroke-width="1.5"/>
+       
+       <!-- Body -->
+       <line x1="0" y1="-5" x2="0" y2="15" stroke="#94a3b8" stroke-width="4" stroke-linecap="round"/>
+       <!-- Head -->
+       <circle cx="0" cy="-12" r="5" fill="#cbd5e1" />
+       <!-- Legs (Walking anim) -->
+       <g stroke="#94a3b8" stroke-width="3.5" stroke-linecap="round">
+          <line x1="0" y1="14" x2="-6" y2="30">
+            <animate attributeName="x2" values="-8; 8; -8" dur="0.6s" repeatCount="indefinite"/>
+          </line>
+          <line x1="0" y1="14" x2="6" y2="30">
+            <animate attributeName="x2" values="8; -8; 8" dur="0.6s" repeatCount="indefinite"/>
+          </line>
+       </g>
+    </g>
+
+    <!-- Foreground Lampposts to Add Depth via Parallax -->
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0,0; -800,0" dur="2s" repeatCount="indefinite" />
+      <rect x="200" y="400" width="12" height="500" fill="#080a12"/>
+      <rect x="200" y="400" width="80" height="8" fill="#080a12"/>
+      <ellipse cx="280" cy="405" rx="8" ry="4" fill="#fff" filter="url(#blurLg)"/>
+      <!-- Second Lamppost -->
+      <rect x="1000" y="400" width="12" height="500" fill="#080a12"/>
+      <rect x="1000" y="400" width="80" height="8" fill="#080a12"/>
+      <ellipse cx="1080" cy="405" rx="8" ry="4" fill="#fff" filter="url(#blurLg)"/>
+    </g>
+  </svg>
+
+  <!-- AUTH LAYER -->
+  <div class="auth-layer">
+    <!-- AUTH CARD -->
+    <div class="card">
+
+      <!-- SIGN UP -->
+      <div class="form-box sign-up" [class.shake]="regShake">
+        <h2>Create account</h2>
+        <p class="sub">Join the claims portal today</p>
+        <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+          <div class="field" [class.inv]="isInv(registerForm,'fullName')" [class.ok]="isOk(registerForm,'fullName')">
+            <span class="fico">👤</span>
+            <input type="text" formControlName="fullName" placeholder=" " autocomplete="off"/>
+            <label>Full Name</label>
+            <span class="ferr">Full name is required</span>
+          </div>
+          <div class="field" [class.inv]="isInv(registerForm,'username')" [class.ok]="isOk(registerForm,'username')">
+            <span class="fico">🆔</span>
+            <input type="text" formControlName="username" placeholder=" " autocomplete="off"/>
+            <label>Username</label>
+            <span class="ferr">Username is required</span>
+          </div>
+          <div class="field" [class.inv]="isInv(registerForm,'email')" [class.ok]="isOk(registerForm,'email')">
+            <span class="fico">✉️</span>
+            <input type="email" formControlName="email" placeholder=" " autocomplete="off"/>
+            <label>Email address</label>
+            <span class="ferr">
+              <ng-container *ngIf="registerForm.get('email')?.errors?.['required']">Email is required</ng-container>
+              <ng-container *ngIf="registerForm.get('email')?.errors?.['email']">Enter a valid email</ng-container>
+            </span>
+          </div>
+          
+          <div class="field" [class.inv]="isInv(registerForm,'phone')" [class.ok]="isOk(registerForm,'phone')">
+            <span class="fico">📱</span>
+            <input type="tel" formControlName="phone" placeholder=" " autocomplete="off" (input)="onPhoneInput($event)"/>
+            <label>Phone Number</label>
+            <span class="ferr">Phone number is required</span>
+          </div>
+
+          <div class="field" [class.inv]="isInv(registerForm,'password')" [class.ok]="isOk(registerForm,'password')">
+            <span class="fico">🔒</span>
+            <input [type]="showRuPw ? 'text' : 'password'" formControlName="password"
+                   placeholder=" " autocomplete="off" (input)="onPwInput($event)"/>
+            <label>Password</label>
+            <span class="peye" (click)="showRuPw=!showRuPw">{{ showRuPw ? '🙈' : '👁' }}</span>
+            <span class="ferr">8+ chars, upper, lower, number &amp; symbol</span>
+            <div class="pwbar"><div class="pwfill" [style.width.%]="pwStr*20" [style.background]="pwColor"></div></div>
+            <div class="pwhint" [style.color]="pwColor">{{ pwLabel }}</div>
+          </div>
+
+          <div class="field" [class.inv]="isInv(registerForm,'confirmPassword') || (registerForm.touched && registerForm.hasError('mismatch'))" [class.ok]="isOk(registerForm,'confirmPassword') && !registerForm.hasError('mismatch')">
+            <span class="fico">🛡️</span>
+            <input type="password" formControlName="confirmPassword" placeholder=" " autocomplete="off"/>
+            <label>Confirm Password</label>
+            <span class="ferr" *ngIf="registerForm.hasError('mismatch')">Passwords do not match</span>
+            <span class="ferr" *ngIf="registerForm.get('confirmPassword')?.errors?.['required'] && !registerForm.hasError('mismatch')">Confirmation is required</span>
+          </div>
+
+          <div class="rlabel">Your role in the system</div>
+          <div class="rgrid">
+            <div class="rbtn" *ngFor="let r of roles"
+                 [class.on]="selRole===r.value"
+                 (click)="setRole(r.value)">
+              <span>{{ r.icon }}</span>{{ r.label }}
+            </div>
+          </div>
+          <div class="rerr" [class.on]="roleErr">Please select a role to continue</div>
+
+          <div class="sbanner" *ngIf="regSucc">{{ regSucc }}</div>
+          <div class="ebanner" *ngIf="regErr">{{ regErr }}</div>
+          <button type="submit" class="bmain" [disabled]="regLoading" (click)="addRipple($event)">
+            <span>{{ regLoading ? 'Creating account...' : 'Create Account' }}</span>
+          </button>
+          
+          <div style="margin-top: 10px; font-size: 13px; text-align: center;">
+            Already have an account? <a routerLink="/login" style="color: #e63350; font-weight: 600; text-decoration: none;">Sign in here</a>
+          </div>
+        </form>
       </div>
 
-      <!-- ✅ Phone Number -->
-      <div class="input-group">
-        <input type="tel" placeholder=" " formControlName="phoneNumber">
-        <label>Phone Number</label>
-
-        <!-- ✅ FIXED: phoneNumber instead of phone -->
-        <small class="error"
-          *ngIf="itemForm.get('phoneNumber')?.invalid &&
-                 (itemForm.get('phoneNumber')?.touched || itemForm.get('phoneNumber')?.dirty)">
-          <span *ngIf="itemForm.get('phoneNumber')?.errors?.['required']">
-            Phone number is required
-          </span>
-          <span *ngIf="itemForm.get('phoneNumber')?.errors?.['pattern']">
-            Enter a valid 10-digit phone number
-          </span>
-        </small>
-      </div>
-
-      <!-- Email -->
-      <div class="input-group">
-        <input type="email" placeholder=" " formControlName="email">
-        <label>Email</label>
-
-        <small class="error"
-          *ngIf="itemForm.get('email')?.invalid &&
-                 (itemForm.get('email')?.touched || itemForm.get('email')?.dirty)">
-          <span *ngIf="itemForm.get('email')?.errors?.['required']">
-            Email is required
-          </span>
-          <span *ngIf="itemForm.get('email')?.errors?.['email']">
-            Enter a valid email
-          </span>
-        </small>
-      </div>
-
-      <!-- Password -->
-      <div class="input-group">
-        <input type="password" placeholder=" " formControlName="password">
-        <label>Password</label>
-
-        <small class="error"
-          *ngIf="itemForm.get('password')?.invalid &&
-                 (itemForm.get('password')?.touched || itemForm.get('password')?.dirty)">
-          Password must be 8+ chars, uppercase, lowercase, number & symbol
-        </small>
-      </div>
-
-      <!-- Role -->
-      <div class="input-group">
-        <select formControlName="role">
-          <option value="" disabled selected></option>
-          <option value="POLICYHOLDER">Policyholder</option>
-          <option value="ADJUSTER">Adjuster</option>
-          <option value="UNDERWRITER">Underwriter</option>
-          <option value="INVESTIGATOR">Investigator</option>
-        </select>
-
-        <label class="select-label">Role</label>
-
-        <small class="error"
-          *ngIf="itemForm.get('role')?.invalid &&
-                 (itemForm.get('role')?.touched || itemForm.get('role')?.dirty)">
-          Role is required
-        </small>
-      </div>
-
-      <button type="submit" [disabled]="itemForm.invalid">
-        Create Account
-      </button>
-
-      <p class="server-message"
-         [class.error]="isError"
-         [class.success]="!isError"
-         *ngIf="showMessage">
-        {{ responseMessage }}
-      </p>
-
-    </form>
-
-    <p class="switch">
-      Already have an account?
-      <a routerLink="/login">Login →</a>
-    </p>
-
+    </div>
   </div>
 </div>

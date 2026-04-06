@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -58,6 +58,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private router: Router,
+    private route: ActivatedRoute,
     private httpService: HttpService,
     private authService: AuthService,
     private toastService: ToastService
@@ -90,7 +91,13 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params: any) => {
+      if (params['verified'] === 'true' || params['verified'] === true) {
+        this.showIntro = false;
+      }
+    });
+  }
 
   passwordMatchValidator(form: any) {
     const p = form.get('password')?.value;
