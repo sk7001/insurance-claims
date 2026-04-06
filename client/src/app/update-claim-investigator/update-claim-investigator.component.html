@@ -1,110 +1,196 @@
-<app-navbar></app-navbar>
-
 <div class="page">
   <div class="page-header">
-    <div>
-      <h1 class="page-title">Review Claims</h1>
-      <p class="page-subtitle">Search and update claim statuses quickly.</p>
+    <div class="header-text">
+      <h1 class="page-title">Manage Claims</h1>
+      <p class="page-subtitle">Review and update assigned claims within your workflow.</p>
     </div>
 
-    <div class="search-wrap">
-      <span class="search-icon">🔍</span>
+    <!-- SEARCH -->
+    <div class="dh-search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
       <input
-        class="search-input"
         type="text"
-        placeholder="Search by claim/type/policyholder/status..."
+        placeholder="Search by Claim ID, User, or Description..."
         (input)="searchByDescId($event)"
       />
     </div>
   </div>
 
-  <div class="table-card">
-    <table>
-      <thead>
-        <tr>
-          <th>Claim ID</th>
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+      In Progress
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'completed'" (click)="setTab('completed')">
+      Completed
+    </button>
+  </div>
 
-          <!-- ✅ NEW -->
-          <th>Type</th>
+  <div class="sections-wrapper">
 
-          <th>Description</th>
-          <th>Status</th>
+    <!-- IN PROGRESS -->
+    <div class="table-card" *ngIf="activeTab === 'pending'">
+      <div class="card-header">
+        <h3>In Progress Claims</h3>
+      </div>
 
-          <!-- ✅ NEW -->
-          <th>Policyholder</th>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Policyholder</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-          <th class="action-header">Action</th>
-        </tr>
-      </thead>
+          <tbody>
+            <tr *ngFor="let claim of activeClaimsList">
+              <td class="td-bold">#{{ claim.id }}</td>
+              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+              <td><span class="td-desc">{{ claim.description }}</span></td>
 
-      <tbody>
-        <tr *ngFor="let claim of searchFilter">
-          <td>
-            <strong class="claim-id">#{{ claim.id }}</strong>
-          </td>
+              <td>
+                <span class="status-tag"
+                  [ngClass]="{
+                    'status-approved': claim.status === 'Approved',
+                    'status-rejected': claim.status === 'Rejected',
+                    'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending',
+                    'status-initiated': claim.status === 'Initiated'
+                  }">
+                  {{ claim.status }}
+                </span>
+              </td>
 
-          <!-- ✅ NEW: TYPE -->
-          <td class="type-col">
-            {{ claim.insuranceType || '-' }}
-          </td>
+              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
 
-          <td class="desc">
-            {{ claim.description }}
-          </td>
+              <td>
+                <ng-container *ngIf="claim.policyholder; else noPH">
+                  <div class="uw-cell">
+                    <div class="uw-name">{{ claim.policyholder.username }}</div>
+                    <div class="uw-email">{{ claim.policyholder.email }}</div>
+                  </div>
+                </ng-container>
+                <ng-template #noPH>
+                  <span class="no-underwriter">Not Available</span>
+                </ng-template>
+              </td>
 
-          <td>
-            <span
-              class="status-tag"
-              [ngClass]="{
-                'status-approved': claim.status === 'Approved',
-                'status-rejected': claim.status === 'Rejected',
-                'status-inprogress': claim.status === 'In progress',
-                'status-initiated': claim.status === 'Initiated'
-              }"
-            >
-              {{ claim.status }}
-            </span>
-          </td>
+              <td>
+                <button class="action-btn" (click)="edit(claim)">Update</button>
+              </td>
+            </tr>
 
-          <!-- ✅ NEW: POLICYHOLDER -->
-          <td>
-            <ng-container *ngIf="claim.policyholder; else noPolicyholder">
-              <div class="policyholder">
-                <div class="ph-name">{{ claim.policyholder.username }}</div>
-                <div class="muted">{{ claim.policyholder.email }}</div>
-                <div class="muted" *ngIf="claim.policyholder.phoneNumber">
-                  {{ claim.policyholder.phoneNumber }}
-                </div>
-              </div>
-            </ng-container>
+            <tr *ngIf="activeClaimsList?.length === 0">
+              <td colspan="7" class="empty">No active claims found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
 
-            <ng-template #noPolicyholder>
-              <span class="no-underwriter">Not Available</span>
-            </ng-template>
-          </td>
+    <!-- COMPLETED -->
+    <div class="table-card" *ngIf="activeTab === 'completed'">
+      <div class="card-header">
+        <h3>Completed Claims</h3>
+      </div>
 
-          <!-- ACTION -->
-          <td class="actions">
-            <button class="action-btn approve" (click)="edit(claim); itemForm.patchValue({ status: 'Approved' }); onSubmit()">
-              Approve
-            </button>
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Policyholder</th>
+              <th>Action</th>
+            </tr>
+          </thead>
 
-            <button class="action-btn reject" (click)="edit(claim); itemForm.patchValue({ status: 'Rejected' }); onSubmit()">
-              Reject
-            </button>
-          </td>
-        </tr>
+          <tbody>
+            <tr *ngFor="let claim of resolvedClaimsList">
+              <td class="td-bold">#{{ claim.id }}</td>
+              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+              <td><span class="td-desc">{{ claim.description }}</span></td>
 
-        <tr *ngIf="searchFilter?.length === 0">
-          <td class="empty" colspan="6">
-            No claims found. Try searching with a different keyword.
-          </td>
-        </tr>
-      </tbody>
-    </table>
+              <td>
+                <span class="status-tag"
+                  [ngClass]="{
+                    'status-approved': claim.status === 'Approved',
+                    'status-rejected': claim.status === 'Rejected'
+                  }">
+                  {{ claim.status }}
+                </span>
+              </td>
 
-    <div *ngIf="showError" class="error-box">
-      {{ errorMessage || 'Something went wrong' }}
+              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+
+              <td>
+                <ng-container *ngIf="claim.policyholder; else noPH2">
+                  <div class="uw-cell">
+                    <div class="uw-name">{{ claim.policyholder.username }}</div>
+                    <div class="uw-email">{{ claim.policyholder.email }}</div>
+                  </div>
+                </ng-container>
+                <ng-template #noPH2>
+                  <span class="no-underwriter">Not Available</span>
+                </ng-template>
+              </td>
+
+              <td>
+                <button class="action-btn" (click)="edit(claim)">Update</button>
+              </td>
+            </tr>
+
+            <tr *ngIf="resolvedClaimsList?.length === 0">
+              <td colspan="7" class="empty">No completed claims found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL (UNCHANGED) -->
+  <div class="update-float-card" [class.show]="updatedId !== null && !closing" [class.closing]="closing">
+    <div class="ufc-inner">
+      <div class="ufc-header">
+        <h3>Update Claim #{{ updatedId }}</h3>
+        <button class="close-icon" (click)="cancelUpdate()">✕</button>
+      </div>
+
+      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="ufc-form">
+        <div class="input-group">
+          <label>Description</label>
+          <input type="text" formControlName="description">
+        </div>
+
+        <div class="row-group">
+          <div class="input-group half">
+            <label>Date</label>
+            <input type="date" formControlName="date">
+          </div>
+
+          <div class="input-group half">
+            <label>Status</label>
+            <input type="text" formControlName="status">
+          </div>
+        </div>
+
+        <button type="submit" class="save-btn">Save Changes</button>
+      </form>
     </div>
   </div>
+
+  <div class="ufc-overlay" [class.show]="updatedId !== null" (click)="cancelUpdate()"></div>
 </div>

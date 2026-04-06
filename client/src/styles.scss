@@ -1,7 +1,124 @@
 /* You can add global styles to this file, and also import other style files */
 html,
 body {
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #f0f0f5; // Global Light Theme Base
+  color: #1a1a1a;
+  font-family: 'Inter', sans-serif;
+
+  /* Global Theme Tokens - Imperial Indigo */
+  --brand-primary: #6366f1;
+  --brand-primary-hover: #4f46e5;
+  --brand-primary-bg: #f5f7ff;
+  --brand-glow: rgba(99, 102, 241, 0.4);
+}
+
+/* ================== GLOBAL LAYOUT ================== */
+.app-layout {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  background: #f0f0f5;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Main scrollable area */
+.content-area {
+  height: 100vh;
+  width: 100%; /* Default to full width for Login/Registration */
+  overflow-y: auto;
+  position: relative;
+  transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  
+  &.has-sidebar {
+    margin-left: 292px; /* 260px sidebar + 32px gap */
+    width: calc(100vw - 292px);
+
+    /* Responsive: remove margin on small screens */
+    @media (max-width: 1024px) {
+      margin-left: 0;
+      width: 100vw;
+    }
+  }
+
+  body.sidebar-collapsed &.has-sidebar {
+    margin-left: 120px; /* 88px sidebar + 32px gap */
+    width: calc(100vw - 120px);
+  }
+
+  /* Smooth scrolling for page content */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.1); border-radius: 10px; }
+}
+
+/* Common Light Shadow */
+.light-shadow {
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+}
+
+/* ================== TOAST NOTIFICATIONS ================== */
+#toast-container {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.custom-toast {
+  background: #ffffff;
+  color: #1a1a1a;
+  padding: 14px 20px 14px 16px;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'Inter', sans-serif;
+  transform: translateX(120%);
+  opacity: 0;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  min-width: 300px;
+  position: relative;
+  overflow: hidden;
+
+  &.show {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .toast-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
+
+  &.toast-success .toast-indicator {
+    background: #10b981;
+  }
+
+  &.toast-error .toast-indicator {
+    background: #ef4444;
+  }
+
+  .toast-icon {
+    font-size: 18px;
+  }
+
+  .toast-message {
+    font-size: 14px;
+    font-weight: 600;
+  }
 }

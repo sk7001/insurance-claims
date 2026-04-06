@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { HttpService } from '../../services/http.service';
 import { AuthService } from '../../services/auth.service';
-import { response } from 'express';
 
 @Component({
   selector: 'app-navbar',
@@ -13,18 +10,33 @@ import { response } from 'express';
 export class NavbarComponent {
 
   IsLoggin: any = false;
-  roleName: string | null;
-  constructor(private authService: AuthService, private router: Router) {
+  roleName: string | null = null;
+  userName: string | null = null;
+  fullName: string | null = null;
+  isCollapsed: boolean = false;
 
+  constructor(private authService: AuthService, private router: Router) {
     this.IsLoggin = authService.getLoginStatus;
     this.roleName = authService.getRole;
+    this.userName = authService.getUsername;
+    this.fullName = authService.getFullName;
+    
     if (this.IsLoggin == false) {
       this.router.navigateByUrl('/login');
     }
   }
+
   logout() {
     this.authService.logout();
     window.location.reload();
   }
-}
 
+  toggleSidebar() {
+    this.isCollapsed = !this.isCollapsed;
+    if (this.isCollapsed) {
+      document.body.classList.add('sidebar-collapsed');
+    } else {
+      document.body.classList.remove('sidebar-collapsed');
+    }
+  }
+}

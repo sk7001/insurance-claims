@@ -47,7 +47,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                .antMatchers("/api/user/register", "/api/user/login").permitAll()
+                .antMatchers("/api/user/register", "/api/user/login", "/api/user/forgot-password/**", "/api/user/verify").permitAll()
+
+                // Profile accessible to any authenticated user
+                .antMatchers("/api/user/profile/**").authenticated()
 
                 .antMatchers("/api/chatbot/**").hasAuthority("POLICYHOLDER")
 

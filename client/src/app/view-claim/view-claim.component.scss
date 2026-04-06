@@ -1,16 +1,25 @@
-$accent: #0071e3;
-$error: #e63946;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+:host {
+  --success: #10b981;
+  --error: #ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 /* ======================
    PAGE
 ====================== */
 .page {
   min-height: 100vh;
-  margin-left: 250px;
-  padding: 30px;
-  background: linear-gradient(120deg, #f7f9fe, #ffffff);
+  background: var(--bg-main);
+  font-family: 'Inter', sans-serif;
+  position: relative;
+  overflow: hidden;
+  padding: 30px 40px;
   animation: fadeSlide 0.45s ease both;
-  scrollbar-width: none;
 }
 
 .page::-webkit-scrollbar {
@@ -22,55 +31,104 @@ $error: #e63946;
 ====================== */
 .page-header {
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 22px;
+  gap: 18px;
+  margin-bottom: 28px;
   flex-wrap: wrap;
-  gap: 16px;
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 32px;
+  font-weight: 700;
   margin: 0;
-  color: #1d1d1f;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+}
+
+.page-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 15px;
+  color: var(--text-dim);
+  font-weight: 500;
 }
 
 /* ======================
    SEARCH
 ====================== */
-.search-wrap {
-  position: relative;
+.dh-search {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 30px;
+  padding: 12px 20px;
   width: 420px;
   max-width: 100%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+
+  svg {
+    color: var(--text-dim);
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    font-size: 14px;
+    width: 100%;
+    outline: none;
+
+    &::placeholder {
+      color: var(--text-dim);
+    }
+  }
+
+  &:focus-within {
+    border-color: var(--brand-primary);
+    box-shadow: 0 0 0 4px var(--brand-glow);
+  }
 }
 
-.search-icon {
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  transform: translateY(-50%);
-  font-size: 14px;
-  opacity: 0.6;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 16px 12px 38px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
+/* ======================
+   TABS
+====================== */
+.tabs-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
   background: #ffffff;
-  transition: 0.25s ease;
-}
+  padding: 6px;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  width: fit-content;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
 
-.search-input::placeholder {
-  color: #9ca3af;
-}
+  .tab-btn {
+    padding: 10px 24px;
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-dim);
+    cursor: pointer;
+    transition: all 0.3s ease;
 
-.search-input:focus {
-  outline: none;
-  border-color: $accent;
-  box-shadow: 0 0 0 4px rgba(0, 113, 227, 0.15);
+    &:hover {
+      color: var(--text-main);
+      background: #f8fafc;
+    }
+
+    &.active {
+      background: var(--brand-primary, #4f46e5);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+    }
+  }
 }
 
 /* ======================
@@ -79,139 +137,155 @@ $error: #e63946;
 .error-message {
   margin-bottom: 16px;
   text-align: center;
-  color: $error;
+  color: var(--error);
   font-weight: 600;
-  animation: shake 0.3s ease;
 }
 
 /* ======================
    TABLE CARD
 ====================== */
 .table-card {
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(16px);
-  padding: 24px;
-  border-radius: 22px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  border: 1px solid #e2e8f0;
   animation: cardFloat 0.55s ease both;
-}
+  display: flex;
+  flex-direction: column;
 
-/* ======================
-   TABLE
-====================== */
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
+  .card-header {
+    padding: 24px 24px 16px;
+    border-bottom: 1px solid #e2e8f0;
 
-th,
-td {
-  padding: 14px;
-  font-size: 14px;
-  border-bottom: 1px solid #e5e7eb;
-}
+    h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+  }
 
-th {
-  text-align: left;
-  color: #6b7280;
-  font-weight: 700;
-}
+  .table-container {
+    overflow-x: auto;
+    padding: 10px 24px 24px;
+  }
 
-tbody tr {
-  animation: rowPop 0.3s ease both;
-}
+  table {
+    width: 100%;
+    min-width: 1000px; /* 🔥 FIX WIDTH */
+    border-collapse: separate;
+    border-spacing: 0;
+    text-align: left;
+  }
 
-tbody tr:hover {
-  background: rgba(0, 113, 227, 0.05);
-}
+  th {
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+  }
 
-/* Description */
-.desc {
-  max-width: 420px;
-}
+  td {
+    padding: 18px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid #f1f5f9;
+    color: var(--text-main);
+    vertical-align: middle;
+  }
 
+  tbody tr:hover {
+    background: #f8fafc;
+  }
 
-.type-col {
-  font-weight: 700;
-  color: #111827;
-  white-space: nowrap;
-}
+  .td-bold {
+    font-weight: 700;
+    white-space: nowrap;
+  }
 
-/* ======================
-   STATUS TAG
-====================== */
-.status-tag {
-  display: inline-block;
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  animation: fadeUp 0.4s ease both;
-}
+  .type-col {
+    font-weight: 600;
+    white-space: nowrap;
+  }
 
-/* Approved */
-.status-approved {
-  background: rgba(34, 197, 94, 0.15);
-  color: #15803d;
-}
+  .td-desc {
+    max-width: 320px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--text-dim);
+  }
 
-/* Rejected */
-.status-rejected {
-  background: rgba(239, 68, 68, 0.15);
-  color: #b91c1c;
-}
+  .td-muted {
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
 
-/* In Progress */
-.status-inprogress {
-  background: rgba(202, 138, 4, 0.15);
-  color: #92400e;
-}
+  .status-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--brand-primary);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
 
-/* Initiated */
-.status-initiated {
-  background: rgba(0, 113, 227, 0.15);
-  color: $accent;
-}
+  .status-tag.status-approved {
+    background: rgba(0, 230, 118, 0.15);
+    color: #00e676;
+  }
 
-/* ======================
-   EMPTY STATE
-====================== */
-.empty {
-  text-align: center;
-  padding: 26px;
-  font-size: 14px;
-  color: #6b7280;
+  .status-tag.status-rejected {
+    background: rgba(255, 59, 48, 0.15);
+    color: #ff3b30;
+  }
+
+  .status-tag.status-inprogress {
+    background: rgba(255, 171, 0, 0.15);
+    color: #ffab00;
+  }
+
+  .status-tag.status-initiated {
+    background: rgba(99, 102, 241, 0.15);
+    color: var(--brand-primary);
+  }
+
+  .empty {
+    text-align: center;
+    padding: 26px;
+    color: var(--text-dim);
+  }
 }
 
 /* ======================
    ANIMATIONS
 ====================== */
 @keyframes fadeSlide {
-  from { opacity: 0; transform: translateY(18px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes cardFloat {
-  from { opacity: 0; transform: translateY(26px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-@keyframes rowPop {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-4px); }
-  50% { transform: translateX(4px); }
-  75% { transform: translateX(-4px); }
-  100% { transform: translateX(0); }
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* ======================
@@ -219,11 +293,6 @@ tbody tr:hover {
 ====================== */
 @media (max-width: 900px) {
   .page {
-    margin-left: 0;
     padding: 20px;
-  }
-
-  .desc {
-    max-width: 280px;
   }
 }

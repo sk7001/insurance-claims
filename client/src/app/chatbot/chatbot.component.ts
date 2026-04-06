@@ -1,5 +1,8 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild, AfterViewChecked, OnDestroy } from '@angular/core';
 import { HttpService } from '../../services/http.service';
+import { AuthService } from '../../services/auth.service';
+import { SpeechService } from '../../services/speech.service';
+import { Subscription } from 'rxjs';
 
 type ChatMsg = {
   from: 'user' | 'bot';
@@ -11,7 +14,9 @@ type ChatMsg = {
   templateUrl: './chatbot.component.html',
   styleUrls: ['./chatbot.component.scss']
 })
-export class ChatbotComponent implements OnInit {
+export class ChatbotComponent implements OnInit, AfterViewChecked, OnDestroy {
+
+  private shouldScroll = false;
 
   isOpen = false;
 
@@ -31,18 +36,48 @@ export class ChatbotComponent implements OnInit {
   // ✅ store last user message for auto-retry
   private lastUserMessage: string | null = null;
 
+  isRecording = false;
+  private speechSub: Subscription | null = null;
+
   @ViewChild('chatBody') chatBody!: ElementRef<HTMLDivElement>;
 
-  constructor(private http: HttpService) {}
+  constructor(
+    private http: HttpService,
+    private authService: AuthService,
+    public speechService: SpeechService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const userId = this.authService.getUserId();
+    if (userId) {
+      this.loadHistory(userId);
+    }
+
+    // ✅ Sync with all possible trigger points (Dashboard header, Sidebar, etc.)
+    ['open-chat', 'open-chat-bot', 'toggle-chat-nexus'].forEach(evtName => {
+      window.addEventListener(evtName, () => {
+        if (!this.isOpen) this.toggleChat();
+      });
+    });
+
+    // ✅ Listen for speech transcripts
+    this.speechSub = this.speechService.getTranscript().subscribe((text: string) => {
+      this.inputText += (this.inputText ? ' ' : '') + text;
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.speechSub) {
+      this.speechSub.unsubscribe();
+    }
+    this.speechService.stop();
+  }
 
   toggleChat(): void {
     this.isOpen = !this.isOpen;
 
-    // ✅ when closing: reset everything, next open starts fresh
+    // ✅ when closing: just hide, don't reset (preserves history)
     if (!this.isOpen) {
-      this.resetChat();
       return;
     }
 
@@ -53,6 +88,34 @@ export class ChatbotComponent implements OnInit {
     }
 
     setTimeout(() => this.scrollToBottom(), 50);
+  }
+
+  toggleSpeechRecording(): void {
+    if (!this.speechService.isSupported()) {
+      alert('Speech recognition is not supported in this browser.');
+      return;
+    }
+
+    if (this.isRecording) {
+      this.speechService.stop();
+      this.isRecording = false;
+    } else {
+      this.speechService.start();
+      this.isRecording = true;
+    }
+  }
+
+  clearChatLogs(): void {
+    if (confirm('Are you sure you want to clear your chat history?')) {
+      this.messages = [];
+      this.initSent = false;
+      const userId = this.authService.getUserId();
+      if (userId) {
+        localStorage.removeItem(`chat_nexus_${userId}`);
+      }
+      this.toggleChat(); // Close and reopen to trigger fresh __INIT__
+      setTimeout(() => this.toggleChat(), 100);
+    }
   }
 
   private resetChat(): void {
@@ -73,7 +136,7 @@ export class ChatbotComponent implements OnInit {
   }
 
   private sendInitialContext(): void {
-    const policyholderId = localStorage.getItem('userId');
+    const policyholderId = this.authService.getUserId();
 
     const payload = {
       policyholderId: Number(policyholderId),
@@ -86,8 +149,9 @@ export class ChatbotComponent implements OnInit {
       next: (res: any) => {
         this.messages.push({
           from: 'bot',
-          text: res?.reply || 'Hi 👋 I am Claim Bot. Ask me anything about your claims.'
+          text: res?.reply || 'Hi! I am Nexus AI, your dedicated claims specialist. How can I assist you with your insurance today?'
         });
+        this.saveHistory();
         this.loading = false;
         this.scrollToBottom();
       },
@@ -106,7 +170,6 @@ export class ChatbotComponent implements OnInit {
     const text = (this.inputText || '').trim();
     if (!text) return;
 
-    // ✅ block sending while queued
     if (this.isQueued) {
       this.messages.push({
         from: 'bot',
@@ -116,72 +179,45 @@ export class ChatbotComponent implements OnInit {
       return;
     }
 
-    const policyholderId = localStorage.getItem('userId');
-
-    // show user message
+    const policyholderId = this.authService.getUserId();
     this.messages.push({ from: 'user', text });
-
-    // store last message for retry
     this.lastUserMessage = text;
-
-    // clear input
     this.inputText = '';
     this.loading = true;
     this.scrollToBottom();
 
-    const payload = {
-      policyholderId: Number(policyholderId),
-      message: text
-    };
-
-    this.http.chatbotMessage(payload).subscribe({
+    this.http.chatbotMessage({ policyholderId: Number(policyholderId), message: text }).subscribe({
       next: (res: any) => {
         this.loading = false;
-
         const reply = res?.reply || 'No response';
-
-        // ✅ detect rate-limit retry seconds from reply
         const sec = this.extractRetrySeconds(reply);
         if (sec > 0) {
-          this.messages.push({
-            from: 'bot',
-            text: `⏳ You are in queue. Retrying in ${sec}s...`
-          });
+          this.messages.push({ from: 'bot', text: `⏳ Rate limit hit. Retrying in ${sec}s...` });
           this.startQueue(sec);
         } else {
           this.messages.push({ from: 'bot', text: reply });
         }
-
+        this.saveHistory();
         this.scrollToBottom();
       },
       error: (err: any) => {
         this.loading = false;
-
-        // backend might return text error or json error
-        const raw = err?.error?.reply || err?.error || 'Gemini is busy. Please try again later.';
+        const raw = err?.error?.reply || err?.error || 'Busy. Try later.';
         const replyText = typeof raw === 'string' ? raw : JSON.stringify(raw);
-
         const sec = this.extractRetrySeconds(replyText);
         if (sec > 0) {
-          this.messages.push({
-            from: 'bot',
-            text: `⏳ You are in queue. Retrying in ${sec}s...`
-          });
+          this.messages.push({ from: 'bot', text: `⏳ Rate limit hit. Retrying in ${sec}s...` });
           this.startQueue(sec);
         } else {
-          this.messages.push({
-            from: 'bot',
-            text: 'Sorry, I could not respond right now.'
-          });
+          this.messages.push({ from: 'bot', text: 'Sorry, I encountered an error.' });
         }
-
+        this.saveHistory();
         this.scrollToBottom();
       }
     });
   }
 
   onEnter(event: KeyboardEvent): void {
-    // Enter = send, Shift+Enter = new line
     if (event.key === 'Enter' && !event.shiftKey) {
       event.preventDefault();
       this.sendMessage();
@@ -191,29 +227,16 @@ export class ChatbotComponent implements OnInit {
   private startQueue(seconds: number): void {
     this.isQueued = true;
     this.retrySeconds = seconds;
-
-    if (this.retryTimer) {
-      clearInterval(this.retryTimer);
-      this.retryTimer = null;
-    }
-
+    if (this.retryTimer) clearInterval(this.retryTimer);
     this.retryTimer = setInterval(() => {
       this.retrySeconds--;
-
       if (this.retrySeconds <= 0) {
         clearInterval(this.retryTimer);
         this.retryTimer = null;
         this.isQueued = false;
-
-        // ✅ auto retry last message once
         if (this.lastUserMessage) {
           const msg = this.lastUserMessage;
           this.lastUserMessage = null;
-
-          this.messages.push({ from: 'bot', text: '✅ Retrying now...' });
-          this.scrollToBottom();
-
-          // resend same message
           this.inputText = msg;
           this.sendMessage();
         }
@@ -221,30 +244,66 @@ export class ChatbotComponent implements OnInit {
     }, 1000);
   }
 
-  // ✅ extracts retry seconds from common Gemini error messages
-  // Supports:
-  // "Please retry in 39.11651666s"
-  // `"retryDelay":"39s"`
   private extractRetrySeconds(text: string): number {
     if (!text) return 0;
-
     const m1 = text.match(/retry in\s+([0-9]+(\.[0-9]+)?)s/i);
     if (m1 && m1[1]) return Math.ceil(Number(m1[1]));
-
     const m2 = text.match(/"retryDelay"\s*:\s*"(\d+)s"/i);
-    if (m2 && m2[1]) return Number(m2[1]);
-
     const m3 = text.match(/retryDelay.*?(\d+)s/i);
-    if (m3 && m3[1]) return Number(m3[1]);
+    return m2 ? Number(m2[1]) : (m3 ? Number(m3[1]) : 0);
+  }
 
-    return 0;
+  ngAfterViewChecked(): void {
+    if (this.shouldScroll) {
+      this.doScroll();
+      this.shouldScroll = false;
+    }
   }
 
   private scrollToBottom(): void {
+    this.shouldScroll = true;
+    // Also fire with a small delay as a fallback
+    setTimeout(() => this.doScroll(), 50);
+  }
+
+  private doScroll(): void {
     try {
       const el = this.chatBody?.nativeElement;
-      if (!el) return;
-      el.scrollTop = el.scrollHeight;
+      if (el) {
+        el.scrollTo({ top: el.scrollHeight, behavior: 'smooth' });
+      }
     } catch {}
+  }
+
+  public formatText(text: string): string {
+    if (!text) return '';
+    let f = text.replace(/\*\*(.*?)\*\*/g, '<strong style="color: #fff; font-weight: 800;">$1</strong>');
+    f = f.replace(/\n/g, '<br>');
+    return f;
+  }
+
+  // ✅ HISTORY SYNC
+  private saveHistory(): void {
+    const userId = this.authService.getUserId();
+    if (!userId) return;
+    const data = {
+      messages: this.messages,
+      initSent: this.initSent
+    };
+    localStorage.setItem(`chat_nexus_${userId}`, JSON.stringify(data));
+  }
+
+  private loadHistory(userId: string): void {
+    const raw = localStorage.getItem(`chat_nexus_${userId}`);
+    if (raw) {
+      try {
+        const data = JSON.parse(raw);
+        this.messages = data.messages || [];
+        this.initSent = data.initSent || false;
+      } catch {
+        this.messages = [];
+        this.initSent = false;
+      }
+    }
   }
 }

@@ -103,7 +103,7 @@ export class HttpService {
       this.serverName
         + '/api/adjuster/claim/' + details.claimId
         + '/assign?underwriterId=' + details.underwriterId
-        + '&adjusterId=' + localStorage.getItem('userId'),
+        + '&adjusterId=' + this.authService.getUserId(),
       details,
       { headers: headers }
     );
@@ -129,5 +129,39 @@ export class HttpService {
     if (authToken) headers = headers.set('Authorization', `Bearer ${authToken}`);
 
     return this.http.post(this.serverName + '/api/chatbot/message', payload, { headers });
+  }
+
+  /* =========================
+     USER PROFILE
+  ========================= */
+  getUserProfile(id: any): Observable<any> {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.get(this.serverName + `/api/user/profile/${id}`, { headers });
+  }
+
+  updateProfile(id: any, data: any): Observable<any> {
+    const authToken = this.authService.getToken();
+    let headers = new HttpHeaders();
+    headers = headers.set('Content-Type', 'application/json');
+    headers = headers.set('Authorization', `Bearer ${authToken}`);
+    return this.http.put(this.serverName + `/api/user/profile/${id}`, data, { headers });
+  }
+
+  /* =========================
+     FORGOT PASSWORD (OTP FLOW)
+  ========================= */
+  requestOtp(email: string): Observable<any> {
+    return this.http.post(this.serverName + `/api/user/forgot-password/request-otp/${email}`, {}, { responseType: 'text' });
+  }
+
+  verifyOtpOnly(email: string, otp: string): Observable<any> {
+    return this.http.post(this.serverName + `/api/user/forgot-password/verify-otp?email=${email}&otp=${otp}`, {}, { responseType: 'text' });
+  }
+
+  verifyReset(payload: any): Observable<any> {
+    return this.http.post(this.serverName + `/api/user/forgot-password/verify-reset`, payload, { responseType: 'text' });
   }
 }

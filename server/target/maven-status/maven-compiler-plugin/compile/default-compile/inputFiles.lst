@@ -3,10 +3,12 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/config/SecurityConfig.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/InvestigatorRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/UnderwriterRepository.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/UserController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/LoginResponse.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/InvestigationRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/jwt/JwtUtil.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/ChatbotController.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/OtpRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/ClaimRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/ChatbotRequest.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/UnderwriterController.java
@@ -23,6 +25,7 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/RegisterAndLoginController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigation.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Investigator.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/dto/ResetRequest.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/AdjusterRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/controller/AdjusterController.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/config/Configurations.java
@@ -30,6 +33,7 @@
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Claim.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/Policyholder.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/UserRepository.java
+/home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/OtpRecord.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/repository/PolicyholderRepository.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/service/ChatbotService.java
 /home/coder/app/server/src/main/java/com/edutech/insurance_claims_processing_system/entity/User.java

@@ -18,6 +18,8 @@ import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/up
 import { NavbarComponent } from './navbar/navbar.component';
 import { ViewClaimComponent } from './view-claim/view-claim.component';
 import { ChatbotComponent } from './chatbot/chatbot.component';
+import { ProfileComponent } from './profile/profile.component';
+import { SpeechService } from '../services/speech.service';
 
 @NgModule({
   declarations: [
@@ -32,7 +34,8 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     UpdateClaimInvestigatorComponent,
     NavbarComponent,
     ViewClaimComponent,
-    ChatbotComponent
+    ChatbotComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +44,7 @@ import { ChatbotComponent } from './chatbot/chatbot.component';
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [HttpService, HttpClientModule],
+  providers: [HttpService, HttpClientModule, SpeechService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

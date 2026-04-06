@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-assign-claim',
@@ -39,7 +40,8 @@ export class AssignClaimComponent implements OnInit {
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
     this.itemForm = this.formBuilder.group({
       claimId: [this.formModel.claimId, Validators.required],
@@ -196,7 +198,7 @@ export class AssignClaimComponent implements OnInit {
         this.showMessage = true;
         this.showError = false;
         this.responseMessage = 'Claim assigned successfully';
-        alert('Claim assigned successfully');
+        this.toastService.show('Claim assigned successfully', 'success');
 
         this.itemForm.reset({ claimId: null, underwriterId: null });
         this.selectedClaimText = '';

@@ -1,50 +1,74 @@
-<app-navbar></app-navbar>
 
-<div class="page">
+<div class="db-shell">
+  <!-- TOPBAR -->
+  <header class="dh-header">
+    <div class="dh-greeting">
+      <h2>{{ getGreeting() }}, <span>{{ userName }}</span> 👋</h2>
+      <p>Summary of your insurance claims.</p>
+    </div>
+    
+    <div style="margin-left: auto;">
+      <div class="dh-time-badge">{{ currentTime }}</div>
+    </div>
+  </header>
 
-  <!-- PAGE TITLE -->
-  <h1 class="page-title">Dashboard</h1>
-
-  <!-- STATS CARDS -->
-  <div class="stats-row">
-
-    <div class="stat-card">
-      <h3>Total Claims</h3>
-      <div class="number">{{ stats.total }}</div>
+  <!-- DASHBOARD CONTENT ONLY -->
+  <div class="db-grid">
+    <div class="db-col-lg">
+      <div class="d-card overview-card">
+        <div class="card-head"><h2 class="c-title">Overview</h2><div class="c-select">Last 7 days ▼</div></div>
+        <div class="oc-kpis">
+          <div class="oc-kpi-box"><div class="oc-kpi-title">Total Claims</div><div class="oc-kpi-value"><h1>{{ metrics.totalClaims }}</h1></div></div>
+          <div class="oc-kpi-box"><div class="oc-kpi-title">Pending Evaluation</div><div class="oc-kpi-value"><h1>{{ metrics.pending }}</h1></div></div>
+        </div>
+        <div class="oc-footer">
+          <div class="ocf-text"><h3>{{ metrics.claimsInitiated }} new today</h3><p>Manage your priority cases.</p></div>
+        </div>
+      </div>
+      <div class="cute-kpi-grid">
+        <div class="cute-card" *ngFor="let k of kpiCards" routerLink="/view-claim-status">
+          <div class="cc-icon" [ngClass]="'type-' + k.color"><i class="bi" [ngClass]="k.icon"></i></div><p>{{ k.label }}</p><h2>{{ k.value }}</h2>
+        </div>
+      </div>
     </div>
 
-    <div class="stat-card info">
-      <h3>Initiated</h3>
-      <div class="number">{{ stats.initiated }}</div>
+    <div class="db-col-sm">
+      <div class="d-card donut-card">
+        <div class="card-head"><h2 class="c-title">Status Split</h2></div>
+        <div class="donut-wrapper" style="margin-bottom: 10px;">
+          <svg class="donut-svg" viewBox="0 0 200 200">
+            <circle class="circle-bg" cx="100" cy="100" r="80" stroke-width="12"></circle>
+            <circle class="circle-seg" *ngFor="let seg of donutSegments"
+                    cx="100" cy="100" r="80" stroke-width="12"
+                    [attr.stroke]="seg.color"
+                    [attr.stroke-dasharray]="seg.dasharray" 
+                    [attr.stroke-dashoffset]="seg.dashoffset"
+                    style="transition: all 1s ease-out;">
+            </circle>
+          </svg>
+          <div class="donut-center"><h2>{{ metrics.totalClaims }}</h2><p>Total</p></div>
+        </div>
+        <div class="donut-legend" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;">
+          <div class="leg-item" *ngFor="let seg of donutSegments">
+            <div class="leg-icon" [style.color]="seg.color"><i class="bi" [ngClass]="seg.icon"></i></div>
+            <div>
+              <p style="margin: 0;">{{ seg.label }}</p>
+              <h3 style="margin: 0;">{{ seg.count }}</h3>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-card list-card" *ngIf="role === 'POLICYHOLDER'">
+        <div class="db-list">
+          <div class="list-item" *ngFor="let c of claims.slice(0,3)" routerLink="/view-claim-status">
+            <h4>{{ c.id }}</h4><span class="d-badge" [ngClass]="c.cssClass">{{ c.status }}</span>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="stat-card warning">
-      <h3>In Progress</h3>
-      <div class="number">{{ stats.inProgress }}</div>
-    </div>
-
-    <div class="stat-card success">
-      <h3>Approved</h3>
-      <div class="number">{{ stats.approved }}</div>
-    </div>
-
-    <div class="stat-card danger">
-      <h3>Rejected</h3>
-      <div class="number">{{ stats.rejected }}</div>
-    </div>
-
   </div>
 
-  <!-- SECTION TITLE -->
-  <h2 class="section-title" *ngIf="role === 'POLICYHOLDER'">
-    Your Claims
-  </h2>
-
-  <!-- CLAIMS VIEW WRAPPED CLEANLY -->
-  <div class="content-card" *ngIf="role === 'POLICYHOLDER'">
-    <app-view-claim></app-view-claim>
-  </div>
-
+<!-- AI CHATBOT COMPONENT (Policyholders Only) -->
+  <app-chatbot *ngIf="role === 'POLICYHOLDER'"></app-chatbot>
 </div>
 
-<app-chatbot *ngIf="role==='POLICYHOLDER'"></app-chatbot>

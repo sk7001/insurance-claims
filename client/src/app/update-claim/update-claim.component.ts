@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-update-claim',
@@ -19,6 +20,9 @@ export class UpdateClaimComponent implements OnInit {
 
   claimList: any[] = [];
   searchFilter: any[] = [];
+  activeClaimsList: any[] = [];
+  resolvedClaimsList: any[] = [];
+  activeTab: 'pending' | 'completed' = 'pending';
 
   assignModel: any = {};
   showMessage: any;
@@ -31,7 +35,8 @@ export class UpdateClaimComponent implements OnInit {
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
     this.itemForm = this.formBuilder.group({
       description: ['', Validators.required],
@@ -58,6 +63,7 @@ export class UpdateClaimComponent implements OnInit {
       next: (res: any) => {
         this.claimList = this.sortByDateDesc(res || []);
         this.searchFilter = [...this.claimList];
+        this.updateLists();
       },
       error: (err) => {
         this.showError = true;
@@ -104,7 +110,7 @@ export class UpdateClaimComponent implements OnInit {
         });
         this.updatedId = null;
         this.getClaims();
-        alert('Claim updated successfully');
+        this.toastService.show('Claim updated successfully', 'success');
       },
       error: (err) => {
         this.showError = true;
@@ -159,5 +165,15 @@ export class UpdateClaimComponent implements OnInit {
     });
 
     this.searchFilter = this.sortByDateDesc(filtered);
+    this.updateLists();
+  }
+
+  updateLists() {
+    this.activeClaimsList = this.searchFilter.filter(c => c.status === 'Initiated' || c.status === 'In progress' || c.status === 'Pending');
+    this.resolvedClaimsList = this.searchFilter.filter(c => c.status === 'Approved' || c.status === 'Rejected');
+  }
+
+  setTab(tab: 'pending' | 'completed') {
+    this.activeTab = tab;
   }
 }
