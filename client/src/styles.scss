@@ -45,6 +45,11 @@ body {
     }
   }
 
+  body.sidebar-collapsed &.has-sidebar {
+    margin-left: 120px; /* 88px sidebar + 32px gap */
+    width: calc(100vw - 120px);
+  }
+
   /* Smooth scrolling for page content */
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.1) transparent;

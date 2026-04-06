@@ -1,4 +1,8 @@
-<nav class="d-sidebar" style="position: fixed; top: 16px; left: 16px; width: 260px; height: calc(100vh - 32px); flex-shrink: 0; background: #ffffff; border-radius: 28px; display: flex; flex-direction: column; padding: 30px 24px; border: 1px solid rgba(0, 0, 0, 0.05); z-index: 1000;">
+<nav class="d-sidebar" [class.collapsed]="isCollapsed">
+  <button class="collapse-btn" (click)="toggleSidebar()" title="Toggle Sidebar">
+    <svg *ngIf="!isCollapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+    <svg *ngIf="isCollapsed" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+  </button>
   <div class="ds-brand">
     <button class="ds-profile-btn" *ngIf="userName" routerLink="/profile" routerLinkActive="active">
        <img [src]="'https://ui-avatars.com/api/?name=' + (fullName || userName) + '&background=6366f1&color=fff'" class="ds-avatar">
