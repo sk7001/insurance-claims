@@ -1,0 +1,459 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+/* ================== SHELL ================== */
+.cc-shell {
+  min-height: 100vh;
+  background: #f0f0f5;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.cc-container {
+  width: 100%;
+  max-width: 580px;
+  /* Slightly wider to accommodate complex drop downs */
+}
+
+/* ================== CARD ================== */
+.cc-card {
+  background: #ffffff;
+  border-radius: 30px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  position: relative;
+  animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== BANNER ================== */
+.cc-banner {
+  position: relative;
+  background: #1a1a1f;
+  padding: 34px 36px 68px;
+  overflow: hidden;
+  border-radius: 30px 30px 0 0;
+}
+
+.cc-banner-dots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 22px 22px;
+  pointer-events: none;
+}
+
+.cc-banner-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 100px;
+  padding: 5px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.cc-pill-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  animation: blink 1.8s infinite;
+}
+
+@keyframes blink {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.cc-banner h2 {
+  position: relative;
+  font-size: 30px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin: 0 0 8px 0;
+}
+
+.cc-banner p {
+  position: relative;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.cc-banner-wave {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 52px;
+  width: 100%;
+}
+
+/* ================== BODY ================== */
+.cc-body {
+  padding: 14px 32px 32px;
+}
+
+.cc-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ================== FIELDS ================== */
+.cc-field {
+  margin-bottom: 22px;
+
+  label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    color: #aaaaaa;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+}
+
+.form-error {
+  display: block;
+  font-size: 11px;
+  color: #e74c3c;
+  font-weight: 600;
+  margin-top: 6px;
+  margin-left: 4px;
+}
+
+/* ================== DROPDOWN ================== */
+.dropdown {
+  position: relative;
+}
+
+.dropdown-box {
+  width: 100%;
+  background: #f7f7f9;
+  border: 1.5px solid #ebebef;
+  border-radius: 18px;
+  padding: 14px 18px;
+  font-size: 14px;
+  color: #1a1a1f;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dropdown-box:hover {
+  border-color: #1a1a1f;
+}
+
+.arrow {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.trigger-text {
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.dropdown-menu {
+  display: block !important;
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 100%;
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid #ebebef;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.12);
+  padding: 10px;
+  z-index: 100;
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown-search-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e5;
+  background: #f9f9fa;
+  margin-bottom: 10px;
+  outline: none;
+  font-size: 13.5px;
+  color: #1a1a1f;
+  font-family: 'Inter', sans-serif;
+  transition: 0.2s;
+
+  &:focus {
+    border-color: #1a1a1f;
+    background: #fff;
+  }
+}
+
+.dropdown-list {
+  max-height: 260px;
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+}
+
+.dropdown-item {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 12px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: 'Inter', sans-serif;
+  transition: 0.2s;
+  margin-bottom: 4px;
+}
+
+.dropdown-item:hover {
+  background: #f0f0f5;
+}
+
+/* COMPLEX ITEMS */
+.complex-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.claim-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #1a1a1f;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.assigned-badge {
+  display: inline-block;
+  background: rgba(99, 102, 241, 0.15);
+  color: #4f46e5;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+
+  &.status-approved {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+
+  &.status-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
+}
+
+.item-dot {
+  opacity: 0.3;
+}
+
+.item-desc {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  color: #666;
+}
+
+.claim-type {
+  font-weight: 700;
+  color: #1a1a1f;
+  margin-right: 4px;
+}
+
+.item-sub {
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.claim-right {
+  flex: 0 0 160px;
+  text-align: right;
+  line-height: 1.4;
+}
+
+.ph-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1a1a1f;
+}
+
+.ph-muted {
+  margin-top: 2px;
+  font-size: 11.5px;
+  color: #777;
+}
+
+.active-count-badge {
+  display: inline-block;
+  margin-top: 0;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  background: #f1f5f9;
+  color: #64748b;
+
+  &.has-cases {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+  }
+}
+
+.dropdown-empty {
+  padding: 16px;
+  color: #888;
+  font-size: 13px;
+  text-align: center;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================== SUBMIT BUTTON ================== */
+.cc-submit-btn {
+  width: 100%;
+  height: 56px;
+  border-radius: 18px;
+  border: none;
+  background: #1a1a1f;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: transform 0.15s, box-shadow 0.2s;
+  position: relative;
+  overflow: hidden;
+  margin-top: 10px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+    background-size: 200% 100%;
+    animation: shine 2.6s infinite;
+  }
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.22);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    background: #c8c8cc;
+    color: #ffffff;
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+}
+
+@keyframes shine {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* RESPONSIVE */
+@media (max-width: 1024px) {
+  .cc-shell {
+    margin-left: 0;
+  }
+
+  .complex-item {
+    flex-direction: column;
+  }
+
+  .claim-right {
+    text-align: left;
+    margin-top: 6px;
+    border-top: 1px solid #eee;
+    padding-top: 8px;
+    width: 100%;
+  }
+}

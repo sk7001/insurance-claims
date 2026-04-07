@@ -1,0 +1,134 @@
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">View Claim Status</h1>
+      <p class="page-subtitle">Track and monitor your submission history.</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="dh-search">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="8" />
+        <path d="m21 21-4.35-4.35" />
+      </svg>
+      <input
+        type="text"
+        placeholder="Search by Claim ID or Description..."
+        (input)="searchByDescId($event)"
+      />
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+      In Progress
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'completed'" (click)="setTab('completed')">
+      Completed
+    </button>
+  </div>
+
+  <!-- ERROR -->
+  <p class="error-message" *ngIf="showError">
+    {{ errorMessage }}
+  </p>
+
+  <div class="sections-wrapper">
+
+    <!-- IN PROGRESS -->
+    <div class="table-card" *ngIf="activeTab === 'pending'">
+      <div class="card-header">
+        <h3>In Progress Claims</h3>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let claim of activeClaimsList">
+              <td class="td-bold">#{{ claim.id }}</td>
+              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+              <td><span class="td-desc">{{ claim.description }}</span></td>
+
+              <td>
+                <span class="status-tag"
+                  [ngClass]="{
+                    'status-approved': claim.status === 'Approved',
+                    'status-rejected': claim.status === 'Rejected',
+                    'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending',
+                    'status-initiated': claim.status === 'Initiated'
+                  }">
+                  {{ claim.status }}
+                </span>
+              </td>
+
+              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+            </tr>
+
+            <tr *ngIf="activeClaimsList?.length === 0">
+              <td colspan="5" class="empty">No active claims found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COMPLETED -->
+    <div class="table-card" *ngIf="activeTab === 'completed'">
+      <div class="card-header">
+        <h3>Completed Claims</h3>
+      </div>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Claim ID</th>
+              <th>Type</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let claim of resolvedClaimsList">
+              <td class="td-bold">#{{ claim.id }}</td>
+              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+              <td><span class="td-desc">{{ claim.description }}</span></td>
+
+              <td>
+                <span class="status-tag"
+                  [ngClass]="{
+                    'status-approved': claim.status === 'Approved',
+                    'status-rejected': claim.status === 'Rejected'
+                  }">
+                  {{ claim.status }}
+                </span>
+              </td>
+
+              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+            </tr>
+
+            <tr *ngIf="resolvedClaimsList?.length === 0">
+              <td colspan="5" class="empty">No completed claims found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

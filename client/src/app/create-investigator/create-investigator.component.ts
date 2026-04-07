@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-create-investigator',
@@ -24,7 +25,8 @@ export class CreateInvestigatorComponent implements OnInit{
     public router: Router,
     public httpService: HttpService,
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private toastService: ToastService
   ) {
     this.itemForm = this.formBuilder.group({
       report: [this.formModel.report, Validators.required],
@@ -66,6 +68,7 @@ export class CreateInvestigatorComponent implements OnInit{
         next: () => {
           this.itemForm.reset({ report: '', status: '' });
           this.getInvestigation();
+          this.toastService.show('Investigation created successfully', 'success');
         },
         error: (err) => {
           this.showError = true;
@@ -78,6 +81,7 @@ export class CreateInvestigatorComponent implements OnInit{
           this.itemForm.reset({ report: '', status: '' });
           this.updateId = null;
           this.getInvestigation();
+          this.toastService.show('Investigation updated successfully', 'success');
         },
         error: (err) => {
           this.showError = true;

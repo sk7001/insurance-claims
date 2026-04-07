@@ -1,1 +1,141 @@
-<!--Enter your code here-->
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1 class="page-title">Manage Claims</h1>
+      <p class="page-subtitle">Review and update assigned claims within your workflow.</p>
+    </div>
+
+    <!-- SEARCH -->
+    <div class="dh-search">
+      <input type="text" placeholder="Search by Claim ID, User, or Description..." (input)="searchByDescId($event)" />
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'pending'" (click)="setTab('pending')">
+      In Progress
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'completed'" (click)="setTab('completed')">
+      Completed
+    </button>
+  </div>
+
+  <!-- ================= IN PROGRESS ================= -->
+  <div class="table-card" *ngIf="activeTab === 'pending'">
+    <div class="card-header">
+      <h3>Initiated & In Progress</h3>
+    </div>
+    <div class="table-container">
+      <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Policyholder</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of activeClaimsList">
+
+          <td class="td-bold">#{{ claim.id }}</td>
+          <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+          <td><span class="td-desc">{{ claim.description }}</span></td>
+
+          <td>
+            <span class="status-tag" [ngClass]="{'status-approved': claim.status === 'Approved', 'status-rejected': claim.status === 'Rejected', 'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending', 'status-initiated': claim.status === 'Initiated'}">{{ claim.status }}</span>
+          </td>
+          <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+
+          <td>
+            <ng-container *ngIf="claim.policyholder; else noPh">
+              <div class="uw-cell">
+                <div class="uw-name">{{ claim.policyholder.username }}</div>
+                <div class="uw-email">{{ claim.policyholder.email }}</div>
+              </div>
+            </ng-container>
+            <ng-template #noPh><span class="no-underwriter">Unassigned</span></ng-template>
+          </td>
+
+          <!-- ✅ ACTION BUTTONS -->
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="action-btn approve-btn" (click)="updateStatus(claim, 'Approved')">
+                Approve
+              </button>
+
+              <button class="action-btn reject-btn" (click)="updateStatus(claim, 'Rejected')">
+                Reject
+              </button>
+            </div>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="activeClaimsList.length === 0">
+          <td colspan="7">No active claims</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+  <!-- ================= COMPLETED ================= -->
+  <div class="table-card" *ngIf="activeTab === 'completed'">
+    <div class="card-header">
+      <h3>Approved & Rejected</h3>
+    </div>
+    <div class="table-container">
+      <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Policyholder</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of resolvedClaimsList">
+
+          <td class="td-bold">#{{ claim.id }}</td>
+          <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+          <td><span class="td-desc">{{ claim.description }}</span></td>
+
+          <td>
+            <span class="status-tag" [ngClass]="{'status-approved': claim.status === 'Approved', 'status-rejected': claim.status === 'Rejected', 'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending', 'status-initiated': claim.status === 'Initiated'}">{{ claim.status }}</span>
+          </td>
+
+          <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+
+          <td>
+            <ng-container *ngIf="claim.policyholder; else noPhRes">
+              <div class="uw-cell">
+                <div class="uw-name">{{ claim.policyholder.username }}</div>
+                <div class="uw-email">{{ claim.policyholder.email }}</div>
+              </div>
+            </ng-container>
+            <ng-template #noPhRes><span class="no-underwriter">Unassigned</span></ng-template>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="resolvedClaimsList.length === 0">
+          <td colspan="6">No completed claims</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+</div>

@@ -15,6 +15,11 @@ import { UpdateClaimComponent } from './update-claim/update-claim.component';
 import { AssignClaimComponent } from './assign-claim/assign-claim.component';
 import { CreateInvestigatorComponent } from './create-investigator/create-investigator.component';
 import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/update-claim-investigator.component';
+import { NavbarComponent } from './navbar/navbar.component';
+import { ViewClaimComponent } from './view-claim/view-claim.component';
+import { ChatbotComponent } from './chatbot/chatbot.component';
+import { ProfileComponent } from './profile/profile.component';
+import { SpeechService } from '../services/speech.service';
 
 @NgModule({
   declarations: [
@@ -23,10 +28,14 @@ import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/up
     RegistrationComponent,
     DashbaordComponent,
     CreateClaimComponent,
-     UpdateClaimComponent,
-      AssignClaimComponent,
-      CreateInvestigatorComponent,
-      UpdateClaimInvestigatorComponent,
+    UpdateClaimComponent,
+    AssignClaimComponent,
+    CreateInvestigatorComponent,
+    UpdateClaimInvestigatorComponent,
+    NavbarComponent,
+    ViewClaimComponent,
+    ChatbotComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -35,7 +44,7 @@ import { UpdateClaimInvestigatorComponent } from './update-claim-investigator/up
     ReactiveFormsModule,
     HttpClientModule,
   ],
-  providers: [HttpService, HttpClientModule],
+  providers: [HttpService, HttpClientModule, SpeechService],
   bootstrap: [AppComponent],
 })
-export class AppModule {}
+export class AppModule { }
