@@ -1,4 +1,6 @@
 <div class="page">
+
+  <!-- HEADER -->
   <div class="page-header">
     <div class="header-text">
       <h1 class="page-title">Manage Claims</h1>
@@ -7,15 +9,7 @@
 
     <!-- SEARCH -->
     <div class="dh-search">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="11" cy="11" r="8" />
-        <path d="m21 21-4.35-4.35" />
-      </svg>
-      <input
-        type="text"
-        placeholder="Search by Claim ID, User, or Description..."
-        (input)="searchByDescId($event)"
-      />
+      <input type="text" placeholder="Search by Claim ID, User, or Description..." (input)="searchByDescId($event)" />
     </div>
   </div>
 
@@ -29,168 +23,119 @@
     </button>
   </div>
 
-  <div class="sections-wrapper">
-
-    <!-- IN PROGRESS -->
-    <div class="table-card" *ngIf="activeTab === 'pending'">
-      <div class="card-header">
-        <h3>In Progress Claims</h3>
-      </div>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Claim ID</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Policyholder</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            <tr *ngFor="let claim of activeClaimsList">
-              <td class="td-bold">#{{ claim.id }}</td>
-              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
-              <td><span class="td-desc">{{ claim.description }}</span></td>
-
-              <td>
-                <span class="status-tag"
-                  [ngClass]="{
-                    'status-approved': claim.status === 'Approved',
-                    'status-rejected': claim.status === 'Rejected',
-                    'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending',
-                    'status-initiated': claim.status === 'Initiated'
-                  }">
-                  {{ claim.status }}
-                </span>
-              </td>
-
-              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
-
-              <td>
-                <ng-container *ngIf="claim.policyholder; else noPH">
-                  <div class="uw-cell">
-                    <div class="uw-name">{{ claim.policyholder.username }}</div>
-                    <div class="uw-email">{{ claim.policyholder.email }}</div>
-                  </div>
-                </ng-container>
-                <ng-template #noPH>
-                  <span class="no-underwriter">Not Available</span>
-                </ng-template>
-              </td>
-
-              <td>
-                <button class="action-btn" (click)="edit(claim)">Update</button>
-              </td>
-            </tr>
-
-            <tr *ngIf="activeClaimsList?.length === 0">
-              <td colspan="7" class="empty">No active claims found</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <!-- ================= IN PROGRESS ================= -->
+  <div class="table-card" *ngIf="activeTab === 'pending'">
+    <div class="card-header">
+      <h3>Initiated & In Progress</h3>
     </div>
+    <div class="table-container">
+      <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Policyholder</th>
+          <th>Action</th>
+        </tr>
+      </thead>
 
-    <!-- COMPLETED -->
-    <div class="table-card" *ngIf="activeTab === 'completed'">
-      <div class="card-header">
-        <h3>Completed Claims</h3>
-      </div>
+      <tbody>
+        <tr *ngFor="let claim of activeClaimsList">
 
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>Claim ID</th>
-              <th>Type</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Date</th>
-              <th>Policyholder</th>
-              <th>Action</th>
-            </tr>
-          </thead>
+          <td class="td-bold">#{{ claim.id }}</td>
+          <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+          <td><span class="td-desc">{{ claim.description }}</span></td>
 
-          <tbody>
-            <tr *ngFor="let claim of resolvedClaimsList">
-              <td class="td-bold">#{{ claim.id }}</td>
-              <td class="type-col">{{ claim.insuranceType || '-' }}</td>
-              <td><span class="td-desc">{{ claim.description }}</span></td>
+          <td>
+            <span class="status-tag" [ngClass]="{'status-approved': claim.status === 'Approved', 'status-rejected': claim.status === 'Rejected', 'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending', 'status-initiated': claim.status === 'Initiated'}">{{ claim.status }}</span>
+          </td>
+          <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
 
-              <td>
-                <span class="status-tag"
-                  [ngClass]="{
-                    'status-approved': claim.status === 'Approved',
-                    'status-rejected': claim.status === 'Rejected'
-                  }">
-                  {{ claim.status }}
-                </span>
-              </td>
+          <td>
+            <ng-container *ngIf="claim.policyholder; else noPh">
+              <div class="uw-cell">
+                <div class="uw-name">{{ claim.policyholder.username }}</div>
+                <div class="uw-email">{{ claim.policyholder.email }}</div>
+              </div>
+            </ng-container>
+            <ng-template #noPh><span class="no-underwriter">Unassigned</span></ng-template>
+          </td>
 
-              <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+          <!-- ✅ ACTION BUTTONS -->
+          <td>
+            <div style="display: flex; gap: 8px;">
+              <button class="action-btn approve-btn" (click)="updateStatus(claim, 'Approved')">
+                Approve
+              </button>
 
-              <td>
-                <ng-container *ngIf="claim.policyholder; else noPH2">
-                  <div class="uw-cell">
-                    <div class="uw-name">{{ claim.policyholder.username }}</div>
-                    <div class="uw-email">{{ claim.policyholder.email }}</div>
-                  </div>
-                </ng-container>
-                <ng-template #noPH2>
-                  <span class="no-underwriter">Not Available</span>
-                </ng-template>
-              </td>
+              <button class="action-btn reject-btn" (click)="updateStatus(claim, 'Rejected')">
+                Reject
+              </button>
+            </div>
+          </td>
 
-              <td>
-                <button class="action-btn" (click)="edit(claim)">Update</button>
-              </td>
-            </tr>
+        </tr>
 
-            <tr *ngIf="resolvedClaimsList?.length === 0">
-              <td colspan="7" class="empty">No completed claims found</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-  </div>
-
-  <!-- MODAL (UNCHANGED) -->
-  <div class="update-float-card" [class.show]="updatedId !== null && !closing" [class.closing]="closing">
-    <div class="ufc-inner">
-      <div class="ufc-header">
-        <h3>Update Claim #{{ updatedId }}</h3>
-        <button class="close-icon" (click)="cancelUpdate()">✕</button>
-      </div>
-
-      <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="ufc-form">
-        <div class="input-group">
-          <label>Description</label>
-          <input type="text" formControlName="description">
-        </div>
-
-        <div class="row-group">
-          <div class="input-group half">
-            <label>Date</label>
-            <input type="date" formControlName="date">
-          </div>
-
-          <div class="input-group half">
-            <label>Status</label>
-            <input type="text" formControlName="status">
-          </div>
-        </div>
-
-        <button type="submit" class="save-btn">Save Changes</button>
-      </form>
+        <tr *ngIf="activeClaimsList.length === 0">
+          <td colspan="7">No active claims</td>
+        </tr>
+      </tbody>
+    </table>
     </div>
   </div>
 
-  <div class="ufc-overlay" [class.show]="updatedId !== null" (click)="cancelUpdate()"></div>
+  <!-- ================= COMPLETED ================= -->
+  <div class="table-card" *ngIf="activeTab === 'completed'">
+    <div class="card-header">
+      <h3>Approved & Rejected</h3>
+    </div>
+    <div class="table-container">
+      <table>
+      <thead>
+        <tr>
+          <th>Claim ID</th>
+          <th>Type</th>
+          <th>Description</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Policyholder</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let claim of resolvedClaimsList">
+
+          <td class="td-bold">#{{ claim.id }}</td>
+          <td class="type-col">{{ claim.insuranceType || '-' }}</td>
+          <td><span class="td-desc">{{ claim.description }}</span></td>
+
+          <td>
+            <span class="status-tag" [ngClass]="{'status-approved': claim.status === 'Approved', 'status-rejected': claim.status === 'Rejected', 'status-inprogress': claim.status === 'In progress' || claim.status === 'Pending', 'status-initiated': claim.status === 'Initiated'}">{{ claim.status }}</span>
+          </td>
+
+          <td class="td-muted">{{ claim.date | date:'MMM d, y' }}</td>
+
+          <td>
+            <ng-container *ngIf="claim.policyholder; else noPhRes">
+              <div class="uw-cell">
+                <div class="uw-name">{{ claim.policyholder.username }}</div>
+                <div class="uw-email">{{ claim.policyholder.email }}</div>
+              </div>
+            </ng-container>
+            <ng-template #noPhRes><span class="no-underwriter">Unassigned</span></ng-template>
+          </td>
+
+        </tr>
+
+        <tr *ngIf="resolvedClaimsList.length === 0">
+          <td colspan="6">No completed claims</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+
 </div>

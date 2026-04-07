@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { HttpService } from '../../services/http.service';
 import { ToastService } from '../../services/toast.service';
@@ -12,8 +10,6 @@ import { ToastService } from '../../services/toast.service';
 })
 export class UpdateClaimInvestigatorComponent implements OnInit {
 
-  itemForm: FormGroup;
-
   claimList: any[] = [];
   searchFilter: any[] = [];
 
@@ -21,28 +17,15 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
   resolvedClaimsList: any[] = [];
 
   activeTab: 'pending' | 'completed' = 'pending';
-  searchTerm: string = '';
-
-  updatedId: number | null = null;
-  closing = false;
-
-  assignModel: any = {};
-
-  showError = false;
+  
+  showError: boolean = false;
   errorMessage: any;
 
   constructor(
     private httpService: HttpService,
-    private formBuilder: FormBuilder,
     private authService: AuthService,
     private toastService: ToastService
-  ) {
-    this.itemForm = this.formBuilder.group({
-      description: ['', Validators.required],
-      date: ['', Validators.required],
-      status: ['', Validators.required],
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
     this.getClaims();
@@ -63,11 +46,14 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
         this.claimList = this.sortByDateDesc(res || []);
         this.searchFilter = [...this.claimList];
         this.updateLists();
+      },
+      error: (err: any) => {
+        this.showError = true;
+        this.errorMessage = err;
       }
     });
   }
 
-  /** 🔥 SAME LOGIC AS FIRST COMPONENT */
   updateLists() {
     this.activeClaimsList = this.searchFilter.filter(c =>
       c.status === 'Initiated' ||
@@ -85,21 +71,13 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     const q = (event.target.value || '').toLowerCase().trim();
 
     const filtered = this.claimList.filter((claim) => {
-      const claimId = String(claim?.id || '').toLowerCase();
-      const desc = claim?.description?.toLowerCase() || '';
-      const status = claim?.status?.toLowerCase() || '';
-      const type = claim?.insuranceType?.toLowerCase() || '';
-
-      const phName = claim?.policyholder?.username?.toLowerCase() || '';
-      const phEmail = claim?.policyholder?.email?.toLowerCase() || '';
-
       return (
-        claimId.includes(q) ||
-        desc.includes(q) ||
-        status.includes(q) ||
-        type.includes(q) ||
-        phName.includes(q) ||
-        phEmail.includes(q)
+        String(claim?.id || '').toLowerCase().includes(q) ||
+        claim?.description?.toLowerCase().includes(q) ||
+        claim?.status?.toLowerCase().includes(q) ||
+        claim?.insuranceType?.toLowerCase().includes(q) ||
+        claim?.policyholder?.username?.toLowerCase().includes(q) ||
+        claim?.policyholder?.email?.toLowerCase().includes(q)
       );
     });
 
@@ -111,43 +89,29 @@ export class UpdateClaimInvestigatorComponent implements OnInit {
     this.activeTab = tab;
   }
 
-  edit(val: any) {
-    this.updatedId = val.id;
-    this.assignModel = val;
+  // ✅ MAIN LOGIC for Approve/Reject using correct Underwriter API
+  updateStatus(claim: any, status: string) {
+    const originalStatus = claim.status;
+    claim.status = status;
 
-    this.itemForm.patchValue({
-      description: val.description,
-      status: val.status,
-      date: this.formatDate(val.date),
-    });
-  }
-
-  formatDate(date: any): string {
-    const d = new Date(date);
-    return d.toISOString().split('T')[0];
-  }
-
-  onSubmit() {
-    if (this.itemForm.invalid) return;
-
-    Object.assign(this.assignModel, this.itemForm.value);
-
-    this.httpService.updateClaims(this.assignModel, this.updatedId).subscribe({
+    this.httpService.updateClaimsStatus(status, claim.id).subscribe({
       next: () => {
-        this.updatedId = null;
-        this.getClaims();
-        this.toastService.show('Updated successfully', 'success');
+        this.toastService.show(`Claim ${status}`, 'success');
+
+        // Move to completed list instantly
+        this.activeClaimsList = this.activeClaimsList.filter(c => c.id !== claim.id);
+        this.resolvedClaimsList.unshift(claim);
+        
+        // Ensure reflected in original list
+        const index = this.claimList.findIndex(c => c.id === claim.id);
+        if (index !== -1) {
+          this.claimList[index].status = status;
+        }
+      },
+      error: () => {
+        claim.status = originalStatus; // revert on failure
+        this.toastService.show('Error updating claim status', 'error');
       }
     });
-  }
-
-  cancelUpdate() {
-    this.closing = true;
-
-    setTimeout(() => {
-      this.updatedId = null;
-      this.itemForm.reset();
-      this.closing = false;
-    }, 300);
   }
 }
