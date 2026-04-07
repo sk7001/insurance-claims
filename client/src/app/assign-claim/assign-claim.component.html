@@ -58,6 +58,7 @@
                   <div class="claim-left">
                     <div class="item-main">
                       <strong>#{{ claim.id }}</strong>
+                      <span class="assigned-badge" *ngIf="claim.underwriter">Assigned</span>
                       <span class="item-dot">•</span>
                       <span class="item-desc">
                         <span class="claim-type" *ngIf="claim.insuranceType">{{ claim.insuranceType }} -</span>
@@ -124,6 +125,11 @@
                       <strong>#{{ u.id }}</strong>
                       <span class="item-dot">•</span>
                       <span class="item-desc">{{ u.username }}</span>
+                    </div>
+                    <div class="item-sub">
+                      <span class="active-count-badge" [ngClass]="{'has-cases': u.activeCount > 0}">
+                        {{ u.activeCount || 0 }} Active Cases
+                      </span>
                     </div>
                   </div>
 

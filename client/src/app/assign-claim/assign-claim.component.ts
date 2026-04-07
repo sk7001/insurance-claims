@@ -94,6 +94,7 @@ export class AssignClaimComponent implements OnInit {
       next: (res: any) => {
         this.claimList = this.sortByDateDesc(res || []);
         this.filteredClaimList = [...this.claimList];
+        this.calculateUnderwriterLoad();
         console.log('Claims:', this.filteredClaimList);
       },
       error: (err) => {
@@ -108,12 +109,30 @@ export class AssignClaimComponent implements OnInit {
       next: (res: any) => {
         this.underwriterList = res || [];
         this.filteredUnderwriterList = [...this.underwriterList];
+        this.calculateUnderwriterLoad();
         console.log('Underwriters:', this.filteredUnderwriterList);
       },
       error: (err) => {
         this.showError = true;
         this.errorMessage = err;
       }
+    });
+  }
+
+  // ✅ calculate active cases per underwriter
+  calculateUnderwriterLoad(): void {
+    if (!this.underwriterList.length || !this.claimList.length) return;
+
+    this.underwriterList.forEach(u => {
+      u.activeCount = this.claimList.filter(c =>
+        c.underwriter?.id === u.id &&
+        (c.status === 'Initiated' || c.status === 'In progress' || c.status === 'Pending')
+      ).length;
+    });
+
+    this.filteredUnderwriterList.forEach(fu => {
+      const match = this.underwriterList.find(u => u.id === fu.id);
+      if (match) fu.activeCount = match.activeCount;
     });
   }
 
