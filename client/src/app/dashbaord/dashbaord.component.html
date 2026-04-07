@@ -11,9 +11,11 @@
     </div>
   </header>
 
-  <!-- DASHBOARD CONTENT ONLY -->
+  <!-- DASHBOARD CONTENT -->
   <div class="db-grid">
+    <!-- LEFT COLUMN -->
     <div class="db-col-lg">
+      <!-- OVERVIEW CARD -->
       <div class="d-card overview-card">
         <div class="card-head">
           <h2 class="c-title">Overview</h2>
@@ -43,11 +45,11 @@
         </div>
       </div>
 
-      <!-- ✅ KPI CARDS -->
+      <!-- KPI CARDS -->
       <div class="cute-kpi-grid">
         <div
           class="cute-card"
-          *ngFor="let k of kpiCards"
+          *ngFor="let k of kpiCards; let i = index"
           [class.clickable]="role === 'POLICYHOLDER'"
           (click)="onKpiCardClick()"
           [attr.role]="role === 'POLICYHOLDER' ? 'button' : null"
@@ -65,13 +67,15 @@
       </div>
     </div>
 
+    <!-- RIGHT COLUMN -->
     <div class="db-col-sm">
+      <!-- DONUT CARD -->
       <div class="d-card donut-card">
         <div class="card-head">
           <h2 class="c-title">Status Split</h2>
         </div>
 
-        <div class="donut-wrapper" style="margin-bottom: 10px;">
+        <div class="donut-wrapper">
           <svg class="donut-svg" viewBox="0 0 200 200">
             <circle class="circle-bg" cx="100" cy="100" r="80" stroke-width="12"></circle>
 
@@ -83,9 +87,8 @@
               r="80"
               stroke-width="12"
               [attr.stroke]="seg.color"
-              [attr.stroke-dasharray]="seg.dasharray"
-              [attr.stroke-dashoffset]="seg.dashoffset"
-              style="transition: all 1s ease-out;"
+              [attr.stroke-dasharray]="animateDonut ? seg.dasharray : '0 502.65'"
+              [attr.stroke-dashoffset]="animateDonut ? seg.dashoffset : 0"
             ></circle>
           </svg>
 
@@ -95,27 +98,28 @@
           </div>
         </div>
 
-        <div
-          class="donut-legend"
-          style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px;"
-        >
-          <div class="leg-item" *ngFor="let seg of donutSegments">
+        <div class="donut-legend">
+          <div class="leg-item" *ngFor="let seg of donutSegments; let i = index">
             <div class="leg-icon" [style.color]="seg.color">
               <i class="bi" [ngClass]="seg.icon"></i>
             </div>
 
             <div>
-              <p style="margin: 0;">{{ seg.label }}</p>
-              <h3 style="margin: 0;">{{ seg.count }}</h3>
+              <p>{{ seg.label }}</p>
+              <h3>{{ seg.count }}</h3>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ✅ Already policyholder-only -->
+      <!-- RECENT CLAIMS (Policyholder only) -->
       <div class="d-card list-card" *ngIf="role === 'POLICYHOLDER'">
         <div class="db-list">
-          <div class="list-item" *ngFor="let c of claims.slice(0, 3)" routerLink="/view-claim-status">
+          <div
+            class="list-item"
+            *ngFor="let c of claims.slice(0, 3); let i = index"
+            routerLink="/view-claim-status"
+          >
             <h4>{{ c.id }}</h4>
             <span class="d-badge" [ngClass]="c.cssClass">{{ c.status }}</span>
           </div>
@@ -124,6 +128,6 @@
     </div>
   </div>
 
-  <!-- AI CHATBOT COMPONENT (Policyholders Only) -->
+  <!-- CHATBOT (Policyholders Only) -->
   <app-chatbot *ngIf="role === 'POLICYHOLDER'"></app-chatbot>
 </div>
