@@ -291,6 +291,16 @@
   border-radius: 4px;
   text-transform: uppercase;
   white-space: nowrap;
+
+  &.status-approved {
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
+
+  &.status-rejected {
+    background: rgba(239, 68, 68, 0.15);
+    color: #ef4444;
+  }
 }
 
 .item-dot {

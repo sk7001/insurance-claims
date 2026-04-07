@@ -58,7 +58,9 @@
                   <div class="claim-left">
                     <div class="item-main">
                       <strong>#{{ claim.id }}</strong>
-                      <span class="assigned-badge" *ngIf="claim.underwriter">Assigned</span>
+                      <span class="assigned-badge status-approved" *ngIf="claim.status === 'Approved'">Approved</span>
+                      <span class="assigned-badge status-rejected" *ngIf="claim.status === 'Rejected'">Rejected</span>
+                      <span class="assigned-badge" *ngIf="claim.status !== 'Approved' && claim.status !== 'Rejected' && claim.underwriter">Assigned</span>
                       <span class="item-dot">•</span>
                       <span class="item-desc">
                         <span class="claim-type" *ngIf="claim.insuranceType">{{ claim.insuranceType }} -</span>
